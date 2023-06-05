@@ -1,0 +1,25 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m; // @include pour utiliser
+
+.Footer {
+    background: yellow;
+    font-weight: 700;
+
+    &--contact_cgu {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        &--contact {
+            color: blue;
+        }
+
+        &--cgu {
+            color: red;
+        }
+    }
+
+    &--copyright {
+        color: pink;
+        text-align: center;
+    }
+}

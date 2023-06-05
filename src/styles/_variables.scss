@@ -1,0 +1,21 @@
+@use 'sass:color';
+
+// Colors
+$color: #3e7fb7;
+$color-dark: color.scale($color, $lightness: -50%);
+$color-light: color.scale($color, $lightness: 70%);
+
+$color-darkest: #333;
+$color-lightest: #fff;
+
+$color-alt: #555;
+
+// Fonts
+$font: 'Roboto', sans-serif;
+$font-weight: 300;
+
+$font-title: 'Oswald', sans-serif;
+$font-title-weight: 500;
+$font-sans: 'Open Sans', sans-serif;
+
+$gutter: 1rem;

@@ -1,0 +1,26 @@
+@use 'reset'; // On importe le reset css
+@use 'variables' as v; // On importe les variables
+
+*,
+::before,
+::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100vh; // On règle la hauteur à 100vh pour que tout l'espace vertical soit pris
+    width: 100vw; // On règle la largeur à 100vw pour que tout l'espace horizontal soit pris
+}
+
+html {
+    font-size: 62.5%; // 10px par default, facilite les calculs de taille
+}
+
+body {
+    background: v.$color-alt; // On choisit la couleur d'arrière plan
+    font-family: v.$font-sans; // On choisit la police par défaut
+    font-size: 1.6rem; // On règle la taille de police par défaut
+}

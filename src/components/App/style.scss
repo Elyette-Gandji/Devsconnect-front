@@ -1,0 +1,8 @@
+@use '../../styles/mixins' as m; // @include pour utiliser
+@use '../../styles/variables' as v;
+
+.App {
+    flex-grow: 1;
+    text-align: center;
+    // height: 80vh;
+}
