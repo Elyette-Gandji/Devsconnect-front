@@ -1,47 +1,47 @@
 //! reducer user pour authentification
 //! est importer dans les composants de formmulaires
 
-//? Librairies
+// ? Librairies
 import {
   createAction,
   createReducer,
   createAsyncThunk,
-} from "@reduxjs/toolkit";
+} from '@reduxjs/toolkit';
 
 //* message est utilisé pour afficher un message pop-up. On importe son typage.
-import { Flash } from "../../@types/chat";
+import { Flash } from '../../@types/chat';
 
-//? fonctions maison
-import axiosInstance from "../../utils/axios"; //! Vérifier le chemin
+// ? fonctions maison
+import axiosInstance from '../../utils/axios'; //! Vérifier le chemin
 
-//? Typage
+// ? Typage
 interface UserState {
   logged: boolean;
   pseudo: string | null;
   message: Flash | null;
 }
 
-//? Initialisation
+// ? Initialisation
 export const initialState: UserState = {
   logged: false,
   pseudo: null,
   message: null,
 };
 
-//? Fonctions synchrones
+// ? Fonctions synchrones
 //* Déconnexion
-export const logout = createAction("user/logout");
+export const logout = createAction('user/logout');
 
-//? Fonctions asynchrones
+// ? Fonctions asynchrones
 //* Authentification
 export const login = createAsyncThunk(
-  "user/login",
+  'user/login',
   async (formData: FormData) => {
     //! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
     const objData = Object.fromEntries(formData);
 
     //* data est le retour de la requête axios, on le déstructure les données
-    const { data } = await axiosInstance.post("/login", objData);
+    const { data } = await axiosInstance.post('/login', objData);
 
     //! A la connexion, j'ajoute le token à mon instance Axios
     axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.token}`;
@@ -49,7 +49,7 @@ export const login = createAsyncThunk(
     // ! Pour des raisons de sécurité, on le supprime de `data`
     delete data.token;
 
-    //? On retourne le state
+    // ? On retourne le state
     return data as {
       logged: boolean;
       pseudo: string;
@@ -57,9 +57,9 @@ export const login = createAsyncThunk(
   }
 );
 
-//? Construction du reducer user avec builder qui utilise les actions pour modifier le state initial
+// ? Construction du reducer user avec builder qui utilise les actions pour modifier le state initial
 const userReducer = createReducer(initialState, (builder) => {
-  //? On retourne le state selon les cas de figure suivants :
+  // ? On retourne le state selon les cas de figure suivants :
   builder
 
     //* Cas de la connexion en cours
@@ -74,8 +74,8 @@ const userReducer = createReducer(initialState, (builder) => {
       state.logged = false;
       state.pseudo = null;
       state.message = {
-        type: "error",
-        children: action.error.code || "UNKNOWN_ERROR",
+        type: 'error',
+        children: action.error.code || 'UNKNOWN_ERROR',
         duration: 5000,
       };
     })
@@ -86,7 +86,7 @@ const userReducer = createReducer(initialState, (builder) => {
       state.logged = logged;
       state.pseudo = pseudo;
       state.message = {
-        type: "success",
+        type: 'success',
         children: `Bienvenue ${pseudo} !`,
       };
     })

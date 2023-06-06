@@ -4,7 +4,7 @@
 .Footer {
     @include m.flex-center;
     justify-content: space-between;
-    padding: 2rem;
+    padding: 2rem 4rem;
     border-top: 1px solid black;
     font-weight: 700;
     background: v.$color-dark;

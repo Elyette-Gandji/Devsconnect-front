@@ -1,0 +1,73 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m; // @include pour utiliser
+
+.Header {
+    background: v.$color-dark;
+    &--brand {
+        color: v.$color-lightest;
+    }
+
+    //? Media Queries
+    @media screen and (min-width: 769px) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+
+        &--nav ul {
+            display: flex;
+
+            & li {
+                color: v.$color-lightest;
+                padding-left: 4rem;
+                list-style: none;
+            }
+        }
+
+        &--nav--connect {
+            & button {
+                padding: 0.5rem 1.2rem;
+                border-radius: 1rem;
+                font-weight: 500;
+                border: none;
+            }
+
+            &--subscribe {
+                margin-left: 2rem;
+                background: v.$color-lightest;
+                color: v.$color-darkest;
+            }
+
+            &--login {
+                background: #6558f7;
+                color: v.$color;
+            }
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        height: 7rem;
+
+        &--brand {
+            @include m.flex-center;
+            height: 7rem;
+        }
+    }
+    @media screen and (max-width: 500px) {
+        height: 6rem;
+
+        &--brand {
+            @include m.flex-center;
+            height: 6rem;
+        }
+    }
+
+    @media screen and (max-width: 300px) {
+        height: 5rem;
+
+        &--brand {
+            @include m.flex-center;
+            height: 5rem;
+        }
+    }
+}

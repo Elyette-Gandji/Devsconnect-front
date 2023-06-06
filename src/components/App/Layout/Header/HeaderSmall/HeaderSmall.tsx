@@ -1,15 +1,22 @@
-import HamburgerMenu from './HamburgerMenu';
+import Burger from './Burger/Burger';
 import Title from '../Title/Title';
-
-import './style.scss';
+import NavComponent from '../NavComponent/NavComponent';
+import LogComponent from '../LogComponent/LogComponent';
 
 function HeaderSmall() {
   return (
-    <div className="HeaderSmall">
-      <HamburgerMenu />
+    <>
+      <div className="Header">
+        <Burger />
+        <Title />
 
-      <Title />
-    </div>
+        {/* Quand isOpen est true, on ajoute une classe à ..., et ce ... à une transition CSS de left -100vw vers left 0 */}
+      </div>
+      <nav>
+        {/* <NavComponent />
+        <LogComponent /> */}
+      </nav>
+    </>
   );
 }
 
