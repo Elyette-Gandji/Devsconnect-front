@@ -2,24 +2,9 @@
 @use '../../../../styles/mixins' as m; // @include pour utiliser
 
 .Footer {
-    background: yellow;
+    background-color: yellow;
     font-weight: 700;
-
-    &--contact_cgu {
-        display: flex;
-        justify-content: space-between;
-        padding: 1rem;
-        &--contact {
-            color: blue;
-        }
-
-        &--cgu {
-            color: red;
-        }
-    }
-
-    &--copyright {
-        color: pink;
-        text-align: center;
-    }
+    @include m.flex-center;
+    justify-content: space-between;
+    padding: 2rem;
 }

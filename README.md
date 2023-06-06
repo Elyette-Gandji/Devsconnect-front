@@ -5,3 +5,10 @@ Vous avez une idée de projet et avez besoin de compétences complémentaires po
 ## Page les projets:
 
 Explorez notre vaste base de données de membres pour trouver des profils correspondant à vos critères.
+
+## page connexion
+
+Connectez-vous avec les meilleurs développeurs pour concrétiser vos
+idées et mener à bien vos projets informatiques.
+
+git commit -m "logo + texte page accueil, reglage css sur font-size html suivant taille écran, flex-grow 1 sur composant du milieu"

@@ -9,12 +9,6 @@
     padding: 0;
 }
 
-html,
-body {
-    height: 100vh; // On règle la hauteur à 100vh pour que tout l'espace vertical soit pris
-    width: 100vw; // On règle la largeur à 100vw pour que tout l'espace horizontal soit pris
-}
-
 html {
     font-size: 62.5%; // 10px par default, facilite les calculs de taille
 }
@@ -23,4 +17,48 @@ body {
     background: v.$color-alt; // On choisit la couleur d'arrière plan
     font-family: v.$font-sans; // On choisit la police par défaut
     font-size: 1.6rem; // On règle la taille de police par défaut
+}
+
+.devsConnect {
+    display: flex; // On passe le conteneur en flexbox pour pouvoir utiliser les propriétés flex grow
+    flex-direction: column;
+    min-height: 100vh; // On règle la hauteur à 100vh pour que tout l'espace vertical soit pris
+}
+
+@media screen and (max-width: 1024px) {
+    html {
+        font-size: 62.5%;
+        -webkit-text-size-adjust: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    /*! ================= */
+    /*! ==== Globals ==== */
+    /*! ================= */
+    html {
+        font-size: 57.5%;
+        -webkit-text-size-adjust: none;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    html {
+        font-size: 52.5%;
+        -webkit-text-size-adjust: none;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    html {
+        font-size: 42.5%;
+        -webkit-text-size-adjust: none;
+    }
+}
+
+@media screen and (max-width: 300px) {
+    html {
+        font-size: 32.5%;
+        -webkit-text-size-adjust: none;
+    }
 }

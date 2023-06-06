@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 import Root from './Root';
 import ErrorPage from './ErrorPage';
-import App from '../components/App/App';
+import Home from '../components/App/Home/Home';
 
 const Router = createBrowserRouter(
   // On crée un tableau de route à partir d'éléments React
@@ -17,7 +17,7 @@ const Router = createBrowserRouter(
 
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
       <Route errorElement={<ErrorPage />}>
-        <Route index element={<App />} /> {/* Remplacer App par le contenu */}
+        <Route index element={<Home />} /> {/* Remplacer App par le contenu */}
         {/* Autres routes... */}
       </Route>
     </Route>

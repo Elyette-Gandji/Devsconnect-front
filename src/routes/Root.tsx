@@ -5,7 +5,7 @@ import Footer from '../components/App/Layout/Footer/Footer';
 
 function Root() {
   return (
-    <div className="app">
+    <div className="devsConnect">
       <Header />
       <Outlet /> {/* Equivalent de App */}
       <Footer />
