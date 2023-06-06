@@ -1,23 +1,21 @@
-import './style.scss';
+import { useState, useEffect } from 'react';
+
+import HeaderLarge from './HeaderLarge/HeaderLarge';
+import HeaderSmall from './HeaderSmall/HeaderSmall';
 
 function Header() {
-  return (
-    <div className="Header">
-      <div>
-        <p className="Header--brand">DevsConnect</p>
-      </div>
-      <div className="Header--nav">
-        <p className="Header--nav--search">Rechercher</p>
-        <p className="Header--nav--createProject"> Créer mon projet</p>
-        <p className="Header--nav--profiles">Les profils</p>
-        <p className="Header--nav--project">Les projets</p>
-      </div>
-      <div className="Header--nav--connect">
-        <p className="Header--nav--connect--connection">Connexion</p>
-        <p>Inscription</p>
-      </div>
-    </div>
-  );
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, []);
+
+  return <div>{windowWidth > 748 ? <HeaderLarge /> : <HeaderSmall />}</div>;
 }
 
 export default Header;

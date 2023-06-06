@@ -2,9 +2,11 @@
 @use '../../../../styles/mixins' as m; // @include pour utiliser
 
 .Footer {
-    background-color: yellow;
-    font-weight: 700;
     @include m.flex-center;
     justify-content: space-between;
     padding: 2rem;
+    border-top: 1px solid black;
+    font-weight: 700;
+    background: v.$color-dark;
+    color: v.$color-lightest;
 }

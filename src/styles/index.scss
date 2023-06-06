@@ -14,7 +14,7 @@ html {
 }
 
 body {
-    background: v.$color-alt; // On choisit la couleur d'arrière plan
+    background: v.$color; // On choisit la couleur d'arrière plan
     font-family: v.$font-sans; // On choisit la police par défaut
     font-size: 1.6rem; // On règle la taille de police par défaut
 }
@@ -25,40 +25,53 @@ body {
     min-height: 100vh; // On règle la hauteur à 100vh pour que tout l'espace vertical soit pris
 }
 
-@media screen and (max-width: 1024px) {
-    html {
-        font-size: 62.5%;
-        -webkit-text-size-adjust: none;
+html {
+    @media screen and (max-width: 1300px) {
+        body {
+            font-size: 155%;
+            -webkit-text-size-adjust: none;
+        }
     }
-}
 
-@media screen and (max-width: 768px) {
-    /*! ================= */
-    /*! ==== Globals ==== */
-    /*! ================= */
-    html {
-        font-size: 57.5%;
-        -webkit-text-size-adjust: none;
+    @media screen and (max-width: 1024px) {
+        body {
+            font-size: 130%;
+            -webkit-text-size-adjust: none;
+        }
     }
-}
 
-@media screen and (max-width: 500px) {
-    html {
-        font-size: 52.5%;
-        -webkit-text-size-adjust: none;
+    @media screen and (max-width: 768px) {
+        body {
+            font-size: 105%;
+            -webkit-text-size-adjust: none;
+        }
     }
-}
 
-@media screen and (max-width: 400px) {
-    html {
-        font-size: 42.5%;
-        -webkit-text-size-adjust: none;
+    @media screen and (max-width: 500px) {
+        body {
+            font-size: 95%;
+            -webkit-text-size-adjust: none;
+        }
     }
-}
 
-@media screen and (max-width: 300px) {
-    html {
-        font-size: 32.5%;
-        -webkit-text-size-adjust: none;
+    @media screen and (max-width: 400px) {
+        body {
+            font-size: 85%;
+            -webkit-text-size-adjust: none;
+        }
+    }
+
+    @media screen and (max-width: 300px) {
+        body {
+            font-size: 65%;
+            -webkit-text-size-adjust: none;
+        }
+    }
+
+    @media screen and (max-width: 200px) {
+        body {
+            font-size: 45%;
+            -webkit-text-size-adjust: none;
+        }
     }
 }
