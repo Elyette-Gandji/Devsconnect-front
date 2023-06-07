@@ -1,26 +1,28 @@
-import { useState } from 'react';
-import Signin from '../../../../Form/Signin/signin';
-import Login from '../../../../Form/Login/Login';
-
 function LogComponent(props) {
   // Props de la gestion du burger
-  const { isOpen, setIsOpen } = props;
-
-  const [modalLogin, setModalLogin] = useState(false);
-  const [modalSignin, setModalSignin] = useState(false);
+  const {
+    isOpen,
+    setIsOpen,
+    modalLogin,
+    setModalLogin,
+    modalSignin,
+    setModalSignin,
+  } = props;
 
   const handleLogin = () => {
     setModalLogin(!modalLogin);
+    // Si on ouvre login on ferme signin
     setModalSignin(false);
     // On inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
-    setIsOpen(!isOpen);
+    setIsOpen(false);
   };
 
   const handleSignin = () => {
     setModalSignin(!modalSignin);
+    // Si on ouvre signin on ferme login
     setModalLogin(false);
     // On inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
-    setIsOpen(!isOpen);
+    setIsOpen(false);
   };
   return (
     <div className="Header--connect">
@@ -38,9 +40,6 @@ function LogComponent(props) {
       >
         Inscription
       </button>
-
-      {modalLogin && <Login />}
-      {modalSignin && <Signin />}
     </div>
   );
 }
