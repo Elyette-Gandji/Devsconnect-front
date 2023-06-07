@@ -7,6 +7,7 @@ import './styles.scss';
 interface InputProps {
   //! Obligation d'avoir une propriété `name` sur l'input
   name: string;
+  placeholder: string;
   [otherProps: string]: unknown; // On ne connait pas le type de ce qu'il peut y avoir => booleen, string, number, ...
 }
 
@@ -23,7 +24,12 @@ function Input({ name, placeholder, ...props }: InputProps) {
   }
 
   return (
-    <div className="">
+    <div className="Signin--inputText">
+      {/* // ! On utilise l'id généré pour lier le label à l'input htmlFor = for  */}
+      {/* // ! On utilise le placeholder reçu pour le label */}
+      <label htmlFor={inputId} className="field-label">
+        {placeholder}
+      </label>
       <input
         // infos obligatoires
         name={name}
@@ -31,15 +37,11 @@ function Input({ name, placeholder, ...props }: InputProps) {
         value={value}
         onChange={handleChange}
         id={inputId}
+        placeholder={placeholder}
         // autres infos
         {...props}
         className=""
       />
-      {/* // ! On utilise l'id généré pour lier le label à l'input htmlFor = for  */}
-      {/* // ! On utilise le placeholder reçu pour le label */}
-      <label htmlFor={inputId} className="field-label">
-        {placeholder}
-      </label>
     </div>
   );
 }
