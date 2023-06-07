@@ -1,23 +1,27 @@
 import LogComponent from '../LogComponent/LogComponent';
 import LinksComponent from '../LinksComponent/LinksComponent';
 
-import Title from '../Title/Title';
+import { useAppSelector } from '../../../../../hook/redux';
 
-function HeaderLarge(props) {
-  const { modalLogin, setModalLogin, modalSignin, setModalSignin } = props;
+import Title from '../Title/Title';
+import Login from '../../../../Form/Login/Login';
+import Signin from '../../../../Form/Signin/signin';
+
+function HeaderLarge() {
+  const modalLogin = useAppSelector((state) => state.log.modalLogin);
+  const modalSignin = useAppSelector((state) => state.log.modalSignin);
   return (
-    <div className="Header">
-      <div>
-        <Title />
+    <>
+      <div className="Header">
+        <div>
+          <Title />
+        </div>
+        <LinksComponent />
+        <LogComponent />
       </div>
-      <LinksComponent />
-      <LogComponent
-        modalLogin={modalLogin}
-        setModalLogin={setModalLogin}
-        modalSignin={modalSignin}
-        setModalSignin={setModalSignin}
-      />
-    </div>
+      {modalLogin && <Login />}
+      {modalSignin && <Signin />}
+    </>
   );
 }
 

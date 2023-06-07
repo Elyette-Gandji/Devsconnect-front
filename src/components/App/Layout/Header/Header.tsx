@@ -3,15 +3,9 @@ import { useState, useEffect } from 'react';
 import HeaderLarge from './HeaderLarge/HeaderLarge';
 import HeaderSmall from './HeaderSmall/HeaderSmall';
 
-import Login from '../../../Form/Login/Login';
-import Signin from '../../../Form/Signin/signin';
-
 import './style.scss';
 
 function Header() {
-  const [modalLogin, setModalLogin] = useState(false);
-  const [modalSignin, setModalSignin] = useState(false);
-
   // On utilise la state windowWidth pour savoir la largeur de la fenêtre navigateur
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -30,27 +24,7 @@ function Header() {
 
   // On retourne le composant HeaderLarge si la largeur de la fenêtre navigateur est supérieure à 768px
   // Sinon on retourne le composant HeaderSmall
-  return (
-    <div>
-      {windowWidth > 768 ? (
-        <HeaderLarge
-          modalLogin={modalLogin}
-          setModalLogin={setModalLogin}
-          modalSignin={modalSignin}
-          setModalSignin={setModalSignin}
-        />
-      ) : (
-        <HeaderSmall
-          modalLogin={modalLogin}
-          setModalLogin={setModalLogin}
-          modalSignin={modalSignin}
-          setModalSignin={setModalSignin}
-        />
-      )}
-      {modalLogin && <Login />}
-      {modalSignin && <Signin />}
-    </div>
-  );
+  return <div>{windowWidth > 768 ? <HeaderLarge /> : <HeaderSmall />}</div>;
 }
 
 export default Header;

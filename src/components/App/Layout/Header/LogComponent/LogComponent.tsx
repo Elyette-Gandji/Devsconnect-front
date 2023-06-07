@@ -1,26 +1,24 @@
+import { useAppDispatch } from '../../../../../hook/redux';
+
+import {
+  toggleModalLogin,
+  toggleModalSignin,
+} from '../../../../../store/reducer/log';
+
 function LogComponent(props) {
   // Props de la gestion du burger
-  const {
-    isOpen,
-    setIsOpen,
-    modalLogin,
-    setModalLogin,
-    modalSignin,
-    setModalSignin,
-  } = props;
+  const { setIsOpen } = props;
+
+  const dispatch = useAppDispatch();
 
   const handleLogin = () => {
-    setModalLogin(!modalLogin);
-    // Si on ouvre login on ferme signin
-    setModalSignin(false);
+    dispatch(toggleModalLogin());
     // On inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
     setIsOpen(false);
   };
 
   const handleSignin = () => {
-    setModalSignin(!modalSignin);
-    // Si on ouvre signin on ferme login
-    setModalLogin(false);
+    dispatch(toggleModalSignin());
     // On inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
     setIsOpen(false);
   };
