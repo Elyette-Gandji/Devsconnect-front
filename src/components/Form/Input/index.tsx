@@ -1,0 +1,48 @@
+//* Librairies
+import { useId, useState } from 'react';
+
+//* Styles
+import './styles.scss';
+
+interface InputProps {
+  //! Obligation d'avoir une propriété `name` sur l'input
+  name: string;
+  [otherProps: string]: unknown; // On ne connait pas le type de ce qu'il peut y avoir => booleen, string, number, ...
+}
+
+// ? Composant
+function Input({ name, placeholder, ...props }: InputProps) {
+  // ? Génère un id aléatoire pour le champ
+  const inputId = useId();
+
+  // ? Gestion en local du champ
+  const [value, setValue] = useState('');
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setValue(event.target.value);
+  }
+
+  return (
+    <div className="">
+      <input
+        // infos obligatoires
+        name={name}
+        // React - state
+        value={value}
+        onChange={handleChange}
+        id={inputId}
+        // autres infos
+        {...props}
+        className=""
+      />
+      {/* // ! On utilise l'id généré pour lier le label à l'input htmlFor = for  */}
+      {/* // ! On utilise le placeholder reçu pour le label */}
+      <label htmlFor={inputId} className="field-label">
+        {placeholder}
+      </label>
+    </div>
+  );
+}
+
+// == Export
+export default Input;
