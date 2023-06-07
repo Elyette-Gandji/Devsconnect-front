@@ -1,10 +1,10 @@
 function LogComponent() {
   return (
-    <div className="Header--nav--connect">
-      <button className="Header--nav--connect--login" type="button">
+    <div className="Header--connect">
+      <button className="Header--connect--login" type="button">
         Connexion
       </button>
-      <button className="Header--nav--connect--subscribe" type="button">
+      <button className="Header--connect--subscribe" type="button">
         Inscription
       </button>
     </div>

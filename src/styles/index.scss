@@ -26,51 +26,37 @@ body {
 }
 
 html {
-    @media screen and (max-width: 1300px) {
+    @media screen and (max-width: v.$mq-xlarge) {
         body {
             font-size: 155%;
             -webkit-text-size-adjust: none;
         }
     }
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: v.$mq-large) {
         body {
             font-size: 130%;
             -webkit-text-size-adjust: none;
         }
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: v.$mq-medium) {
         body {
             font-size: 105%;
             -webkit-text-size-adjust: none;
         }
     }
 
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: v.$mq-small) {
         body {
             font-size: 95%;
             -webkit-text-size-adjust: none;
         }
     }
 
-    @media screen and (max-width: 400px) {
-        body {
-            font-size: 85%;
-            -webkit-text-size-adjust: none;
-        }
-    }
-
-    @media screen and (max-width: 300px) {
+    @media screen and (max-width: v.$mq-xsmall) {
         body {
             font-size: 65%;
-            -webkit-text-size-adjust: none;
-        }
-    }
-
-    @media screen and (max-width: 200px) {
-        body {
-            font-size: 45%;
             -webkit-text-size-adjust: none;
         }
     }

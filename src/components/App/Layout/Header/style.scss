@@ -2,29 +2,32 @@
 @use '../../../../styles/mixins' as m; // @include pour utiliser
 
 .Header {
-    background: v.$color-dark;
+    background: v.$color-dark; // Couleur de fond pour small et large
     &--brand {
-        color: v.$color-lightest;
+        color: v.$color; // Couleur du titre pour small et large
     }
 
     //? Media Queries
-    @media screen and (min-width: 769px) {
-        display: flex;
+    // A partir de 768px (desktop)
+    @media screen and (min-width: v.$mq-medium) {
+        @include m.flex-center;
         justify-content: space-between;
-        align-items: center;
         padding: 1rem 2rem;
 
-        &--nav ul {
+        //? Liste des liens
+        & ul {
             display: flex;
 
+            //? Lien unique
             & li {
-                color: v.$color-lightest;
+                color: v.$color;
                 padding-left: 4rem;
                 list-style: none;
             }
         }
 
-        &--nav--connect {
+        //? Boutons login et subscribe
+        &--connect {
             & button {
                 padding: 0.5rem 1.2rem;
                 border-radius: 1rem;
@@ -34,7 +37,7 @@
 
             &--subscribe {
                 margin-left: 2rem;
-                background: v.$color-lightest;
+                background: v.$color;
                 color: v.$color-darkest;
             }
 
@@ -45,29 +48,31 @@
         }
     }
 
-    @media screen and (max-width: 768px) {
-        height: 7rem;
+    // Jusqu'à 768px (mobile)
+    @media screen and (max-width: v.$mq-medium) {
+        // hauteur du header
+        height: v.$height-header-medium; // Hauteur du header en variable
 
         &--brand {
             @include m.flex-center;
-            height: 7rem;
+            height: v.$height-header-medium; // Hauteur du titre égale à la hauteur du header pour le centrage
         }
     }
-    @media screen and (max-width: 500px) {
-        height: 6rem;
+    @media screen and (max-width: v.$mq-small) {
+        height: v.$height-header-small; // Hauteur du header en variable
 
         &--brand {
             @include m.flex-center;
-            height: 6rem;
+            height: v.$height-header-small; // Hauteur du titre égale à la hauteur du header pour le centrage
         }
     }
 
-    @media screen and (max-width: 300px) {
-        height: 5rem;
+    @media screen and (max-width: v.$mq-xsmall) {
+        height: v.$height-header-xsmall; // Hauteur du header en variable
 
         &--brand {
             @include m.flex-center;
-            height: 5rem;
+            height: v.$height-header-xsmall; // Hauteur du titre égale à la hauteur du header pour le centrage
         }
     }
 }

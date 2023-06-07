@@ -1,14 +1,13 @@
 @use 'sass:color';
 
-// Colors
+//? Colors
 $color: #e6e6e6;
 $color-dark: color.scale($color, $lightness: -50%);
 $color-light: color.scale($color, $lightness: 70%);
 
 $color-darkest: #333;
-$color-lightest: #e6e6e6;
 
-// Fonts
+//? Fonts
 $font: 'Roboto', sans-serif;
 $font-weight: 300;
 
@@ -17,3 +16,15 @@ $font-title-weight: 500;
 $font-sans: 'Open Sans', sans-serif;
 
 $gutter: 1rem;
+
+//? Media Queries
+
+$mq-xlarge: 1200px;
+$mq-large: 1024px;
+$mq-medium: 768px;
+$mq-small: 500px;
+$mq-xsmall: 300px;
+
+$height-header-medium: 7rem;
+$height-header-small: 6rem;
+$height-header-xsmall: 5rem;

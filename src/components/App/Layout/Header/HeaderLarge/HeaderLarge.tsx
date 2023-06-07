@@ -1,5 +1,5 @@
 import LogComponent from '../LogComponent/LogComponent';
-import NavComponent from '../NavComponent/NavComponent';
+import LinksComponent from '../LinksComponent/LinksComponent';
 
 import Title from '../Title/Title';
 
@@ -9,7 +9,7 @@ function HeaderLarge() {
       <div>
         <Title />
       </div>
-      <NavComponent />
+      <LinksComponent />
       <LogComponent />
     </div>
   );

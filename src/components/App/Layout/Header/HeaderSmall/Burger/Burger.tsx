@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import './style.scss';
 
-function Burger() {
-  const [isOpen, setIsOpen] = useState(false);
+function Burger(props) {
+  const { isOpen, setIsOpen } = props;
 
   const handleClick = () => {
     setIsOpen(!isOpen);
@@ -17,7 +17,6 @@ function Burger() {
       handleClick();
     }
   };
-
   return (
     <div
       className="burger"

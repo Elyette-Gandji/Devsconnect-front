@@ -61,7 +61,7 @@
 
 //? Média queries
 .burger {
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: v.$mq-medium) {
         //? Container burger
         .burger {
             width: 4rem;
@@ -115,7 +115,7 @@
             transform: translate(0.5rem, -1.7rem) rotate(90deg);
         }
     }
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: v.$mq-small) {
         //? Container burger
         .burger {
             width: 3rem;
@@ -169,7 +169,7 @@
             transform: translate(0.21rem, -1.29rem) rotate(90deg);
         }
     }
-    @media screen and (max-width: 300px) {
+    @media screen and (max-width: v.$mq-xsmall) {
         //? Container burger
         .burger {
             width: 2rem;
