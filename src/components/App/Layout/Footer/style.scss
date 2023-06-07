@@ -9,4 +9,16 @@
     font-weight: 700;
     background: v.$color-dark;
     color: v.$color;
+
+    @media screen and (max-width: v.$mq-medium) {
+        font-size: 105%;
+    }
+    // Jusqu'à 500px (mobile)
+    @media screen and (max-width: v.$mq-small) {
+        font-size: 95%;
+    }
+    // Jusqu'à 320px (mobile)
+    @media screen and (max-width: v.$mq-xsmall) {
+        font-size: 65%;
+    }
 }

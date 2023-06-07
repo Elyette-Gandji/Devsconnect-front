@@ -2,8 +2,6 @@ import LogComponent from '../../LogComponent/LogComponent';
 import LinksComponent from '../../LinksComponent/LinksComponent';
 import Footer from '../../../Footer/Footer';
 
-import './style.scss';
-
 function LeftMenu(props) {
   // On récupère la state isOpen du composant parent HeaderSmall
   const { isOpen } = props;

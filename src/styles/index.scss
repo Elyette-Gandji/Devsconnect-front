@@ -17,47 +17,11 @@ body {
     background: v.$color; // On choisit la couleur d'arrière plan
     font-family: v.$font-sans; // On choisit la police par défaut
     font-size: 1.6rem; // On règle la taille de police par défaut
+    -webkit-text-size-adjust: none; // Réglage pour apple
 }
 
 .devsConnect {
     display: flex; // On passe le conteneur en flexbox pour pouvoir utiliser les propriétés flex grow
     flex-direction: column;
     min-height: 100vh; // On règle la hauteur à 100vh pour que tout l'espace vertical soit pris
-}
-
-html {
-    @media screen and (max-width: v.$mq-xlarge) {
-        body {
-            font-size: 155%;
-            -webkit-text-size-adjust: none;
-        }
-    }
-
-    @media screen and (max-width: v.$mq-large) {
-        body {
-            font-size: 130%;
-            -webkit-text-size-adjust: none;
-        }
-    }
-
-    @media screen and (max-width: v.$mq-medium) {
-        body {
-            font-size: 105%;
-            -webkit-text-size-adjust: none;
-        }
-    }
-
-    @media screen and (max-width: v.$mq-small) {
-        body {
-            font-size: 95%;
-            -webkit-text-size-adjust: none;
-        }
-    }
-
-    @media screen and (max-width: v.$mq-xsmall) {
-        body {
-            font-size: 65%;
-            -webkit-text-size-adjust: none;
-        }
-    }
 }
