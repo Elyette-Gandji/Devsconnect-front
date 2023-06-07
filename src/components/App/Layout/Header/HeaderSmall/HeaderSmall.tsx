@@ -15,7 +15,8 @@ function HeaderSmall() {
         <Burger isOpen={isOpen} setIsOpen={setIsOpen} />
         <Title />
       </div>
-      <LeftMenu isOpen={isOpen} />
+      {/* On envoie les props de l'ouverture du burger dans la gestion des modales connexions inscription */}
+      <LeftMenu isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   );
 }

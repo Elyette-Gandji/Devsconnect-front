@@ -24,7 +24,7 @@ interface UserState {
 // ? Initialisation
 export const initialState: UserState = {
   logged: false,
-  pseudo: null,
+  pseudo: 'bob',
   message: null,
 };
 
