@@ -22,7 +22,7 @@ function LogComponent(props) {
   const handleLogin = () => {
     // On dispatch l'action qui va gérer l'ouverture de la modale
     dispatch(toggleModalLogin());
-    // Si windowWidth <= 768, on inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
+    // Si windowWidth > 768, on ignore, sinon inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
     if (windowWidth > 768) {
       return;
     }
@@ -32,7 +32,7 @@ function LogComponent(props) {
   const handleSignin = () => {
     // On dispatch l'action qui va gérer l'ouverture de la modale
     dispatch(toggleModalSignin());
-    // On inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
+    // Si windowWidth > 768, on ignore, sinon inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
     if (windowWidth > 768) {
       return;
     }

@@ -1,10 +1,12 @@
-import { useRef, useEffect } from 'react';
+// ? Librairie
+import { useRef, useEffect, FormEvent } from 'react';
 
-// Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
-import { useAppDispatch } from '../../../hook/redux';
+// Permet modifier le state et de relancer le rendu de ce composant à chaque fois que le state de la modale change
+import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
 // Actions du reducer
 import { toggleModalLogin } from '../../../store/reducer/log';
+import { loginUser, logout } from '../../../store/reducer/user';
 
 // Composants
 import Input from '../Input';
@@ -13,11 +15,16 @@ import Input from '../Input';
 import './style.scss';
 
 function Login() {
+  const pseudo = useAppSelector((state) => state.user.pseudo);
+  const isLogged = useAppSelector((state) => state.user.logged);
+
+  //! Ref pour la modale
   const modalRef = useRef(null);
 
-  // Dispatch
+  //! Dispatch
   const dispatch = useAppDispatch();
 
+  //! useEffect pour clic externe à la modale
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -33,11 +40,11 @@ function Login() {
     };
   }, []);
 
+  //! Fonction pour fermer la modale avec la croix
   const handleLogin = () => {
     // On dispatch l'action qui va gérer l'ouverture de la modale
     dispatch(toggleModalLogin());
   };
-
   // * Une div n'est pas un element clickable
   // * Fonction d’accessibilité pour le clavier.
   // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
@@ -45,6 +52,18 @@ function Login() {
     if (event.key === 'enter' || event.key === ' ') {
       handleLogin();
     }
+  };
+
+  //! Fonction pour soumettre le formulaire
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // On récupère les données du formulaire
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    dispatch(loginUser(formData)); // Dispatch de l'action de connexion réussie
+    dispatch(toggleModalLogin()); // Dispatch de l'action qui va gérer l'ouverture de la modale
   };
 
   return (
@@ -62,7 +81,7 @@ function Login() {
             X
           </div>
         </div>
-        <form className="Login--form">
+        <form className="Login--form" onSubmit={handleSubmit}>
           <Input
             name="email"
             type="email"
