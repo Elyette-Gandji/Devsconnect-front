@@ -2,13 +2,14 @@ import './style.scss';
 import { Link } from 'react-router-dom';
 
 type CardProps = {
+  id: number;
   title: string;
   description: string;
 };
 
-function Card({ title, description }: CardProps): JSX.Element {
+function Card({ id, title, description }: CardProps): JSX.Element {
   return (
-    <Link to={`/projects/${title}`}>
+    <Link to={`/projects/${id}`}>
       <div className="Card">
         <h2 className="Card--title">{title}</h2>
         <p className="Card--description">{description}</p>
@@ -17,10 +18,21 @@ function Card({ title, description }: CardProps): JSX.Element {
   );
 }
 
-function ProjectCards() {
+type ProjectCardsProps = {
+  cardData: CardProps[];
+};
+
+function ProjectCards({ cardData }: ProjectCardsProps) {
   return (
     <div>
-      <Card title="titre de la carte" description="description de la carte" />
+      {cardData.map((card) => (
+        <Card
+          key={card.id}
+          id={card.id}
+          title={card.title}
+          description={card.description}
+        />
+      ))}
     </div>
   );
 }
