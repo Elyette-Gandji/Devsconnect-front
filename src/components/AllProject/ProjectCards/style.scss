@@ -1,12 +1,37 @@
 .Card {
-    border: 1px solid black;
     margin-bottom: 1rem;
     display: grid;
     padding: 2rem;
     max-width: 20rem;
-}
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    border-top: 1px solid rgb(125, 125, 125);
+    border-left: 1px solid rgb(125, 125, 125);
+    display: flex;
 
-.Card--description {
-    color: black;
-    border: 1px solid black;
+    .Card--title {
+        font-weight: bold;
+        align-self: start;
+        font-size: 2rem;
+        padding-top: 0, 1 rem;
+    }
+
+    .Card--description {
+        color: black;
+        grid-area: descrption;
+        align-self: stretch;
+        border: 1px solid black;
+    }
+
+    grid-template-areas:
+        'title'
+        'description';
+
+    @media screen and (min-width: 768px) {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            'title title'
+            'description description';
+    }
 }
