@@ -11,7 +11,7 @@ function LeftMenu(props) {
     <div className={`LeftMenu ${isOpen ? 'active' : ''}`}>
       <LinksComponent />
       {/* On transmet les props de l'ouverture du burger dans la gestion des modales connexions inscription */}
-      <LogComponent setIsOpen={setIsOpen} />
+      <LogComponent isOpen={isOpen} setIsOpen={setIsOpen} />
       <Footer />
     </div>
   );

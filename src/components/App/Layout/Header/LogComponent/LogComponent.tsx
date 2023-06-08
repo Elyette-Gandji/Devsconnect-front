@@ -1,5 +1,5 @@
-// Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
-import { useAppDispatch } from '../../../../../hook/redux';
+// Permet de lire les state du store et d'effectuer des actions sur le store
+import { useAppSelector, useAppDispatch } from '../../../../../hook/redux';
 
 // Actions du reducer
 import {
@@ -10,7 +10,10 @@ import {
 // Fonction du composant
 function LogComponent(props) {
   // Props de la gestion du burger
-  const { setIsOpen } = props;
+  const { isOpen, setIsOpen } = props;
+
+  // On récupère la state windowWidth du reducer main
+  const windowWidth = useAppSelector((state) => state.main.windowWidth);
 
   // Dispatch
   const dispatch = useAppDispatch();
@@ -19,16 +22,23 @@ function LogComponent(props) {
   const handleLogin = () => {
     // On dispatch l'action qui va gérer l'ouverture de la modale
     dispatch(toggleModalLogin());
-    // On inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
-    setIsOpen(false);
+    // Si windowWidth <= 768, on inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
+    if (windowWidth > 768) {
+      return;
+    }
+    setIsOpen(!isOpen);
   };
 
   const handleSignin = () => {
     // On dispatch l'action qui va gérer l'ouverture de la modale
     dispatch(toggleModalSignin());
     // On inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
-    setIsOpen(false);
+    if (windowWidth > 768) {
+      return;
+    }
+    setIsOpen(!isOpen);
   };
+
   return (
     <div className="Header--connect">
       <button

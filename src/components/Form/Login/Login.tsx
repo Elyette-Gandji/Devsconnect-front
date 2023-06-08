@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 // Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
 import { useAppDispatch } from '../../../hook/redux';
