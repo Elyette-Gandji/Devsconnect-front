@@ -1,6 +1,5 @@
 // ? Librairie
 import { useRef, useEffect, FormEvent } from 'react';
-
 // Permet modifier le state et de relancer le rendu de ce composant à chaque fois que le state de la modale change
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
@@ -15,9 +14,8 @@ import FlashMessage from '../FlashMessage/FlashMessage';
 // Styles
 import './style.scss';
 
+// ? Fonction
 function Login() {
-  const pseudo = useAppSelector((state) => state.user.pseudo);
-  const isLogged = useAppSelector((state) => state.user.logged);
   const flash = useAppSelector((state) => state.user.message);
 
   //! Ref pour la modale
@@ -64,57 +62,50 @@ function Login() {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    dispatch(loginUser(formData)); // Dispatch de l'action de connexion réussie
     dispatch(toggleModalLogin()); // Dispatch de l'action qui va gérer la fermeture de la modale
+    dispatch(loginUser(formData)); // Dispatch de l'action de connexion réussie
   };
 
   return (
-    <div className="">
-      {/* //? Si on a un message flash, on l'affiche, sinon on n'affiche rien */}
-      {/* // ? On utilise le composant `FlashMessage` pour afficher le message */}
-      {/* //? On utilise la propriété `children` pour afficher le contenu du message flash */}
-      {flash &&
-        (console.log(flash),
-        (
+    <div className="Login">
+      <div className="Login--container" ref={modalRef}>
+        {flash && (
           <FlashMessage type={flash.type} duration={flash.duration ?? 3000}>
             {flash.children}
           </FlashMessage>
-        ))}
-
-      <div className="Login">
-        <div className="Login--container" ref={modalRef}>
-          <div className="Login--container--head">
-            <h2 className="Login--title">Connexion</h2>
-            <div
-              className="Login--close"
-              role="button"
-              tabIndex={0}
-              onClick={handleLogin}
-              onKeyDown={handleLoginKeyDown}
-            >
-              X
-            </div>
+        )}
+        <div className="Login--container--head">
+          <h2 className="Login--title">Connexion</h2>
+          <div
+            className="Login--close"
+            role="button"
+            tabIndex={0}
+            onClick={handleLogin}
+            onKeyDown={handleLoginKeyDown}
+          >
+            X
           </div>
-          <form className="Login--form" onSubmit={handleSubmit}>
-            <Input
-              name="email"
-              type="email"
-              placeholder="Adresse Email"
-              className="Login--inputText"
-            />
-            <Input
-              name="password"
-              type="password"
-              placeholder="Mot de passe"
-              className="Login--inputText"
-            />
-
-            <button type="submit" className="Login--form--submit">
-              Se connecter
-            </button>
-          </form>
-          <p>DevsConnect</p>
         </div>
+
+        <form className="Login--form" onSubmit={handleSubmit}>
+          <Input
+            name="email"
+            type="email"
+            placeholder="Adresse Email"
+            className="Login--inputText"
+          />
+          <Input
+            name="password"
+            type="password"
+            placeholder="Mot de passe"
+            className="Login--inputText"
+          />
+
+          <button type="submit" className="Login--form--submit">
+            Se connecter
+          </button>
+        </form>
+        <p>DevsConnect</p>
       </div>
     </div>
   );
