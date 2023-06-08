@@ -2,15 +2,171 @@
 @use '../../../styles/mixins' as m; // @include pour utiliser
 
 .Login {
-    position: absolute;
+    //? Modale
+    @include m.flex-center; // mixin pour flex center auto
+    position: fixed; // position fixed pour que le formulaire reste prenne tout l'écran
     top: 50%;
-    left: 0;
-    width: 30rem;
-    height: 30rem;
-    background: yellow;
-    opacity: 0.5;
+    left: 50%;
+    transform: translate(-50%, -50%); // Pour centrer le formulaire
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); // Effet de transparence
+    z-index: 9999; // Au dessus de tout
+
+    //? Entête et formulaire
+    &--container {
+        position: relative; // Pour positionner le bouton close en absolute
+        // height: 100vh; // Prend toute la hauteur de l'écran
+        background: rgba(v.$color-darkest, 0.7); // Effet de transparence
+    }
+    //? Titre
+    & h2 {
+        color: v.$color;
+        font-size: 2em;
+        text-align: center;
+    }
+    //? Croix de fermeture
+    &--close {
+        position: absolute; // Position absolute pour sortir du flux
+        border: 0.3rem solid v.$color;
+        border-radius: 50%;
+        color: v.$color;
+        cursor: pointer;
+        top: v.$font-small;
+        right: v.$font-small;
+        padding: 0 v.$font-xsmall;
+        font-size: 1.5em;
+    }
+    //? Formulaire
     &--form {
-        opacity: 1;
-        color: green;
+        display: flex;
+        flex-direction: column; // Pour que les champs soient côte à côte
+        margin: 0 auto;
+        max-width: 90rem; // Largeur max du formulaire
+        color: v.$color;
+
+        //? Bouton submit
+        &--submit {
+            margin: 0 auto;
+            margin-top: v.$font-large;
+            padding: v.$font-xsmall v.$font-large;
+            border-radius: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    }
+    //? Gestion des champs texte
+    &--inputText {
+        display: flex; // label et input côte à côte
+        margin-top: v.$font-large;
+        justify-content: space-between; // A chaque extrémité
+        & input {
+            border-radius: 1rem;
+            padding-left: 1rem;
+        }
+    }
+
+    @media screen and (min-width: v.$mq-large) {
+        //? Entête et formulaire
+        &--container {
+            padding: v.$font-large;
+            width: 40%;
+        }
+        //? Titre
+        & h2 {
+            margin: v.$font-large auto;
+        }
+
+        //? Formulaire
+        &--form {
+            //? Bouton submit
+            &--submit {
+                width: 50%;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-large) {
+        font-size: 90%;
+
+        //? Entête et formulaire
+        &--container {
+            padding: v.$font-xlarge;
+            width: 50%;
+        }
+        //? Titre
+        & h2 {
+            margin: v.$font-small auto;
+        }
+
+        //? Formulaire
+        &--form {
+            //? Bouton submit
+            &--submit {
+                width: 60%;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-medium) {
+        font-size: 75%;
+
+        //? Entête et formulaire
+        &--container {
+            padding: v.$font-large;
+            width: 60%;
+        }
+        //? Titre
+        & h2 {
+            margin: v.$font-xsmall auto;
+        }
+
+        //? Formulaire
+        &--form {
+            //? Bouton submit
+            &--submit {
+                width: 60%;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-small) {
+        font-size: 65%;
+
+        //? Entête et formulaire
+        &--container {
+            padding: v.$font-medium v.$font-xlarge;
+            width: 100%;
+        }
+        //? Titre
+        & h2 {
+            margin: v.$font-xsmall auto;
+        }
+
+        //? Formulaire
+        &--form {
+            //? Bouton submit
+            &--submit {
+                width: 60%;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-xsmall) {
+        font-size: 60%;
+
+        //? Entête et formulaire
+        &--container {
+            padding: v.$font-medium v.$font-xlarge;
+            width: 100%;
+        }
+        //? Titre
+        & h2 {
+            margin: v.$font-xsmall auto;
+        }
+
+        //? Formulaire
+        &--form {
+            //? Bouton submit
+            &--submit {
+                width: 60%;
+            }
+        }
     }
 }

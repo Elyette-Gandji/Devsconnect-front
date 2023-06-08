@@ -17,10 +17,6 @@
         position: relative; // Pour positionner le bouton close en absolute
         height: 100vh; // Prend toute la hauteur de l'écran
         background: rgba(v.$color-darkest, 0.7); // Effet de transparence
-
-        //? Entête
-        &--head {
-        }
     }
     //? Titre
     & h2 {
@@ -61,6 +57,11 @@
     &--inputText {
         display: flex; // label et input côte à côte
         justify-content: space-between; // A chaque extrémité
+
+        & input {
+            border-radius: 1rem;
+            padding-left: 1rem;
+        }
     }
     //? Open to work
     &--openToWork {
@@ -77,6 +78,9 @@
         flex-direction: column; // Pour que le label soit au dessus du textarea
         & textarea {
             resize: none; // Masquer les poignées de redimensionnement
+
+            border-radius: 1rem;
+            padding-left: 1rem;
         }
     }
     //? Gestion des champs checkbox Technos
