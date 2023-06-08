@@ -69,11 +69,11 @@ function Login() {
   return (
     <div className="Login">
       <div className="Login--container" ref={modalRef}>
-        {flash && (
+        {/* {flash && (
           <FlashMessage type={flash.type} duration={flash.duration ?? 3000}>
             {flash.children}
           </FlashMessage>
-        )}
+        )} */}
         <div className="Login--container--head">
           <h2 className="Login--title">Connexion</h2>
           <div

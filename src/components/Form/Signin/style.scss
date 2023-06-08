@@ -66,11 +66,8 @@
     //? Open to work
     &--openToWork {
         display: flex; // label et radio côte à côte
-        justify-content: left; // A gauche
-
-        & input {
-            margin-left: 2rem; // Pour espacer les radios du label
-        }
+        justify-content: space-evenly; // A gauche
+        align-items: center; // Aligner les éléments verticalement
     }
     //? A propos
     &--inputTextarea {
@@ -161,10 +158,6 @@
         //? Open to work
         &--openToWork {
             margin-top: v.$font-large;
-
-            & input {
-                margin-left: v.$font-large; // Pour espacer les radios du label
-            }
         }
         //? A propos
         &--inputTextarea {
@@ -246,10 +239,6 @@
         //? Open to work
         &--openToWork {
             margin-top: v.$font-medium;
-
-            & input {
-                margin-left: v.$font-medium; // Pour espacer les radios du label
-            }
         }
         //? A propos
         &--inputTextarea {
@@ -334,10 +323,6 @@
         //? Open to work
         &--openToWork {
             margin-top: v.$font-medium;
-
-            & input {
-                margin-left: v.$font-medium; // Pour espacer les radios du label
-            }
         }
         //? A propos
         &--inputTextarea {
@@ -421,10 +406,6 @@
         //? Open to work
         &--openToWork {
             margin-top: v.$font-small;
-
-            & input {
-                margin-left: v.$font-medium; // Pour espacer les radios du label
-            }
         }
         //? A propos
         &--inputTextarea {
@@ -508,10 +489,6 @@
         //? Open to work
         &--openToWork {
             margin-top: v.$font-small;
-
-            & input {
-                margin-left: v.$font-small; // Pour espacer les radios du label
-            }
         }
         //? A propos
         &--inputTextarea {
