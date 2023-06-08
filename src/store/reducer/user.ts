@@ -1,6 +1,3 @@
-//! reducer user pour authentification
-//! est importer dans les composants de formmulaires
-
 // ? Librairies
 import {
   createAction,
@@ -9,23 +6,23 @@ import {
 } from '@reduxjs/toolkit';
 
 //* message est utilisé pour afficher un message pop-up. On importe son typage.
-// import { Flash } from '../../@types/chat';
+import { Flash } from '../../@types/interface';
 
 // ? fonctions maison
-// import axiosInstance from '../../utils/axios';
+import axiosInstance from '../../utils/axios';
 
 // ? Typage
 interface UserState {
   logged: boolean;
   pseudo: string | null;
-  // message: Flash | null;
+  message: Flash | null;
 }
 
 // ? Initialisation
 export const initialState: UserState = {
   logged: false,
   pseudo: 'jean',
-  // message: null,
+  message: null,
 };
 
 // ? Fonctions synchrones
@@ -38,54 +35,57 @@ export const loginUser = createAsyncThunk(
   'user/loginUser',
   async (formData: FormData) => {
     try {
+      //     // Vérifiez les informations d'identification
+      //     const hardcodedEmail = 'bob@bob.com';
+      //     const hardcodedPassword = 'bob';
+      //     // Récupérez les informations d'identification du formulaire
+      //     const email = formData.get('email');
+      //     const password = formData.get('password');
+
+      //     if (email === hardcodedEmail && password === hardcodedPassword) {
+      //       return {
+      //         logged: true,
+      //         message: `Bienvenue !`,
+      //         pseudo: 'bob',
+      //       };
+      //     }
+      //     return { logged: false, pseudo: 'raté' };
+      //   } catch (error) {
+      //     console.error('Error during login:', error);
+      //     throw error;
+      //   }
+      // }
       // ___________________________________________________________________________
 
-      // Vérifiez les informations d'identification
-      const hardcodedEmail = 'bob@bob.com';
-      const hardcodedPassword = 'bob';
-      // Récupérez les informations d'identification du formulaire
-      const email = formData.get('email');
-      const password = formData.get('password');
+      const objData = Object.fromEntries(formData);
+      // ! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
 
-      if (email === hardcodedEmail && password === hardcodedPassword) {
-        return { logged: true, message: 'Login successful', pseudo: 'bob' };
+      const { data } = await axiosInstance.post('/api/users', objData);
+
+      // ! A la connexion, j'ajoute le token à mon instance Axios
+      // axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.token}`;
+
+      // ! Pour des raisons de sécurité, on le supprime de `data`
+      // delete data.token;
+
+      // Ici, vous pouvez traiter la réponse de la connexion, mettre à jour votre Redux store, etc.
+      const { success, message } = data;
+
+      if (success) {
+        // return { success: true, message: 'Login successful' };
+        // ? On retourne le state
+        return data as {
+          logged: boolean;
+          pseudo: string;
+        };
       }
-      return { logged: false, message: 'Invalid credentials', pseudo: 'raté' };
+      return { success: false, message };
     } catch (error) {
+      // Gérez les erreurs potentielles ici
       console.error('Error during login:', error);
       throw error;
     }
   }
-  // ___________________________________________________________________________
-
-  // const objData = Object.fromEntries(formData);
-  //! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
-
-  // const { data } = await axiosInstance.post('/login', objData);
-
-  //! A la connexion, j'ajoute le token à mon instance Axios
-  // axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.token}`;
-
-  // ! Pour des raisons de sécurité, on le supprime de `data`
-  // delete data.token;
-
-  // Ici, vous pouvez traiter la réponse de la connexion, mettre à jour votre Redux store, etc.
-  // const { success, message } = data;
-
-  // if (success) {
-  // return { success: true, message: 'Login successful' };
-  // // ? On retourne le state
-  // return data as {
-  //   logged: boolean;
-  //   pseudo: string;
-  // };
-  // }
-  // return { success: false, message };
-  // } catch (error) {
-  // Gérez les erreurs potentielles ici
-  // console.error('Error during login:', error);
-  // throw error;
-  // }
 );
 
 // ? Construction du reducer user avec builder qui utilise les actions pour modifier le state initial
@@ -115,13 +115,14 @@ const userReducer = createReducer(initialState, (builder) => {
     //* Cas de la connexion réussie
     .addCase(loginUser.fulfilled, (state, action) => {
       console.log('loginUser.fulfilled');
-      const { logged, pseudo } = action.payload;
+      const { logged, pseudo, message } = action.payload;
       state.logged = logged;
       state.pseudo = pseudo;
-      // state.message = {
-      //   type: 'success',
-      //   children: `Bienvenue ${pseudo} !`,
-      // };
+      // state.message = message;
+      state.message = {
+        type: 'success',
+        children: `Bienvenue ${pseudo} !`,
+      };
     })
     .addCase(logout, (state) => {
       state.logged = false;

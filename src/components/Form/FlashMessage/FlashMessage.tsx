@@ -1,6 +1,6 @@
-import { Flash } from "../../@types/interface";
+import { Flash } from '../../@types/interface';
 
-import "./style.scss";
+import './style.scss';
 
 function FlashMessage({ type, duration, children }: Flash) {
   return (
