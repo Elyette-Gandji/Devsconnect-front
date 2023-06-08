@@ -19,11 +19,13 @@ li {
         font-weight: 500;
         cursor: pointer;
     }
-    &--subscribe {
+    &--subscribe,
+    &--logout {
         background: v.$color;
         color: v.$color-darkest;
     }
-    &--login {
+    &--login,
+    &--profil {
         background: #6558f7;
         color: v.$color;
     }
