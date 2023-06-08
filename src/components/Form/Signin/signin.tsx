@@ -219,7 +219,7 @@ function Signin() {
                   id="cgu"
                   name="cgu"
                   value="cgu"
-                  className="Signin--inputCheckbox"
+                  className="Signin--inputCheckbox--cgu"
                 />
               </label>
             </div>
