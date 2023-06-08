@@ -3,11 +3,11 @@ import { useAppSelector } from '../../../../../hook/redux';
 
 // Composants
 import LogComponent from '../LogComponent/LogComponent';
+import LogoutComponent from '../LogoutComponent/LogoutComponent';
 import LinksComponent from '../LinksComponent/LinksComponent';
 import Title from '../Title/Title';
 import Login from '../../../../Form/Login/Login';
 import Signin from '../../../../Form/Signin/signin';
-import LogoutComponent from '../../LogoutComponent/LogoutComponent';
 
 // Fonction principale
 function HeaderLarge() {
