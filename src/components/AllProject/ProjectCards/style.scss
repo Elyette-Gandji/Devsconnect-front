@@ -1,0 +1,12 @@
+.Card {
+    border: 1px solid black;
+    margin-bottom: 1rem;
+    display: grid;
+    padding: 2rem;
+    max-width: 20rem;
+}
+
+.Card--description {
+    color: black;
+    border: 1px solid black;
+}

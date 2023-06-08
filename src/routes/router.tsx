@@ -6,6 +6,7 @@ import {
 import Root from './Root';
 import ErrorPage from './ErrorPage';
 import Home from '../components/App/Home/Home';
+import ProjectPage from '../components/AllProject/ProjectsPage/ProjectsPage';
 
 const Router = createBrowserRouter(
   // On crée un tableau de route à partir d'éléments React
@@ -18,6 +19,7 @@ const Router = createBrowserRouter(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Home />} /> {/* Remplacer App par le contenu */}
+        <Route path="/projects" element={<ProjectPage />} />
         {/* Autres routes... */}
       </Route>
     </Route>
