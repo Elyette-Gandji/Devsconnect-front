@@ -6,7 +6,7 @@ import { logout } from '../../../../../store/reducer/user';
 // Fonction du composant
 function LogoutComponent(props) {
   // Props de la gestion du burger
-  const { isOpen, setIsOpen } = props;
+  const { setIsOpen } = props;
 
   // On récupère la state windowWidth du reducer main
   const windowWidth = useAppSelector((state) => state.main.windowWidth);

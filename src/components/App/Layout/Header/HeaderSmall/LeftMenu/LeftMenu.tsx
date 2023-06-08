@@ -19,9 +19,9 @@ function LeftMenu(props) {
       {/* On transmet les props de l'ouverture du burger dans la gestion des modales connexions inscription */}
 
       {isLogged ? (
-        <LogoutComponent isOpen={isOpen} setIsOpen={setIsOpen} />
+        <LogoutComponent setIsOpen={setIsOpen} />
       ) : (
-        <LogComponent isOpen={isOpen} setIsOpen={setIsOpen} />
+        <LogComponent setIsOpen={setIsOpen} />
       )}
       <Footer />
     </div>

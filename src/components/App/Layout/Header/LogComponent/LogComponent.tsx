@@ -10,7 +10,7 @@ import {
 // Fonction du composant
 function LogComponent(props) {
   // Props de la gestion du burger
-  const { isOpen, setIsOpen } = props;
+  const { setIsOpen } = props;
 
   // On récupère la state windowWidth du reducer main
   const windowWidth = useAppSelector((state) => state.main.windowWidth);
@@ -26,7 +26,7 @@ function LogComponent(props) {
     if (windowWidth > 768) {
       return;
     }
-    setIsOpen(!isOpen);
+    setIsOpen(false);
   };
 
   const handleSignin = () => {
@@ -36,7 +36,7 @@ function LogComponent(props) {
     if (windowWidth > 768) {
       return;
     }
-    setIsOpen(!isOpen);
+    setIsOpen(false);
   };
 
   return (
