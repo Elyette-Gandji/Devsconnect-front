@@ -48,7 +48,7 @@
         }
     }
     @media screen and (max-width: v.$mq-large) {
-        font-size: v.$font-small;
+        font-size: v.$font-medium;
         &--firstField {
             padding: v.$font-medium 0;
         }
@@ -79,7 +79,7 @@
         }
     }
     @media screen and (max-width: v.$mq-small) {
-        font-size: v.$font-xsmall;
+        font-size: v.$font-small;
         &--firstField {
             padding: v.$font-small 0;
         }
@@ -90,6 +90,7 @@
         }
     }
     @media screen and (max-width: v.$mq-xsmall) {
+        font-size: v.$font-small;
         &--secondField {
             &--search {
                 width: 80%;

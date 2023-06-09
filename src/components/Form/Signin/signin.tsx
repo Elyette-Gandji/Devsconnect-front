@@ -9,7 +9,9 @@ import { toggleModalSignin } from '../../../store/reducer/log';
 
 // Composants
 import Input from '../Input';
-// Icone switch open to work
+
+// Data
+import { technos } from '../../../data/technosPath'; // Pour le choix des technos
 
 // Styles
 import './style.scss';
@@ -146,94 +148,32 @@ function Signin() {
               <h3>Mes technos</h3>
               <p>(Plusieurs choix possibles)</p>
               <div className="Signin--techno">
-                <div className="Signin--inputCheckbox">
-                  <input
-                    type="checkbox"
-                    id="react"
-                    name="react"
-                    value="react"
-                  />
-                  <label htmlFor="html"> React</label>
-                  <div
-                    role="button"
-                    onClick={() => handleImageClick('react')}
-                    onKeyDown={handleImageKeyDown}
-                    tabIndex={0}
-                    className={`Signin--inputCheckbox--img ${
-                      selectedTechnos.includes('react') ? 'selected' : ''
-                    }`}
-                  >
-                    <img src="/images/technos/react.svg" alt="react" />
-                  </div>
-                </div>
-                <div className="Signin--inputCheckbox">
-                  <input type="checkbox" id="css" name="css" value="css" />
-                  <label htmlFor="html"> CSS</label>
-                  <div
-                    role="button"
-                    onClick={() => handleImageClick('css')}
-                    onKeyDown={handleImageKeyDown}
-                    tabIndex={0}
-                    className={`Signin--inputCheckbox--img ${
-                      selectedTechnos.includes('css') ? 'selected' : ''
-                    }`}
-                  >
-                    {/* <img src="/images/technos/css.svg" alt="css" /> */}
-                  </div>
-                </div>
-                <div className="Signin--inputCheckbox">
-                  <input type="checkbox" id="vite" name="vite" value="vite" />
-                  <label htmlFor="html"> Vite</label>
-                  <div
-                    role="button"
-                    onClick={() => handleImageClick('vite')}
-                    onKeyDown={handleImageKeyDown}
-                    tabIndex={0}
-                    className={`Signin--inputCheckbox--img ${
-                      selectedTechnos.includes('vite') ? 'selected' : ''
-                    }`}
-                  >
-                    <img src="/images/technos/vite.svg" alt="vite" />
-                  </div>
-                </div>
-                <div className="Signin--inputCheckbox">
-                  <input
-                    type="checkbox"
-                    id="typescript"
-                    name="typescript"
-                    value="typescript"
-                  />
-                  <label htmlFor="html"> Typescript</label>
-                  <div
-                    role="button"
-                    onClick={() => handleImageClick('typescript')}
-                    onKeyDown={handleImageKeyDown}
-                    tabIndex={0}
-                    className={`Signin--inputCheckbox--img ${
-                      selectedTechnos.includes('typescript') ? 'selected' : ''
-                    }`}
-                  >
-                    <img
-                      src="/images/technos/typescript.svg"
-                      alt="typescript"
+                {technos.map((techno) => (
+                  <div className="Signin--inputCheckbox" key={techno.id}>
+                    <input
+                      type="checkbox"
+                      id={techno.id}
+                      name={techno.id}
+                      value={techno.id}
                     />
+                    <label htmlFor={techno.id}>{techno.label}</label>
+                    <div
+                      role="button"
+                      onClick={() => handleImageClick(techno.id)}
+                      onKeyDown={handleImageKeyDown}
+                      tabIndex={0}
+                      className={`Signin--inputCheckbox--img ${
+                        selectedTechnos.includes(techno.id) ? 'selected' : ''
+                      }`}
+                    >
+                      <img
+                        src={techno.path}
+                        title={techno.label}
+                        alt={techno.label}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="Signin--inputCheckbox">
-                  <input type="checkbox" id="html" name="html" value="html" />
-                  <label htmlFor="html"> HTML</label>
-                  <div
-                    role="button"
-                    onClick={() => handleImageClick('html')}
-                    onKeyDown={handleImageKeyDown}
-                    tabIndex={0}
-                    className={`Signin--inputCheckbox--img ${
-                      selectedTechnos.includes('html') ? 'selected' : ''
-                    }`}
-                  >
-                    <img src="/images/technos/html.svg" alt="html" />
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
             <div className="Signin--cgu">
@@ -241,6 +181,7 @@ function Signin() {
                 J&apos;accepte les CGU
                 <input
                   type="checkbox"
+                  required
                   id="cgu"
                   name="cgu"
                   value="cgu"

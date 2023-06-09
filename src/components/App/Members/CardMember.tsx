@@ -1,5 +1,5 @@
 import './style.scss';
-import technosPath from '../../../data/technosPath';
+import { technos } from '../../../data/technosPath';
 
 function CardMember() {
   return (
@@ -24,30 +24,23 @@ function CardMember() {
             autem. Alias.
           </p>
           <div className="CardMember--card--body--technos">
-            {/*     
-            //! Map() pour limiter à 5 l'affichage des technos de l'appel API
-            <div>
-              {data.map((item, index) => {
-                if (index < 5) {
-                  return <li key={index}>{item}</li>;
-                }
-                return null;
-              })}
-            </div> 
-            */}
-            <img src={technosPath.html} />
-            <img src={technosPath.react} />
-            <img src={technosPath.css} />
-            <img src={technosPath.javascript} />
-            <img src={technosPath.nodejs} />
+            {/* //! On importe toutes les données depuis data, on map dessus en dur et limite à 5 l'affichage */}
+            {technos.slice(0, 5).map((techno) => (
+              <img
+                src={techno.path}
+                alt={techno.label}
+                title={techno.label}
+                key={techno.id}
+              />
+            ))}
           </div>
         </div>
         <div className="CardMember--card--footer">
           <h4>Projets :</h4>
           <ul className="CardMember--card--footer--list">
-            <li>Lorem ipsum dolor sit amet.</li>
-            <li>Amet consectetur adipisicing elit.</li>
-            <li>Animi quis magni dolore iure?</li>
+            <li>Projet 1 : Lorem ipsum dolor sit amet.</li>
+            <li>Projet 2 : Amet consectetur adipisicing elit.</li>
+            <li>Projet 3 : Animi quis magni dolore iure?</li>
           </ul>
         </div>
       </section>
