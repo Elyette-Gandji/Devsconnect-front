@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 
 // Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
+import { Switch } from '@mui/material';
 import { useAppDispatch } from '../../../hook/redux';
 
 // Actions du reducer
@@ -8,12 +9,17 @@ import { toggleModalSignin } from '../../../store/reducer/log';
 
 // Composants
 import Input from '../Input';
+// Icone switch open to work
 
 // Styles
 import './style.scss';
 
 function Signin() {
-  const [selectedImages, setSelectedImages] = useState([]);
+  // State pour la selection des technos
+
+  const [selectedTechnos, setSelectedTechnos] = useState([]);
+  // State pour le check de open to work
+  const [checked, setChecked] = useState(false);
 
   const modalRef = useRef(null);
 
@@ -36,10 +42,10 @@ function Signin() {
   }, []);
 
   const handleImageClick = (imageId) => {
-    if (selectedImages.includes(imageId)) {
-      setSelectedImages(selectedImages.filter((id) => id !== imageId));
+    if (selectedTechnos.includes(imageId)) {
+      setSelectedTechnos(selectedTechnos.filter((id) => id !== imageId));
     } else {
-      setSelectedImages([...selectedImages, imageId]);
+      setSelectedTechnos([...selectedTechnos, imageId]);
     }
   };
   // * Une div n'est pas un element clickable
@@ -51,6 +57,12 @@ function Signin() {
     }
   };
 
+  //! Fonction pour le switch open to work
+  const handleSwitch = () => {
+    setChecked(!checked);
+  };
+
+  //! Fonction pour la modale Signin
   const handleSignin = () => {
     // On dispatch l'action qui va gérer l'ouverture de la modale
     dispatch(toggleModalSignin());
@@ -63,6 +75,38 @@ function Signin() {
     if (event.key === 'enter' || event.key === ' ') {
       handleSignin();
     }
+  };
+
+  //! Fonction pour l'envoie du formulaire
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Utilisez la valeur `checked` comme nécessaire lors de la soumission du formulaire
+    console.log('Valeur du bouton de commutation :', checked);
+
+    // Récupérer la valeur du champ CGU
+    const cguAccepted = event.target.cgu.checked;
+
+    // Préparez les données du formulaire
+    const formData = {
+      openToWork: checked,
+      firstname: event.target.firstname.value,
+      lastname: event.target.lastname.value,
+      pseudo: event.target.pseudo.value,
+      email: event.target.email.value,
+      password: event.target.password.value,
+      aboutMe: event.target.aboutMe.value,
+
+      // Récupérer la valeur du champ CGU
+      cguAccepted,
+      // Récupérer les technos sélectionnées
+      technos: selectedTechnos,
+    };
+
+    // Utilisez les données du formulaire comme nécessaire
+    console.log('Données du formulaire :', formData);
+
+    // Effectuez les actions nécessaires avec les données du formulaire
+    // Par exemple, vous pouvez réinitialiser le formulaire, afficher un message de confirmation, etc.
   };
 
   return (
@@ -80,7 +124,7 @@ function Signin() {
             X
           </div>
         </div>
-        <form className="Signin--form">
+        <form onSubmit={handleSubmit} className="Signin--form">
           <fieldset className="Signin--field">
             <Input name="firstname" type="text" placeholder="Prénom" />
             <Input name="lastname" type="text" placeholder="Nom" />
@@ -89,26 +133,7 @@ function Signin() {
             <Input name="password" type="password" placeholder="Mot de passe" />
             <div className="Signin--openToWork">
               <p>Ouvert aux projets</p>
-              <div>
-                <input
-                  type="radio"
-                  id="yes"
-                  name="open-to-projects"
-                  value="yes"
-                  className="Signin--inputRadio"
-                />
-                <label htmlFor="yes"> Oui</label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  id="no"
-                  name="open-to-projects"
-                  value="yes"
-                  className="Signin--inputRadio"
-                />
-                <label htmlFor="no"> Non</label>
-              </div>
+              <Switch checked={checked} onChange={handleSwitch} />
             </div>
             <label htmlFor="aboutMe" className="Signin--inputTextarea">
               A propos de moi
@@ -135,7 +160,7 @@ function Signin() {
                     onKeyDown={handleImageKeyDown}
                     tabIndex={0}
                     className={`Signin--inputCheckbox--img ${
-                      selectedImages.includes('react') ? 'selected' : ''
+                      selectedTechnos.includes('react') ? 'selected' : ''
                     }`}
                   >
                     <img src="/images/technos/react.svg" alt="react" />
@@ -150,7 +175,7 @@ function Signin() {
                     onKeyDown={handleImageKeyDown}
                     tabIndex={0}
                     className={`Signin--inputCheckbox--img ${
-                      selectedImages.includes('css') ? 'selected' : ''
+                      selectedTechnos.includes('css') ? 'selected' : ''
                     }`}
                   >
                     <img src="/images/technos/css.svg" alt="css" />
@@ -165,7 +190,7 @@ function Signin() {
                     onKeyDown={handleImageKeyDown}
                     tabIndex={0}
                     className={`Signin--inputCheckbox--img ${
-                      selectedImages.includes('vite') ? 'selected' : ''
+                      selectedTechnos.includes('vite') ? 'selected' : ''
                     }`}
                   >
                     <img src="/images/technos/vite.svg" alt="vite" />
@@ -185,7 +210,7 @@ function Signin() {
                     onKeyDown={handleImageKeyDown}
                     tabIndex={0}
                     className={`Signin--inputCheckbox--img ${
-                      selectedImages.includes('typescript') ? 'selected' : ''
+                      selectedTechnos.includes('typescript') ? 'selected' : ''
                     }`}
                   >
                     <img
@@ -203,7 +228,7 @@ function Signin() {
                     onKeyDown={handleImageKeyDown}
                     tabIndex={0}
                     className={`Signin--inputCheckbox--img ${
-                      selectedImages.includes('html') ? 'selected' : ''
+                      selectedTechnos.includes('html') ? 'selected' : ''
                     }`}
                   >
                     <img src="/images/technos/html.svg" alt="html" />
@@ -219,7 +244,7 @@ function Signin() {
                   id="cgu"
                   name="cgu"
                   value="cgu"
-                  className="Signin--inputCheckbox"
+                  className="Signin--inputCheckbox--cgu"
                 />
               </label>
             </div>

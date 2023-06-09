@@ -19,11 +19,13 @@ li {
         font-weight: 500;
         cursor: pointer;
     }
-    &--subscribe {
+    &--subscribe,
+    &--logout {
         background: v.$color;
         color: v.$color-darkest;
     }
-    &--login {
+    &--login,
+    &--profil {
         background: #6558f7;
         color: v.$color;
     }
@@ -54,11 +56,9 @@ li {
                 padding: 0.5rem 1.2rem;
             }
 
-            &--subscribe {
+            &--subscribe,
+            &--logout {
                 margin-left: 2rem;
-            }
-
-            &--login {
             }
         }
     }

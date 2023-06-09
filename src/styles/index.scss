@@ -25,3 +25,10 @@ body {
     flex-direction: column;
     min-height: 100vh; // On règle la hauteur à 100vh pour que tout l'espace vertical soit pris
 }
+
+// Meme utilité qu'au dessus, mais comme le component Error n'est pas dans la classe .devsConnect, on doit le réécrire
+#root {
+    display: flex; // On passe le conteneur en flexbox pour pouvoir utiliser les propriétés flex grow
+    flex-direction: column; // On règle la direction du flexbox en colonne
+    min-height: 100vh; // On règle la hauteur à 100vh pour que tout l'espace vertical soit pris
+}

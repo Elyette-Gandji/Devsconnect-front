@@ -6,22 +6,19 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
 
 interface MainState {
-  state1: [];
+  windowWidth: number;
 }
 
 const initialState: MainState = {
-  state1: [],
+  windowWidth: window.innerWidth,
 };
 
 // Fonctions synchrone
-export const action1 = createAction('main/action1');
-
-// Fonctions asynchrone
-// export const  = createAsyncThunk<>('main/action1');
+export const resizeWindow = createAction('main/resizeWindow');
 
 const mainReducer = createReducer(initialState, (builder) => {
-  builder.addCase(action1, (state, action) => {
-    state.state1;
+  builder.addCase(resizeWindow, (state) => {
+    state.windowWidth = window.innerWidth;
   });
 });
 

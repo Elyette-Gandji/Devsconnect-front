@@ -7,8 +7,8 @@ import logReducer from './reducer/log';
 
 const store = configureStore({
   reducer: {
-    // main: mainReducer,
-    // user: userReducer,
+    main: mainReducer,
+    user: userReducer,
     log: logReducer,
   },
 });

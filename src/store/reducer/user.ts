@@ -1,6 +1,3 @@
-//! reducer user pour authentification
-//! est importer dans les composants de formmulaires
-
 // ? Librairies
 import {
   createAction,
@@ -9,10 +6,10 @@ import {
 } from '@reduxjs/toolkit';
 
 //* message est utilisé pour afficher un message pop-up. On importe son typage.
-import { Flash } from '../../@types/chat';
+import { Flash } from '../../@types/interface';
 
-// ? fonctions maison
-import axiosInstance from '../../utils/axios'; //! Vérifier le chemin
+// ? fonctions maison pour l'instance Axios
+import axiosInstance from '../../utils/axios';
 
 // ? Typage
 interface UserState {
@@ -24,7 +21,7 @@ interface UserState {
 // ? Initialisation
 export const initialState: UserState = {
   logged: false,
-  pseudo: 'bob',
+  pseudo: null,
   message: null,
 };
 
@@ -34,26 +31,30 @@ export const logout = createAction('user/logout');
 
 // ? Fonctions asynchrones
 //* Authentification
-export const login = createAsyncThunk(
-  'user/login',
+export const loginUser = createAsyncThunk(
+  'user/loginUser',
   async (formData: FormData) => {
-    //! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
-    const objData = Object.fromEntries(formData);
+    try {
+      // ! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
+      const objData = Object.fromEntries(formData);
 
-    //* data est le retour de la requête axios, on le déstructure les données
-    const { data } = await axiosInstance.post('/login', objData);
+      const { data } = await axiosInstance.post('/api/users', objData);
+      // ! A la connexion, j'ajoute le token à mon instance Axios
+      // axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.token}`;
 
-    //! A la connexion, j'ajoute le token à mon instance Axios
-    axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.token}`;
+      // ! Pour des raisons de sécurité, on le supprime de `data`
+      // delete data.token;
 
-    // ! Pour des raisons de sécurité, on le supprime de `data`
-    delete data.token;
-
-    // ? On retourne le state
-    return data as {
-      logged: boolean;
-      pseudo: string;
-    };
+      // ? On retourne le state
+      return data as {
+        logged: boolean;
+        pseudo: string;
+      };
+    } catch (error) {
+      // Gérez les erreurs potentielles ici
+      console.error('Error during login:', error);
+      throw error;
+    }
   }
 );
 
@@ -61,16 +62,15 @@ export const login = createAsyncThunk(
 const userReducer = createReducer(initialState, (builder) => {
   // ? On retourne le state selon les cas de figure suivants :
   builder
-
     //* Cas de la connexion en cours
-    .addCase(login.pending, (state) => {
+    .addCase(loginUser.pending, (state) => {
       state.logged = false;
       state.pseudo = null;
       state.message = null;
     })
 
     //* Cas de la connexion échouée
-    .addCase(login.rejected, (state, action) => {
+    .addCase(loginUser.rejected, (state, action) => {
       state.logged = false;
       state.pseudo = null;
       state.message = {
@@ -81,7 +81,7 @@ const userReducer = createReducer(initialState, (builder) => {
     })
 
     //* Cas de la connexion réussie
-    .addCase(login.fulfilled, (state, action) => {
+    .addCase(loginUser.fulfilled, (state, action) => {
       const { logged, pseudo } = action.payload;
       state.logged = logged;
       state.pseudo = pseudo;
@@ -95,7 +95,7 @@ const userReducer = createReducer(initialState, (builder) => {
       state.pseudo = null;
 
       //! à la déconnexion, on supprime le token
-      delete axiosInstance.defaults.headers.common.Authorization;
+      // delete axiosInstance.defaults.headers.common.Authorization;
     });
 });
 

@@ -15,9 +15,11 @@ function Burger(props) {
       handleClick();
     }
   };
+
   return (
     <div
-      className="burger"
+      className={`burger ${isOpen ? 'open' : ''}`}
+      // className="burger"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       role="button" //! On donne un role de bouton à la div (pour l'accessibilité)
