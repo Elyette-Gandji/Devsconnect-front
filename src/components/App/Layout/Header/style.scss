@@ -10,6 +10,8 @@
 //? Liens
 li {
     list-style: none;
+
+    //? Style du navLink
     & a.active::after {
         content: '';
         display: block;
