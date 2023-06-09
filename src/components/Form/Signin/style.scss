@@ -278,7 +278,6 @@
     }
 
     @media screen and (max-width: v.$mq-medium) {
-        font-size: 70%;
         //? Entête et formulaire
         &--container {
             width: 60%;
@@ -288,14 +287,10 @@
         & h2 {
             margin: 0 auto;
             margin-top: v.$font-xxlarge + 2rem;
-            font-size: 2em;
         }
         //? Croix de fermeture
         &--close {
             top: v.$font-medium;
-            right: v.$font-medium;
-            padding: 0 v.$font-xsmall;
-            font-size: 1.5em;
         }
 
         //? Formulaire
@@ -305,73 +300,25 @@
             //? Bouton submit
             &--submit {
                 margin-top: v.$font-medium;
-                padding: v.$font-xsmall;
                 width: 60%;
             }
         }
         //? Gestion des parties 1 et 2 du formulaire
         &--field {
-            flex-direction: column; // Pour que les champs soient les uns en dessous des autres
             margin: v.$font-small auto 0;
             padding: 0 v.$font-xsmall;
             width: 80%; // Largeur du champ
         }
-        //? Gestion des champs texte
-        &--inputText {
-            margin-top: v.$font-medium;
-        }
-        //? Open to work
-        &--openToWork {
-            margin-top: v.$font-medium;
-        }
-        //? A propos
-        &--inputTextarea {
-            margin-top: v.$font-medium;
-            & textarea {
-                height: 5em; // Hauteur du bloc de texte
-            }
-        }
-        //? Container technos
-        &--technos {
-            margin-top: v.$font-medium;
-        }
-        //? Gestion des champs checkbox Technos
-        &--techno {
-            gap: v.$font-xsmall; // Espacement x et y entre les technos
-            margin-top: v.$font-medium;
-        }
         //? Case techno
         &--inputCheckbox {
             height: v.$font-large + 2rem; // Hauteur de la case
-            &--img img {
-                width: v.$font-large; // Largeur de l'image
-            }
-            //! Ajouter une bordure autour de l'image lorsque la case à cocher est cochée
-            &--img.selected {
-                padding: 0.5rem; // Epaisseur de la bordure
-            }
-        }
-        //? cgu
-        &--cgu {
-            margin-top: v.$font-medium;
-
-            & input {
-                margin-left: v.$font-medium;
-            }
         }
     }
     @media screen and (max-width: v.$mq-small) {
         font-size: 60%;
-        //? Entête et formulaire
-        &--container {
-            width: 80%;
-            overflow: auto;
-        }
         //? Titre
         & h2 {
-            margin: 0 auto;
             margin-top: v.$font-large + 2rem;
-            font-size: 2em;
         }
         //? Croix de fermeture
         &--close {
@@ -383,8 +330,6 @@
 
         //? Formulaire
         &--form {
-            flex-direction: column; // Pour que les champs soient les uns en dessous des autres
-
             //? Bouton submit
             &--submit {
                 margin-top: v.$font-small;
@@ -394,8 +339,6 @@
         }
         //? Gestion des parties 1 et 2 du formulaire
         &--field {
-            flex-direction: column; // Pour que les champs soient les uns en dessous des autres
-            margin: v.$font-small auto 0;
             padding: 0;
             width: 85%; // Largeur du champ
         }
@@ -410,9 +353,6 @@
         //? A propos
         &--inputTextarea {
             margin-top: v.$font-small;
-            & textarea {
-                height: 5em; // Hauteur du bloc de texte
-            }
         }
         //? Container technos
         &--technos {
@@ -420,109 +360,24 @@
         }
         //? Gestion des champs checkbox Technos
         &--techno {
-            gap: v.$font-xsmall; // Espacement x et y entre les technos
             margin-top: v.$font-small;
-        }
-        //? Case techno
-        &--inputCheckbox {
-            height: v.$font-large + 2rem; // Hauteur de la case
-            &--img img {
-                width: v.$font-large; // Largeur de l'image
-            }
-            //! Ajouter une bordure autour de l'image lorsque la case à cocher est cochée
-            &--img.selected {
-                padding: 0.5rem; // Epaisseur de la bordure
-            }
         }
         //? cgu
         &--cgu {
             margin-top: v.$font-small;
-
-            & input {
-                margin-left: v.$font-medium;
-            }
         }
     }
     @media screen and (max-width: v.$mq-xsmall) {
         font-size: 50%;
-        //? Entête et formulaire
-        &--container {
-            width: 80%;
-            overflow: auto;
-        }
-        //? Titre
-        & h2 {
-            margin: 0 auto;
-            margin-top: v.$font-large + 2rem;
-            font-size: 2em;
-        }
-        //? Croix de fermeture
-        &--close {
-            top: v.$font-small;
-            right: v.$font-small;
-            padding: 0 v.$font-xxsmall;
-            font-size: 1em;
-        }
-
-        //? Formulaire
-        &--form {
-            flex-direction: column; // Pour que les champs soient les uns en dessous des autres
-
-            //? Bouton submit
-            &--submit {
-                margin-top: v.$font-small;
-                padding: v.$font-xsmall;
-                width: 60%;
-            }
-        }
         //? Gestion des parties 1 et 2 du formulaire
         &--field {
-            flex-direction: column; // Pour que les champs soient les uns en dessous des autres
-            margin: v.$font-small auto 0;
-            padding: 0;
             width: 80%; // Largeur du champ
-        }
-        //? Gestion des champs texte
-        &--inputText {
-            margin-top: v.$font-small;
-        }
-        //? Open to work
-        &--openToWork {
-            margin-top: v.$font-small;
-        }
-        //? A propos
-        &--inputTextarea {
-            margin-top: v.$font-small;
-            & textarea {
-                height: 5em; // Hauteur du bloc de texte
-            }
-        }
-        //? Container technos
-        &--technos {
-            margin-top: v.$font-xxsmall;
-        }
-        //? Gestion des champs checkbox Technos
-        &--techno {
-            gap: v.$font-xsmall; // Espacement x et y entre les technos
-            margin-top: v.$font-small;
         }
         //? Case techno
         &--inputCheckbox {
             height: v.$font-medium + 2rem; // Hauteur de la case
             &--img img {
                 width: v.$font-medium; // Largeur de l'image
-            }
-            //! Ajouter une bordure autour de l'image lorsque la case à cocher est cochée
-            &--img.selected {
-                padding: 0.5rem; // Epaisseur de la bordure
-            }
-        }
-        //? cgu
-        &--cgu {
-            margin-top: v.$font-small;
-
-            & input {
-                margin-left: v.$font-medium;
             }
         }
     }
