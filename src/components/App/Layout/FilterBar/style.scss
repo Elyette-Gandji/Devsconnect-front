@@ -43,7 +43,7 @@
             &--search {
                 width: 40%;
                 max-width: 40rem;
-                height: v.$font-xxlarge;
+                height: v.$font-xlarge;
             }
         }
     }
@@ -56,15 +56,11 @@
             padding-bottom: v.$font-medium;
             &--search {
                 width: 40%;
-                height: v.$font-xlarge;
+                height: v.$font-large;
             }
         }
     }
     @media screen and (max-width: v.$mq-medium) {
-        font-size: v.$font-small;
-        &--firstField {
-            padding: v.$font-medium 0;
-        }
         &--secondField {
             flex-direction: column;
             align-items: center;
@@ -72,7 +68,6 @@
             padding-bottom: v.$font-small;
             width: 80%;
             &--search {
-                width: 40%;
                 height: v.$font-large;
             }
             &--switch {
@@ -89,43 +84,15 @@
             padding: v.$font-small 0;
         }
         &--secondField {
-            flex-direction: column;
-            align-items: center;
-            margin: 0 auto;
-            padding-bottom: v.$font-small;
-            width: 80%;
             &--search {
                 width: 75%;
-                height: v.$font-large;
-            }
-            &--switch {
-                margin-top: v.$font-small;
-            }
-            & em {
-                display: none;
             }
         }
     }
     @media screen and (max-width: v.$mq-xsmall) {
-        font-size: v.$font-xsmall;
-        &--firstField {
-            padding: v.$font-small 0;
-        }
         &--secondField {
-            flex-direction: column;
-            align-items: center;
-            margin: 0 auto;
-            padding-bottom: v.$font-small;
-            width: 80%;
             &--search {
                 width: 80%;
-                height: v.$font-large;
-            }
-            &--switch {
-                margin-top: v.$font-small;
-            }
-            & em {
-                display: none;
             }
         }
     }

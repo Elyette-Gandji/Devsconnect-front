@@ -97,14 +97,6 @@
         & h2 {
             margin: v.$font-small auto;
         }
-
-        //? Formulaire
-        &--form {
-            //? Bouton submit
-            &--submit {
-                width: 60%;
-            }
-        }
     }
     @media screen and (max-width: v.$mq-medium) {
         font-size: 75%;
@@ -135,38 +127,8 @@
             padding: v.$font-medium v.$font-xlarge;
             width: 100%;
         }
-        //? Titre
-        & h2 {
-            margin: v.$font-xsmall auto;
-        }
-
-        //? Formulaire
-        &--form {
-            //? Bouton submit
-            &--submit {
-                width: 60%;
-            }
-        }
     }
     @media screen and (max-width: v.$mq-xsmall) {
         font-size: 60%;
-
-        //? Entête et formulaire
-        &--container {
-            padding: v.$font-medium v.$font-xlarge;
-            width: 100%;
-        }
-        //? Titre
-        & h2 {
-            margin: v.$font-xsmall auto;
-        }
-
-        //? Formulaire
-        &--form {
-            //? Bouton submit
-            &--submit {
-                width: 60%;
-            }
-        }
     }
 }

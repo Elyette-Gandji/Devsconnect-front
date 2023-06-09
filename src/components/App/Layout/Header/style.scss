@@ -49,7 +49,6 @@ li {
         justify-content: space-between;
         padding: 1rem 2rem;
         font-size: v.$font-small;
-
         //? Liste des liens
         & ul {
             display: flex;
@@ -59,13 +58,11 @@ li {
                 padding-left: 1rem;
             }
         }
-
         //? Boutons login et subscribe
         &--connect {
             & button {
                 padding: 0.5rem 1.2rem;
             }
-
             &--subscribe,
             &--logout {
                 margin-left: 2rem;
@@ -75,7 +72,6 @@ li {
     // A partir de 1024px (desktop)
     @media screen and (min-width: v.$mq-large) {
         font-size: v.$font-medium;
-
         //? Lien unique
         & ul {
             //? Lien unique
@@ -168,11 +164,6 @@ li {
             margin: 2rem auto;
             padding: 1rem 2rem;
             font-size: v.$font-medium;
-
-            &:hover {
-                // background: v.$color;
-                // color: v.$color-darkest;
-            }
         }
     }
     // Jusqu'à 500px (mobile)
@@ -186,13 +177,7 @@ li {
         //? Boutons login et subscribe
         & button {
             margin: 1.5rem auto;
-            padding: 1rem 2rem;
             font-size: v.$font-small;
-
-            &:hover {
-                // background: v.$color;
-                // color: v.$color-darkest;
-            }
         }
     }
     // Jusqu'à 300px (mobile)
@@ -206,13 +191,7 @@ li {
         //? Boutons login et subscribe
         & button {
             margin: 2rem auto;
-            padding: 1rem 2rem;
             font-size: v.$font-xsmall;
-
-            &:hover {
-                // background: v.$color;
-                // color: v.$color-darkest;
-            }
         }
     }
 }
