@@ -77,6 +77,7 @@ function Signin() {
     }
   };
 
+  //! Fonction pour l'envoie du formulaire
   const handleSubmit = (event) => {
     event.preventDefault();
     // Utilisez la valeur `checked` comme nécessaire lors de la soumission du formulaire
