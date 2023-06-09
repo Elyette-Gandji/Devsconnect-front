@@ -1,12 +1,14 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 function LinksComponent() {
   return (
     <ul className="Header--ul">
       <li className="Header--ul--createProject"> Créer mon projet</li>
-      <li className="Header--ul--profiles">Les profils</li>
+      <li className="Header--ul--profiles">
+        <NavLink to="/users">Les profils</NavLink>
+      </li>
       <li className="Header--ul--project">
-        <Link to="/projects">Les projets</Link>
+        <NavLink to="/projects">Les projets</NavLink>
       </li>
     </ul>
   );

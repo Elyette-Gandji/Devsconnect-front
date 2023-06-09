@@ -10,6 +10,14 @@
 //? Liens
 li {
     list-style: none;
+    & a.active::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 2px;
+        border-radius: 1rem;
+        background: #17988d;
+    }
 }
 //? Boutons login et subscribe
 .Header--connect {
