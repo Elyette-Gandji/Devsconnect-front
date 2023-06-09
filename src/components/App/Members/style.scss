@@ -1,0 +1,139 @@
+@use '../../../styles/variables' as v;
+@use '../../../styles/mixins' as m; // @include pour utiliser
+
+.Members {
+    flex-grow: 1;
+    &--containerCard {
+        padding: 2rem;
+        max-width: 120rem;
+        display: grid;
+        gap: 2rem;
+        justify-items: center;
+    }
+    & h2 {
+        padding: v.$font-small;
+        font-size: v.$font-large;
+        text-align: center;
+    }
+    @media screen and (min-width: v.$mq-large) {
+        &--containerCard {
+            grid-template-columns: repeat(2, 1fr);
+            margin: v.$font-medium auto;
+        }
+        & h2 {
+            padding: v.$font-small;
+            font-size: v.$font-large;
+        }
+    }
+    @media screen and (max-width: v.$mq-large) {
+        &--containerCard {
+            grid-template-columns: repeat(2, 1fr);
+            margin: v.$font-medium auto;
+        }
+        & h2 {
+            padding: v.$font-small;
+            font-size: v.$font-large;
+        }
+    }
+    @media screen and (max-width: v.$mq-medium) {
+        font-size: v.$font-small;
+        &--containerCard {
+            grid-template-columns: repeat(1, 1fr);
+            margin: v.$font-xsmall auto;
+        }
+        & h2 {
+            padding: v.$font-xsmall;
+            font-size: v.$font-large;
+        }
+    }
+    @media screen and (max-width: v.$mq-small) {
+        font-size: v.$font-xsmall;
+        &--containerCard {
+            grid-template-columns: repeat(1, 1fr);
+            margin: v.$font-xsmall auto;
+        }
+        & h2 {
+            padding: v.$font-small;
+            font-size: v.$font-large;
+        }
+    }
+    @media screen and (max-width: v.$mq-xsmall) {
+        font-size: v.$font-xsmall;
+        &--containerCard {
+            grid-template-columns: repeat(1, 1fr);
+            margin: v.$font-xsmall auto;
+        }
+        & h2 {
+            padding: v.$font-small;
+            font-size: v.$font-large;
+        }
+    }
+}
+.CardMember {
+    &--card {
+        margin: 0 auto;
+        // width: 90%;
+        height: auto;
+        border: 2px solid black;
+        &--header {
+            display: flex;
+            justify-content: space-between;
+            padding: v.$font-small;
+
+            border-bottom: 1px solid black;
+            &--text {
+                & h3 {
+                    font-size: v.$font-medium;
+                    font-weight: 700;
+                }
+                & p {
+                    font-size: v.$font-xsmall;
+                    font-weight: 700;
+                    &.open {
+                        color: green;
+                    }
+                    &.close {
+                        color: red;
+                    }
+                }
+            }
+            & img {
+                width: v.$font-xlarge + 2rem;
+                height: v.$font-xlarge + 2rem;
+            }
+        }
+        &--body {
+            padding: v.$font-small;
+
+            &--text {
+                text-align: justify;
+                & p {
+                    font-size: v.$font-xsmall;
+                    font-weight: 700;
+                }
+            }
+            &--technos {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                padding: v.$font-xsmall;
+                & img {
+                    width: 30px;
+                    height: 30px;
+                }
+            }
+        }
+        &--footer {
+            padding: v.$font-small;
+
+            & p {
+                font-size: v.$font-small;
+                font-weight: 700;
+                text-decoration: underline;
+            }
+            & ul {
+                font-size: v.$font-small;
+            }
+        }
+    }
+}

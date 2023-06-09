@@ -178,7 +178,7 @@ function Signin() {
                       selectedTechnos.includes('css') ? 'selected' : ''
                     }`}
                   >
-                    <img src="/images/technos/css.svg" alt="css" />
+                    {/* <img src="/images/technos/css.svg" alt="css" /> */}
                   </div>
                 </div>
                 <div className="Signin--inputCheckbox">

@@ -16,7 +16,7 @@
     &--container {
         position: relative; // Pour positionner le bouton close en absolute
         height: 100vh; // Prend toute la hauteur de l'écran
-        background: rgba(v.$color-darkest, 0.7); // Effet de transparence
+        background: rgba(v.$color-darkest, 0.8); // Effet de transparence
     }
     //? Titre
     & h2 {
