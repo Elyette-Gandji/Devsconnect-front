@@ -1,0 +1,58 @@
+export const list = [
+  {
+    id: 1,
+    title: 'titre 1',
+    description: 'description 1',
+    technos: 'react',
+    open: 'fermé aux candidats',
+  },
+  {
+    id: 2,
+    title: 'titre 2',
+    description: 'description 2',
+    technos: 'nodejs',
+    open: 'fermé aux candidats',
+  },
+  {
+    id: 3,
+    title: 'titre 3',
+    description: 'description 3',
+    technos: 'sql',
+    open: 'ouvert aux candidats',
+  },
+  {
+    id: 4,
+    title: 'titre 4',
+    description: 'description 4',
+    technos: 'css',
+    open: 'fermé aux candidats',
+  },
+  {
+    id: 5,
+    title: 'titre 5',
+    description: 'description 5',
+    technos: 'javascript',
+    open: 'ouvert aux candidat',
+  },
+  {
+    id: 6,
+    title: 'titre 6',
+    description: 'description 6',
+    technos: 'nocode',
+    open: 'ouvert aux candidats',
+  },
+  {
+    id: 7,
+    title: 'titre 7',
+    description: 'description 7',
+    technos: 'react',
+    open: 'ouvert aux candidats',
+  },
+  {
+    id: 8,
+    title: 'titre 8',
+    description: 'description 8',
+    technos: 'vuejs',
+    open: 'ouvert aux candidats',
+  },
+];
