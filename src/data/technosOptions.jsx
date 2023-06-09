@@ -1,5 +1,6 @@
 /* eslint-disable import/no-absolute-path */
 /* eslint-disable global-require */
+// ? Données pour le select des technos dans la barre de filtres membres et projets
 
 import html from '/images/technos/html.svg';
 import css from '/images/technos/css.svg';
