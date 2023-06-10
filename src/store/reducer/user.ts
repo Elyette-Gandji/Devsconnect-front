@@ -38,7 +38,7 @@ export const loginUser = createAsyncThunk(
       // ! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
       const objData = Object.fromEntries(formData);
 
-      const { data } = await axiosInstance.post('/api/users', objData);
+      const { data } = await axiosInstance.post('/api/users/login', objData);
       // ! A la connexion, j'ajoute le token à mon instance Axios
       // axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.token}`;
 

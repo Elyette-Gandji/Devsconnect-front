@@ -85,7 +85,7 @@
         &--body {
             padding: v.$font-small;
             &--text {
-                overflow: scroll;
+                overflow: auto;
                 text-align: justify;
                 & p {
                     font-size: v.$font-xsmall;
