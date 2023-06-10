@@ -35,6 +35,7 @@ function Members() {
         {members.map((member) => (
           <CardMember key={member.id} member={member} />
         ))}
+
       </div>
     </div>
   );
