@@ -6,7 +6,7 @@ import Select from 'react-select';
 import { Switch } from '@mui/material';
 
 // Datas
-import technosOptions from '../../../../data/technosOptions';
+import { technos } from '../../../../data/technosPath';
 // Styles
 import './style.scss';
 
@@ -34,14 +34,14 @@ function FilterBar() {
   //* Elle est appelée pour chaque option et recoit en paramètre un objet avec les propriétés label, value et icon
   //* Elle filtre le tableau de technos sélectionnées et si l'option est présente, elle n'affiche que le label et disparait de la liste déroulante.
   //* Sinon, elle affiche le label et l'icône (dans la liste déroulante).
-  const formatOptionLabel = ({ label, value, icon }) => {
+  const formatOptionLabel = ({ label, value, path }) => {
     if (selectedTechnos.some((option) => option.value === value)) {
-      return label; // Afficher uniquement le label sans l'icône
+      return label; // Afficher uniquement le value sans l'icône
     }
     return (
       <div>
-        {icon}
-        {label}
+        <img src={path} alt={value} width="20px" height="20px" />
+        {value}
       </div>
     );
   };
@@ -54,7 +54,7 @@ function FilterBar() {
           id="selectTechnos"
           isMulti // Choix multiple
           name="technos"
-          options={technosOptions} // Tableau des technos (importé de data/technosOptions)
+          options={technos} // Tableau des technos (importé de data/technosOptions)
           className="FilterBar--firstField--select"
           maxMenuHeight={280} // Hauteur du menu déroulant (1 technos = 40px * 7 = 280px)
           placeholder="5 maximum"

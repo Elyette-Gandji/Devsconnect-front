@@ -4,12 +4,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import mainReducer from './reducer/main';
 import userReducer from './reducer/user';
 import logReducer from './reducer/log';
+import membersReducer from './reducer/members';
 
 const store = configureStore({
   reducer: {
     main: mainReducer,
     user: userReducer,
     log: logReducer,
+    members: membersReducer,
   },
 });
 

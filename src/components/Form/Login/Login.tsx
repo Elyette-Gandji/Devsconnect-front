@@ -5,7 +5,7 @@ import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
 // Actions du reducer
 import { toggleModalLogin } from '../../../store/reducer/log';
-import { loginUser, logout } from '../../../store/reducer/user';
+import { loginUser } from '../../../store/reducer/user';
 
 // Composants
 import Input from '../Input';

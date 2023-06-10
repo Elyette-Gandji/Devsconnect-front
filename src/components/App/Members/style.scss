@@ -4,67 +4,60 @@
 .Members {
     flex-grow: 1;
     &--containerCard {
-        padding: 2rem;
-        max-width: 120rem;
+        max-width: 150rem;
         display: grid;
-        gap: 2rem;
         justify-items: center;
     }
     & h2 {
-        padding: v.$font-small;
-        font-size: v.$font-large;
         text-align: center;
     }
-    @media screen and (min-width: v.$mq-large) {
+    @media screen and (min-width: v.$mq-xlarge) {
         &--containerCard {
-            grid-template-columns: repeat(2, 1fr);
-            margin: v.$font-medium auto;
+            grid-template-columns: repeat(3, 1fr);
+            margin: 0 auto;
+            gap: v.$font-medium;
+            padding: v.$font-xsmall;
         }
         & h2 {
-            padding: v.$font-small;
-            font-size: v.$font-large;
+            padding: v.$font-xsmall;
+            font-size: v.$font-xxlarge;
+        }
+    }
+    @media screen and (max-width: v.$mq-xlarge) {
+        &--containerCard {
+            grid-template-columns: repeat(2, 1fr);
+            margin: 0 auto;
+            gap: v.$font-medium;
+            padding: v.$font-xsmall;
+        }
+        & h2 {
+            padding: v.$font-xsmall;
+            font-size: v.$font-xxlarge;
         }
     }
     @media screen and (max-width: v.$mq-large) {
         &--containerCard {
             grid-template-columns: repeat(2, 1fr);
-            margin: v.$font-medium auto;
-        }
-        & h2 {
-            padding: v.$font-small;
-            font-size: v.$font-large;
-        }
-    }
-    @media screen and (max-width: v.$mq-medium) {
-        font-size: v.$font-small;
-        &--containerCard {
-            grid-template-columns: repeat(1, 1fr);
-            margin: v.$font-xsmall auto;
+            margin: 0 auto;
+            gap: v.$font-medium;
+            padding: v.$font-xsmall;
         }
         & h2 {
             padding: v.$font-xsmall;
-            font-size: v.$font-large;
+            font-size: v.$font-xlarge;
+        }
+    }
+    @media screen and (max-width: v.$mq-medium) {
+        &--containerCard {
+            grid-template-columns: repeat(1, 1fr);
+            gap: v.$font-small;
         }
     }
     @media screen and (max-width: v.$mq-small) {
-        font-size: v.$font-xsmall;
         &--containerCard {
-            grid-template-columns: repeat(1, 1fr);
-            margin: v.$font-xsmall auto;
+            gap: v.$font-xsmall;
         }
         & h2 {
-            padding: v.$font-small;
-            font-size: v.$font-large;
-        }
-    }
-    @media screen and (max-width: v.$mq-xsmall) {
-        font-size: v.$font-xsmall;
-        &--containerCard {
-            grid-template-columns: repeat(1, 1fr);
-            margin: v.$font-xsmall auto;
-        }
-        & h2 {
-            padding: v.$font-small;
             font-size: v.$font-large;
         }
     }
@@ -72,23 +65,14 @@
 .CardMember {
     &--card {
         margin: 0 auto;
-        // width: 90%;
         height: auto;
         border: 2px solid black;
         &--header {
             display: flex;
             justify-content: space-between;
-            padding: v.$font-small;
-
             border-bottom: 1px solid black;
             &--text {
-                & h3 {
-                    font-size: v.$font-medium;
-                    font-weight: 700;
-                }
                 & p {
-                    font-size: v.$font-xsmall;
-                    font-weight: 700;
                     &.open {
                         color: green;
                     }
@@ -97,42 +81,195 @@
                     }
                 }
             }
-            & img {
-                width: v.$font-xlarge + 2rem;
-                height: v.$font-xlarge + 2rem;
-            }
         }
         &--body {
             padding: v.$font-small;
-
             &--text {
+                overflow: auto;
                 text-align: justify;
                 & p {
                     font-size: v.$font-xsmall;
-                    font-weight: 700;
                 }
             }
             &--technos {
                 display: flex;
-                justify-content: space-around;
+                justify-content: left;
                 align-items: center;
-                padding: v.$font-xsmall;
-                & img {
-                    width: 30px;
-                    height: 30px;
-                }
             }
         }
         &--footer {
             padding: v.$font-small;
-
             & p {
                 font-size: v.$font-small;
                 font-weight: 700;
                 text-decoration: underline;
             }
             & ul {
+                & li {
+                    white-space: nowrap; //* Empêche le retour à la ligne
+                    overflow: hidden; //* Cache le contenu dépassant du cadre
+                    text-overflow: ellipsis; //* Ajoute des points de suspension
+                }
+            }
+        }
+        @media screen and (min-width: v.$mq-large) {
+            width: 95%;
+            & p,
+            & li {
+                font-size: v.$font-medium;
+            }
+            & h4 {
+                font-size: v.$font-large;
+            }
+            &--header {
+                padding: v.$font-medium;
+                &--text {
+                    & h3 {
+                        font-size: v.$font-xlarge;
+                    }
+                    & p {
+                        font-weight: 700;
+                    }
+                }
+                & img {
+                    width: v.$font-xlarge + 6rem;
+                    height: v.$font-xlarge + 6rem;
+                }
+            }
+            &--body {
+                padding: v.$font-medium;
+                &--text {
+                    max-height: 20rem;
+                }
+                &--technos {
+                    padding-top: v.$font-medium;
+                    & img {
+                        margin-right: v.$font-large;
+                        width: 6rem;
+                        height: 6rem;
+                    }
+                }
+            }
+            &--footer {
+                padding: 0 v.$font-medium v.$font-medium;
+            }
+        }
+        @media screen and (max-width: v.$mq-large) {
+            width: 95%;
+            & p,
+            & li,
+            & h4 {
+                font-size: v.$font-medium;
+            }
+
+            &--header {
+                padding: v.$font-medium;
+                &--text {
+                    & h3 {
+                        font-size: v.$font-large;
+                    }
+                    & p {
+                        font-weight: 700;
+                    }
+                }
+                & img {
+                    width: v.$font-xlarge + 4rem;
+                    height: v.$font-xlarge + 4rem;
+                }
+            }
+            &--body {
+                padding: v.$font-medium;
+                &--text {
+                    max-height: 20rem;
+                }
+                &--technos {
+                    padding-top: v.$font-medium;
+                    & img {
+                        margin-right: v.$font-medium;
+                        width: 5rem;
+                        height: 5rem;
+                    }
+                }
+            }
+            &--footer {
+                padding: 0 v.$font-medium v.$font-medium;
+            }
+        }
+        @media screen and (max-width: v.$mq-medium) {
+            width: 85%;
+
+            &--header {
+                & img {
+                    width: v.$font-xlarge + 3rem;
+                    height: v.$font-xlarge + 3rem;
+                }
+            }
+            &--body {
+                padding: v.$font-small v.$font-medium 0;
+                &--text {
+                    max-height: 12rem;
+                }
+                &--technos {
+                    padding-top: v.$font-small;
+                    & img {
+                        width: 4rem;
+                        height: 4rem;
+                    }
+                }
+            }
+            &--footer {
+                padding: v.$font-medium;
+            }
+        }
+        @media screen and (max-width: v.$mq-small) {
+            width: 100%;
+            & p,
+            & li {
                 font-size: v.$font-small;
+            }
+
+            &--header {
+                padding: v.$font-small;
+                &--text {
+                    & h3 {
+                        font-size: v.$font-medium;
+                    }
+                }
+                & img {
+                    width: v.$font-xlarge + 2rem;
+                    height: v.$font-xlarge + 2rem;
+                }
+            }
+            &--body {
+                padding: v.$font-xsmall v.$font-xsmall 0;
+                &--technos {
+                    & img {
+                        width: 3rem;
+                        height: 3rem;
+                    }
+                }
+            }
+            &--footer {
+                padding: v.$font-xsmall;
+            }
+        }
+        @media screen and (max-width: v.$mq-xsmall) {
+            font-size: v.$font-xsmall;
+            &--body {
+                padding: v.$font-small;
+
+                &--text {
+                    max-height: 10rem;
+                }
+                &--technos {
+                    & img {
+                        width: 2rem;
+                        height: 2rem;
+                    }
+                }
+            }
+            &--footer {
+                display: none;
             }
         }
     }

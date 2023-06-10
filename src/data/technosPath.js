@@ -1,4 +1,4 @@
-const technosPath = {
+export const technosPath = {
   html: '/images/technos/html.svg',
   css: '/images/technos/css.svg',
   javascript: '/images/technos/javascript.svg',
@@ -17,4 +17,101 @@ const technosPath = {
   vuejs: '/images/technos/vuejs.svg',
 };
 
-export default technosPath;
+export const technos = [
+  {
+    id: 'html',
+    label: 'html',
+    value: 'html',
+    path: technosPath.html,
+  },
+  {
+    id: 'css',
+    label: 'css',
+    value: 'css',
+    path: technosPath.css,
+  },
+  {
+    id: 'javascript',
+    label: 'javascript',
+    value: 'javascript',
+    path: technosPath.javascript,
+  },
+  {
+    id: 'react',
+    label: 'react',
+    value: 'react',
+    path: technosPath.react,
+  },
+  {
+    id: 'ejs',
+    label: 'ejs',
+    value: 'ejs',
+    path: technosPath.ejs,
+  },
+  {
+    id: 'github',
+    label: 'github',
+    value: 'github',
+    path: technosPath.github,
+  },
+  {
+    id: 'graphql',
+    label: 'graphql',
+    value: 'graphql',
+    path: technosPath.graphql,
+  },
+  {
+    id: 'insomnia',
+    label: 'insomnia',
+    value: 'insomnia',
+    path: technosPath.insomnia,
+  },
+  {
+    id: 'nodejs',
+    label: 'nodejs',
+    value: 'nodejs',
+    path: technosPath.nodejs,
+  },
+  {
+    id: 'postgresql',
+    label: 'postgresql',
+    value: 'postgresql',
+    path: technosPath.postgresql,
+  },
+  {
+    id: 'redux',
+    label: 'redux',
+    value: 'redux',
+    path: technosPath.redux,
+  },
+  {
+    id: 'sequelize',
+    label: 'sequelize',
+    value: 'sequelize',
+    path: technosPath.sequelize,
+  },
+  {
+    id: 'strapi',
+    label: 'strapi',
+    value: 'strapi',
+    path: technosPath.strapi,
+  },
+  {
+    id: 'typescript',
+    label: 'typescript',
+    value: 'typescript',
+    path: technosPath.typescript,
+  },
+  {
+    id: 'vite',
+    label: 'vite',
+    value: 'vite',
+    path: technosPath.vite,
+  },
+  {
+    id: 'vuejs',
+    label: 'vuejs',
+    value: 'vuejs',
+    path: technosPath.vuejs,
+  },
+];

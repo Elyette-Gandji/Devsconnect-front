@@ -38,7 +38,7 @@ export const loginUser = createAsyncThunk(
       // ! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
       const objData = Object.fromEntries(formData);
 
-      const { data } = await axiosInstance.post('/api/users', objData);
+      const { data } = await axiosInstance.post('/api/users/login', objData);
       // ! A la connexion, j'ajoute le token à mon instance Axios
       // axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.token}`;
 
@@ -53,6 +53,27 @@ export const loginUser = createAsyncThunk(
     } catch (error) {
       // Gérez les erreurs potentielles ici
       console.error('Error during login:', error);
+      throw error;
+    }
+  }
+);
+
+export const signinUser = createAsyncThunk(
+  'user/signinUser',
+  async (formData: FormData) => {
+    try {
+      // ! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
+      const objData = Object.fromEntries(formData);
+
+      const { data } = await axiosInstance.post('/api/users', objData);
+      console.log(data);
+      // ? On retourne le state
+      return data as {
+        status: string;
+      };
+    } catch (error) {
+      // Gérez les erreurs potentielles ici
+      console.error('Error during signin:', error);
       throw error;
     }
   }
@@ -90,6 +111,30 @@ const userReducer = createReducer(initialState, (builder) => {
         children: `Bienvenue ${pseudo} !`,
       };
     })
+    //* Cas de l'inscription en cours
+    .addCase(signinUser.pending, (state) => {
+      state.message = null;
+    })
+
+    //* Cas de l'inscription échouée
+    .addCase(signinUser.rejected, (state, action) => {
+      state.message = {
+        type: 'error',
+        children: action.error.code || 'UNKNOWN_ERROR',
+        duration: 5000,
+      };
+    })
+
+    //* Cas de l'inscription réussie
+    .addCase(signinUser.fulfilled, (state, action) => {
+      const { status } = action.payload;
+      state.message = {
+        type: 'success',
+        children: status,
+      };
+    })
+
+    //* Cas de la déconnexion
     .addCase(logout, (state) => {
       state.logged = false;
       state.pseudo = null;
