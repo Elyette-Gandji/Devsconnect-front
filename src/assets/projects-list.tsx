@@ -3,7 +3,7 @@ export const list = [
     id: 1,
     title: 'titre 1',
     description: 'description 1',
-    technos: 'react',
+    technos: <img src="react.svg" />,
     open: 'fermé aux candidats',
   },
   {

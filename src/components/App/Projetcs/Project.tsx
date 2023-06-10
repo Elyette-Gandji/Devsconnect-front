@@ -1,8 +1,9 @@
 import './style.scss';
+import { Link } from 'react-router-dom';
 
 function Project({ project }) {
   return (
-    <div className="project">
+    <Link to={`/projects/${project.id}`} className="project">
       <div className="project-title">
         <h1>{project.title}</h1>
       </div>
@@ -15,7 +16,7 @@ function Project({ project }) {
           <p>{project.open} </p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

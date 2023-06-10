@@ -1,15 +1,43 @@
 .projects-flex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    justify-items: center;
+    gap: 1rem;
     padding: 1rem 3rem;
-    gap: 2rem;
 }
 
 .project {
     border: 1px solid black;
-    height: 300px;
-    width: 300px;
     border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-title {
+    text-align: left;
+    padding: 1rem;
+}
+
+.project-description {
+    padding: 1rem;
+}
+
+.project-description p {
+    margin-bottom: 0.5rem;
+}
+
+.project-technos {
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 1000px) {
+    .projects-flex {
+        grid-template-columns: repeat(auto-fit, minmax(40vw, 1fr));
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .projects-flex {
+        grid-template-columns: repeat(auto-fit, minmax(90vw, 1fr));
+    }
 }
