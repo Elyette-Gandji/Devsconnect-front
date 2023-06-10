@@ -1,6 +1,5 @@
 // ? Librairies
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, NavLink } from 'react-router-dom';
 
 // ? Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
 import { Switch } from '@mui/material';
@@ -36,9 +35,6 @@ function Signin() {
 
   // ! Dispatch
   const dispatch = useAppDispatch();
-
-  //! Navigate
-  const navigate = useNavigate();
 
   //! useEffect pour clic externe à la modale
   useEffect(() => {
@@ -101,7 +97,6 @@ function Signin() {
     dispatch(signinUser(formData));
     dispatch(toggleModalSignin());
     dispatch(toggleModalLogin());
-    // navigate('/');
   };
 
   return (
