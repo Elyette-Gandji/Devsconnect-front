@@ -1,0 +1,139 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m; // @include pour utiliser
+
+.OneMember {
+    flex-grow: 1;
+}
+
+.ProjectCard {
+    border: 2px solid black;
+    &--firstField {
+        &--title {
+        }
+        &--technos {
+            display: flex;
+            justify-content: space-around;
+        }
+    }
+    &--secondField {
+        &--description {
+            overflow: auto;
+            text-align: justify;
+        }
+    }
+
+    @media screen and (min-width: v.$mq-large) {
+        display: flex;
+        flex-direction: row;
+        margin: v.$font-xsmall auto;
+        padding: v.$font-xsmall v.$font-xsmall v.$font-xsmall 0;
+        width: 85%;
+        &--firstField {
+            width: 30%;
+            &--title {
+                padding: 0 v.$font-xsmall;
+                font-size: v.$font-medium;
+            }
+            &--technos {
+                display: grid;
+                justify-items: center;
+                grid-template-columns: repeat(2, 1fr);
+                margin: v.$font-xsmall auto;
+                gap: v.$font-small;
+                & img {
+                    width: v.$font-xlarge;
+                    height: v.$font-xlarge;
+                }
+            }
+        }
+        &--secondField {
+            width: 70%;
+            &--description {
+                max-height: 17rem;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-large) {
+        display: flex;
+        flex-direction: row;
+        margin: v.$font-xsmall auto;
+        padding: v.$font-xsmall v.$font-xsmall v.$font-xsmall 0;
+        width: 85%;
+        &--firstField {
+            width: 30%;
+            &--title {
+                padding: 0 v.$font-xsmall;
+                font-size: v.$font-medium;
+            }
+            &--technos {
+                display: grid;
+                justify-items: center;
+                grid-template-columns: repeat(2, 1fr);
+                margin: v.$font-xsmall auto;
+                gap: v.$font-small;
+                & img {
+                    width: v.$font-xlarge;
+                    height: v.$font-xlarge;
+                }
+            }
+        }
+        &--secondField {
+            width: 70%;
+            &--description {
+                max-height: 17rem;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-medium) {
+        display: flex;
+        flex-direction: column;
+        padding: v.$font-xsmall;
+        width: 95%;
+        font-size: v.$font-small;
+        &--firstField {
+            width: 100%;
+            &--title {
+                font-size: v.$font-small;
+            }
+            &--technos {
+                display: flex;
+                padding: v.$font-xsmall;
+                & img {
+                    width: v.$font-large;
+                    height: v.$font-large;
+                }
+            }
+        }
+        &--secondField {
+            width: 100%;
+            &--description {
+                max-height: 13rem;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-small) {
+        margin: v.$font-xxsmall auto;
+        padding: v.$font-xxsmall;
+        font-size: v.$font-xsmall;
+        &--firstField {
+            &--technos {
+                & img {
+                    width: v.$font-medium;
+                    height: v.$font-medium;
+                }
+            }
+        }
+        &--secondField {
+            &--description {
+                max-height: 10rem;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-xsmall) {
+        &--firstField {
+            &--technos {
+                padding: v.$font-xxsmall;
+            }
+        }
+    }
+}

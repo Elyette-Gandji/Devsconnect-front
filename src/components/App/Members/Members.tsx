@@ -1,5 +1,6 @@
 // Librairies
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
 // Fonctions asynchrones
@@ -9,6 +10,7 @@ import { fetchAllMembers } from '../../../store/reducer/members';
 import FilterBar from '../Layout/FilterBar/FilterBar';
 import CardMember from './CardMember';
 import './style.scss';
+import OneMember from './OneMember/OneMember';
 
 function Members() {
   const dispatch = useAppDispatch();
@@ -33,9 +35,11 @@ function Members() {
       <h2>Tous les membres</h2>
       <div className="Members--containerCard">
         {members.map((member) => (
-          <CardMember key={member.id} member={member} />
+          // <Link to={`/members/${member.id}`} key={member.id}>
+          <Link to="/member" key="">
+            <CardMember key={member.id} member={member} />
+          </Link>
         ))}
-
       </div>
     </div>
   );

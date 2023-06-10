@@ -33,6 +33,7 @@ function CardMember({ member }: { member: {} }) {
         </div>
         <div className="CardMember--card--footer">
           <h4>Projets :</h4>
+          {/* //! On map dessus en dur et limite à 3 l'affichage */}
           <ul className="CardMember--card--footer--list">
             <li>Projet 1 : Lorem ipsum dolor sit amet.</li>
             <li>Projet 2 : Amet consectetur adipisicing elit.</li>

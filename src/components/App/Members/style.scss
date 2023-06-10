@@ -4,7 +4,6 @@
 .Members {
     flex-grow: 1;
     &--containerCard {
-        max-width: 150rem;
         display: grid;
         justify-items: center;
     }
@@ -15,6 +14,7 @@
         &--containerCard {
             grid-template-columns: repeat(3, 1fr);
             margin: 0 auto;
+            max-width: 140rem;
             gap: v.$font-medium;
             padding: v.$font-xsmall;
         }
@@ -27,6 +27,7 @@
         &--containerCard {
             grid-template-columns: repeat(2, 1fr);
             margin: 0 auto;
+            max-width: 110rem;
             gap: v.$font-medium;
             padding: v.$font-xsmall;
         }
@@ -39,6 +40,7 @@
         &--containerCard {
             grid-template-columns: repeat(2, 1fr);
             margin: 0 auto;
+            max-width: 75rem;
             gap: v.$font-medium;
             padding: v.$font-xsmall;
         }
@@ -65,7 +67,6 @@
 .CardMember {
     &--card {
         margin: 0 auto;
-        height: auto;
         border: 2px solid black;
         &--header {
             display: flex;
@@ -113,7 +114,9 @@
             }
         }
         @media screen and (min-width: v.$mq-large) {
-            width: 95%;
+            width: 45rem;
+            height: 60rem;
+
             & p,
             & li {
                 font-size: v.$font-medium;
@@ -155,7 +158,8 @@
             }
         }
         @media screen and (max-width: v.$mq-large) {
-            width: 95%;
+            width: 35rem;
+            height: 56rem;
             & p,
             & li,
             & h4 {
@@ -166,7 +170,7 @@
                 padding: v.$font-medium;
                 &--text {
                     & h3 {
-                        font-size: v.$font-large;
+                        font-size: v.$font-medium;
                     }
                     & p {
                         font-weight: 700;
@@ -196,8 +200,8 @@
             }
         }
         @media screen and (max-width: v.$mq-medium) {
-            width: 85%;
-
+            width: 40rem;
+            height: 45rem;
             &--header {
                 & img {
                     width: v.$font-xlarge + 3rem;
@@ -222,7 +226,8 @@
             }
         }
         @media screen and (max-width: v.$mq-small) {
-            width: 100%;
+            width: 30rem;
+            height: 39rem;
             & p,
             & li {
                 font-size: v.$font-small;
@@ -254,7 +259,19 @@
             }
         }
         @media screen and (max-width: v.$mq-xsmall) {
-            font-size: v.$font-xsmall;
+            width: 22rem;
+            height: 28rem;
+            & p,
+            & li {
+                font-size: v.$font-xsmall;
+            }
+            &--header {
+                &--text {
+                    & h3 {
+                        font-size: v.$font-small;
+                    }
+                }
+            }
             &--body {
                 padding: v.$font-small;
 
