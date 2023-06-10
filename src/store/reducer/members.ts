@@ -47,7 +47,6 @@ const membersReducer = createReducer(initialState, (builder) => {
       // ? On modifie le state
       state.list.data = action.payload.data;
       state.list.loading = false; // Définir l'état de chargement sur false
-      console.log('state:', state.list.data);
     })
     //* Cas de la connexion échouée
     .addCase(fetchAllMembers.rejected, (state, action) => {

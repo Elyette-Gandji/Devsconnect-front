@@ -1,7 +1,7 @@
 import './style.scss';
 import { technos } from '../../../data/technosPath';
 
-function CardMember({ member, key }: { member: {}; key: number }) {
+function CardMember({ member }: { member: {} }) {
   // On récupère les données de member et key depuis Members.tsx {
   return (
     <div className="CardMember">

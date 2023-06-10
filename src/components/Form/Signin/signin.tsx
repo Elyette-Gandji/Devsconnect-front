@@ -1,33 +1,46 @@
+// ? Librairies
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate, NavLink } from 'react-router-dom';
 
-// Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
+// ? Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
 import { Switch } from '@mui/material';
-import { useAppDispatch } from '../../../hook/redux';
+import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
-// Actions du reducer
-import { toggleModalSignin } from '../../../store/reducer/log';
+// ? Actions du reducer
+import {
+  toggleModalLogin,
+  toggleModalSignin,
+} from '../../../store/reducer/log';
+import { signinUser } from '../../../store/reducer/user';
 
-// Composants
+// ? Composants
 import Input from '../Input';
+import FlashMessage from '../FlashMessage/FlashMessage';
 
-// Data
+// ? Data
 import { technos } from '../../../data/technosPath'; // Pour le choix des technos
 
 // Styles
 import './style.scss';
 
 function Signin() {
-  // State pour la selection des technos
+  const flash = useAppSelector((state) => state.user.message);
 
+  // State pour la selection des technos
   const [selectedTechnos, setSelectedTechnos] = useState([]);
   // State pour le check de open to work
   const [checked, setChecked] = useState(false);
 
+  //! Ref pour la modale
   const modalRef = useRef(null);
 
-  // Dispatch
+  // ! Dispatch
   const dispatch = useAppDispatch();
 
+  //! Navigate
+  const navigate = useNavigate();
+
+  //! useEffect pour clic externe à la modale
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -43,6 +56,21 @@ function Signin() {
     };
   }, []);
 
+  //! Fonction pour fermer la modale avec la croix
+  const handleSignin = () => {
+    // On dispatch l'action qui va gérer l'ouverture de la modale
+    dispatch(toggleModalSignin());
+  };
+  // * Une div n'est pas un element clickable
+  // * Fonction d’accessibilité pour le clavier.
+  // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
+  const handleSigninKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'enter' || event.key === ' ') {
+      handleSignin();
+    }
+  };
+
+  //! Fonction pour la selection des technos
   const handleImageClick = (imageId) => {
     if (selectedTechnos.includes(imageId)) {
       setSelectedTechnos(selectedTechnos.filter((id) => id !== imageId));
@@ -64,51 +92,16 @@ function Signin() {
     setChecked(!checked);
   };
 
-  //! Fonction pour la modale Signin
-  const handleSignin = () => {
-    // On dispatch l'action qui va gérer l'ouverture de la modale
-    dispatch(toggleModalSignin());
-  };
-
-  // * Une div n'est pas un element clickable
-  // * Fonction d’accessibilité pour le clavier.
-  // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
-  const handleSigninKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'enter' || event.key === ' ') {
-      handleSignin();
-    }
-  };
-
   //! Fonction pour l'envoie du formulaire
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Utilisez la valeur `checked` comme nécessaire lors de la soumission du formulaire
-    console.log('Valeur du bouton de commutation :', checked);
 
-    // Récupérer la valeur du champ CGU
-    const cguAccepted = event.target.cgu.checked;
-
-    // Préparez les données du formulaire
-    const formData = {
-      openToWork: checked,
-      firstname: event.target.firstname.value,
-      lastname: event.target.lastname.value,
-      pseudo: event.target.pseudo.value,
-      email: event.target.email.value,
-      password: event.target.password.value,
-      aboutMe: event.target.aboutMe.value,
-
-      // Récupérer la valeur du champ CGU
-      cguAccepted,
-      // Récupérer les technos sélectionnées
-      technos: selectedTechnos,
-    };
-
-    // Utilisez les données du formulaire comme nécessaire
-    console.log('Données du formulaire :', formData);
-
-    // Effectuez les actions nécessaires avec les données du formulaire
-    // Par exemple, vous pouvez réinitialiser le formulaire, afficher un message de confirmation, etc.
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    dispatch(signinUser(formData));
+    dispatch(toggleModalSignin());
+    dispatch(toggleModalLogin());
+    // navigate('/');
   };
 
   return (
@@ -129,17 +122,21 @@ function Signin() {
         <form onSubmit={handleSubmit} className="Signin--form">
           <fieldset className="Signin--field">
             <Input name="firstname" type="text" placeholder="Prénom" />
-            <Input name="lastname" type="text" placeholder="Nom" />
+            <Input name="name" type="text" placeholder="Nom" />
             <Input name="pseudo" type="text" placeholder="Pseudo" />
             <Input name="email" type="email" placeholder="Adresse Email" />
             <Input name="password" type="password" placeholder="Mot de passe" />
             <div className="Signin--openToWork">
               <p>Ouvert aux projets</p>
-              <Switch checked={checked} onChange={handleSwitch} />
+              <Switch
+                name="availability"
+                checked={checked}
+                onChange={handleSwitch}
+              />
             </div>
-            <label htmlFor="aboutMe" className="Signin--inputTextarea">
+            <label htmlFor="description" className="Signin--inputTextarea">
               A propos de moi
-              <textarea name="aboutMe" id="aboutMe" />
+              <textarea name="description" id="description" />
             </label>
           </fieldset>
 
@@ -181,7 +178,7 @@ function Signin() {
                 J&apos;accepte les CGU
                 <input
                   type="checkbox"
-                  required
+                  // required
                   id="cgu"
                   name="cgu"
                   value="cgu"
