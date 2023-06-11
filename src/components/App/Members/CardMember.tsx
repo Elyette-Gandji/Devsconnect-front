@@ -5,12 +5,17 @@ import './style.scss';
 import { technos } from '../../../data/technosPath';
 
 function CardMember({ member }: { member: {} }) {
+  //! variable pour verifier si la page est celle de l'utilisateur connecté
+  const profilePath =
+    // ? Verifier que le nom de l'utilisateur connecté est bien user
+    member.id === user.id ? `/monprofil` : `/users/${member.id}`;
+
   // On récupère les données de member et key depuis Members.tsx {
   return (
     <div className="CardMember">
       <section className="CardMember--card">
         {/* //? On utilise Link sur le header uniquement} */}
-        <Link to={`/users/${member.id}`} key={member.id}>
+        <Link to={profilePath} key={member.id}>
           <div className="CardMember--card--header">
             <div className="CardMember--card--header--text">
               <h3>
