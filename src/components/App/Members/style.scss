@@ -88,7 +88,9 @@
             display: flex; // Permet de mettre les éléments en ligne
             justify-content: space-between;
             border-bottom: 1px solid black; // Permet de mettre une bordure en bas de la carte
+
             &--text {
+                width: 74+5%;
                 & p {
                     //* Si membre ouvert aux projet, couleur verte, sinon rouge
                     &.open {
@@ -97,6 +99,11 @@
                     &.close {
                         color: red;
                     }
+                }
+                & h3 {
+                    white-space: nowrap; //* Empêche le retour à la ligne
+                    overflow: hidden; //* Cache le contenu dépassant du cadre
+                    text-overflow: ellipsis; //* Ajoute des points de suspension
                 }
             }
         }
