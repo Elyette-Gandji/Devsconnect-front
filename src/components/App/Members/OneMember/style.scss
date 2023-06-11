@@ -12,6 +12,9 @@
             color: v.$color;
             font-weight: 700;
         }
+        & button {
+            cursor: pointer;
+        }
         //? Disponibilité
         &--availability {
             font-weight: 700;
@@ -31,6 +34,24 @@
         }
     }
     @media screen and (min-width: v.$mq-large) {
+        //? Bouton retour
+        &--return {
+            width: 80%;
+            max-width: 100rem;
+            margin: v.$font-medium auto; // Pour centrer le container
+            & button {
+                padding: v.$font-xxsmall v.$font-large;
+                background: v.$color;
+                border-radius: v.$font-medium;
+                color: v.$color-darkest;
+                font-weight: 700;
+                cursor: pointer;
+                &:hover {
+                    background: v.$color-darkest;
+                    color: v.$color;
+                }
+            }
+        }
         width: 80%; // Largeur du container
         max-width: 100rem; // Largeur max du container
         margin: v.$font-medium auto; // Pour centrer le container
@@ -110,6 +131,24 @@
         }
     }
     @media screen and (max-width: v.$mq-large) {
+        //? Bouton retour
+        &--return {
+            width: 90%;
+            max-width: 75rem;
+            margin: v.$font-medium auto; // Pour centrer le container
+            & button {
+                padding: v.$font-xxsmall v.$font-medium;
+                background: v.$color;
+                border-radius: v.$font-medium;
+                color: v.$color-darkest;
+                font-weight: 700;
+                cursor: pointer;
+                &:hover {
+                    background: v.$color-darkest;
+                    color: v.$color;
+                }
+            }
+        }
         width: 90%; // Largeur du container
         max-width: 75rem; // Largeur max du container
         margin: v.$font-small auto; // Pour centrer le container
@@ -188,6 +227,13 @@
         }
     }
     @media screen and (max-width: v.$mq-medium) {
+        //? Bouton retour
+        &--return {
+            max-width: 50rem;
+            & button {
+                padding: 0.4rem v.$font-small;
+            }
+        }
         max-width: 50rem; // Largeur max du container
         padding: v.$font-small;
         //* Taille de la police
@@ -252,6 +298,13 @@
         }
     }
     @media screen and (max-width: v.$mq-small) {
+        //? Bouton retour
+        &--return {
+            max-width: 40rem;
+            & button {
+                padding: 0.2rem v.$font-small;
+            }
+        }
         max-width: 40rem; // Largeur max du container
         margin: v.$font-xsmall auto; // Pour centrer le container
         padding: v.$font-xsmall;
@@ -295,8 +348,14 @@
             }
         }
     }
-
     @media screen and (max-width: v.$mq-xsmall) {
+        //? Bouton retour
+        &--return {
+            max-width: 30rem;
+            & button {
+                padding: 0 v.$font-xsmall;
+            }
+        }
         width: 95%; // Largeur du container
         max-width: 30rem; // Largeur max du container
         margin: v.$font-xxsmall auto; // Pour centrer le container
