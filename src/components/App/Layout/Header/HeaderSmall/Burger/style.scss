@@ -4,7 +4,7 @@
 //? Container burger
 .burger {
     @include m.flex-center; // mixin pour flex
-    position: fixed;
+    position: absolute;
     top: 1.5rem;
     left: 1.5rem;
     z-index: 10; // pour être au dessus de tout, tout le temps

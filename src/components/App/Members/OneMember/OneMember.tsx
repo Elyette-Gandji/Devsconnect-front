@@ -57,15 +57,15 @@ function OneMember() {
             <h2 className="OneMember--firstField--title">
               {member.firstname} {member.name}
             </h2>
-            <button
-              href="mailto:"
-              type="button"
-              // value="Contactez-moi"
+
+            <a
+              href={`mailto:${member.email}`}
               className="OneMember--firstField--contact"
             >
               {' '}
               Me contacter
-            </button>
+            </a>
+
             <div className="OneMember--firstField--availability">
               <p className={member.availability ? 'open' : 'close'}>
                 {member.availability ? 'Disponible' : 'Indisponible'}
@@ -81,7 +81,10 @@ function OneMember() {
               >
                 {/* //! On importe toutes les données depuis data, on map dessus en dur et limite à 8 l'affichage */}
                 {technos.slice(0, 8).map((techno) => (
-                  <div key={techno.id}>
+                  <div
+                    className="OneMember--firstField--technos--technos--group"
+                    key={techno.id}
+                  >
                     <img
                       src={techno.path}
                       alt={techno.label}

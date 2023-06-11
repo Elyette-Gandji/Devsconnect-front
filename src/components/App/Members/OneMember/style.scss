@@ -9,11 +9,12 @@
         &--contact {
             border-radius: 2rem;
             background: #6558f7;
-            color: v.$color;
             font-weight: 700;
-        }
-        & button {
+            text-align: center;
             cursor: pointer;
+        }
+        a {
+            color: v.$color;
         }
         //? Disponibilité
         &--availability {
@@ -50,9 +51,9 @@
         margin: v.$font-medium auto; // Pour centrer le container
         padding: v.$font-small 0;
         //* Taille de la police
-        font-size: v.$font-medium;
+        font-size: v.$font-small;
         & h4 {
-            font-size: v.$font-large;
+            font-size: v.$font-medium;
         }
         //? firstField et secondField
         &--content {
@@ -82,9 +83,13 @@
             }
             //? Bouton contact
             &--contact {
-                display: block; // Pour centrer le bouton
+                display: block;
                 margin: v.$font-medium auto; // Pour centrer le bouton
                 padding: v.$font-small v.$font-xlarge;
+                width: 30%;
+                min-width: 18rem;
+                height: v.$font-xlarge;
+                line-height: v.$font-xsmall;
             }
             //? Technos
             &--technos {
@@ -94,19 +99,23 @@
                 //? Images des technos
                 &--technos {
                     display: grid; // Pour mettre les images en grille
-                    grid-template-columns: repeat(
-                        1,
-                        1fr 3fr
-                    ); // Pour mettre image et titre par colonne
+                    grid-template-columns: 2, 1fr 4fr;
+                    // Pour mettre image et titre par colonne
                     align-items: center; // Pour centrer les images et textes
                     gap: v.$font-large 0; // Pour espacer les images
                     //? Images des technos
-                    & img {
-                        width: v.$font-xxlarge;
-                        height: v.$font-xxlarge;
-                    }
-                    & p {
-                        font-weight: 700;
+                    &--group {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        gap: v.$font-small;
+                        & img {
+                            width: v.$font-xxlarge;
+                            height: v.$font-xxlarge;
+                        }
+                        & p {
+                            font-weight: 700;
+                        }
                     }
                 }
             }
@@ -178,31 +187,39 @@
             }
             //? Bouton contact
             &--contact {
-                display: block; // Pour centrer le bouton
+                display: block;
                 margin: v.$font-medium auto; // Pour centrer le bouton
                 padding: v.$font-small v.$font-xlarge;
+                width: 30%;
+                min-width: 18rem;
+                height: v.$font-xlarge;
+                line-height: v.$font-xsmall;
             }
             //? Technos
             &--technos {
                 & h4 {
-                    margin: v.$font-medium 0;
+                    margin: v.$font-medium 0 0 0;
                 }
                 //? Images des technos
                 &--technos {
                     display: grid; // Pour mettre les images en grille
-                    grid-template-columns: repeat(
-                        1,
-                        1fr 4fr
-                    ); // Pour mettre image et titre par colonne
+                    grid-template-columns: 2, 1fr 4fr;
+                    // Pour mettre image et titre par colonne
                     align-items: center; // Pour centrer les images et textes
                     gap: v.$font-large 0; // Pour espacer les images
                     //? Images des technos
-                    & img {
-                        width: v.$font-xlarge;
-                        height: v.$font-xlarge;
-                    }
-                    & p {
-                        font-weight: 700;
+                    &--group {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        gap: v.$font-small;
+                        & img {
+                            width: v.$font-xlarge;
+                            height: v.$font-xlarge;
+                        }
+                        & p {
+                            font-weight: 700;
+                        }
                     }
                 }
             }
@@ -259,7 +276,7 @@
             //? Bouton contact
             &--contact {
                 margin: v.$font-small auto; // Pour centrer le bouton
-                padding: v.$font-xsmall v.$font-medium;
+                min-width: 20rem;
             }
             //? Technos
             &--technos {
@@ -318,9 +335,11 @@
             }
             //? Bouton contact
             &--contact {
-                display: block; // Pour centrer le bouton
-                margin: v.$font-xsmall auto; // Pour centrer le bouton
-                padding: v.$font-xsmall v.$font-small;
+                margin: v.$font-xsmall auto;
+                width: 40%;
+                min-width: 15rem;
+                height: v.$font-large;
+                line-height: 0;
             }
             //? Technos
             &--technos {
@@ -353,12 +372,6 @@
         max-width: 30rem; // Largeur max du container
         margin: v.$font-xxsmall auto; // Pour centrer le container
         padding: v.$font-xxsmall;
-        &--firstField {
-            //? Bouton contact
-            &--contact {
-                padding: v.$font-xxsmall v.$font-xsmall;
-            }
-        }
     }
 }
 
