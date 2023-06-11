@@ -13,8 +13,8 @@ function Home() {
         </p>
         <p>
           Notre objectif est de faciliter la collaboration entre les
-          développeurs et de favoriser l'émergence de projets innovants.
-          Rejoignez notre communauté dès aujourd'hui et ouvrez la voie à de
+          développeurs et de favoriser l&apos;émergence de projets innovants.
+          Rejoignez notre communauté dès aujourd&apos;hui et ouvrez la voie à de
           nouvelles opportunités dans le monde de la programmation. Trouvez les
           bonnes personnes, créez ensemble et réalisez vos ambitions
           technologiques.

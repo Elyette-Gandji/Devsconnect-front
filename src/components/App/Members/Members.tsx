@@ -2,6 +2,9 @@
 import { useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
+// Typage
+import { MemberI } from '../../../@types/interface';
+
 // Fonctions asynchrones
 import { fetchAllMembers } from '../../../store/reducer/members';
 
@@ -25,7 +28,8 @@ function Members() {
   }
 
   if (members.length === 0) {
-    return <NotFound />;
+    // ? Si la liste des membres est vide, on affiche une erreur 404 au composant NotFound
+    return <NotFound errorMessage="Erreur 404" errorStatut={404} />;
   }
 
   return (
@@ -33,7 +37,7 @@ function Members() {
       <FilterBar />
       <h2>Tous les membres</h2>
       <div className="Members--containerCard">
-        {members.map((member) => (
+        {members.map((member: MemberI) => (
           <CardMember key={member.id} member={member} />
         ))}
       </div>

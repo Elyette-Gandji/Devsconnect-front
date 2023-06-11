@@ -5,6 +5,8 @@ import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../utils/axios';
 
 // ? Typage
+import { MemberI } from '../../@types/interface';
+
 interface MemberState {
   status?: string;
   list: {
@@ -12,19 +14,21 @@ interface MemberState {
     loading: boolean; // Nouvelle propriété
   };
   member: {
-    data: {};
+    data: MemberI | null;
     loading: boolean; // Nouvelle propriété
   };
 }
 
 // ? Initialisation
 export const initialState: MemberState = {
+  // Liste des membres
   list: {
     data: [],
     loading: false, // Nouvelle propriété
   },
+  // Un seul membre
   member: {
-    data: {},
+    data: null,
     loading: false, // Nouvelle propriété
   },
 };
@@ -72,15 +76,15 @@ const membersReducer = createReducer(initialState, (builder) => {
       state.list.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion échouée de fetchAllMembers
-    .addCase(fetchAllMembers.rejected, (state, action) => {
+    .addCase(fetchAllMembers.rejected, (state) => {
       // ? On modifie le state
-      state.data = [];
-      state.loading = false; // Définir l'état de chargement sur false
+      state.list.data = [];
+      state.list.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion en cours de fetchAllMembers
-    .addCase(fetchAllMembers.pending, (state, action) => {
+    .addCase(fetchAllMembers.pending, (state) => {
       // ? On modifie le state
-      state.loading = true; // Définir l'état de chargement sur true
+      state.list.loading = true; // Définir l'état de chargement sur true
     });
 
   //* Cas de la connexion réussie de fetchOneMember
@@ -91,13 +95,13 @@ const membersReducer = createReducer(initialState, (builder) => {
       state.member.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion échouée de fetchOneMember
-    .addCase(fetchOneMember.rejected, (state, action) => {
+    .addCase(fetchOneMember.rejected, (state) => {
       // ? On modifie le state
-      state.member.data = {};
+      state.member.data = null;
       state.member.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion en cours de fetchOneMember
-    .addCase(fetchOneMember.pending, (state, action) => {
+    .addCase(fetchOneMember.pending, (state) => {
       // ? On modifie le state
       state.member.loading = true; // Définir l'état de chargement sur true
     });

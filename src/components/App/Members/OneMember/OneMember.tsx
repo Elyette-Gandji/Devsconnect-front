@@ -25,7 +25,7 @@ function OneMember() {
   const loading = useAppSelector((state) => state.members.member.loading);
 
   useEffect(() => {
-    dispatch(fetchOneMember(id));
+    if (id) dispatch(fetchOneMember(id));
   }, [dispatch, id]);
 
   if (loading) {
