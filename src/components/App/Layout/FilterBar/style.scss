@@ -4,10 +4,11 @@
 .FilterBar {
     display: flex;
     flex-direction: column;
-    background: v.$color-darkest;
+    background: v.$color-dark;
+    border-top: 1.5px dashed v.$color;
     color: v.$color;
     text-decoration: underline;
-    opacity: 0.8;
+    // opacity: 0.8;
 
     &--firstField {
         & p {

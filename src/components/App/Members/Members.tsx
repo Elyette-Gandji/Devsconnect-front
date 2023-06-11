@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 import { fetchAllMembers } from '../../../store/reducer/members';
 
 // Composants
+import NotFound from '../../NotFound/NotFound';
 import FilterBar from '../Layout/FilterBar/FilterBar';
 import CardMember from './CardMember';
 import './style.scss';
@@ -24,7 +25,7 @@ function Members() {
   }
 
   if (members.length === 0) {
-    return <p>No members found.</p>;
+    return <NotFound />;
   }
 
   return (
@@ -35,7 +36,6 @@ function Members() {
         {members.map((member) => (
           <CardMember key={member.id} member={member} />
         ))}
-
       </div>
     </div>
   );

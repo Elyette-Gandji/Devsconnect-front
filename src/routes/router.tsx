@@ -9,7 +9,7 @@ import Home from '../components/App/Home/Home';
 
 import Members from '../components/App/Members/Members';
 import Projects from '../components/App/Projetcs/Projects';
-
+import OneMember from '../components/App/Members/OneMember/OneMember';
 
 const Router = createBrowserRouter(
   // On crée un tableau de route à partir d'éléments React
@@ -23,6 +23,7 @@ const Router = createBrowserRouter(
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Home />} /> {/* Remplacer App par le contenu */}
         <Route path="/users" element={<Members />} />
+        <Route path="/users/:id" element={<OneMember />} />
         <Route path="/projects" element={<Projects />} />
         {/* Autres routes... */}
       </Route>

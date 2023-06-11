@@ -1,8 +1,6 @@
 // On importe depuis `react-router-dom`
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
 import NotFound from '../components/NotFound/NotFound';
-import Header from '../components/App/Layout/Header/Header';
-import Footer from '../components/App/Layout/Footer/Footer';
 
 // On crée notre fonction de gestion d'erreur
 function ErrorPage() {
@@ -46,14 +44,10 @@ function ErrorPage() {
 
   // On retourne les props à un composant crée à part qui s'occupera du style et de l'integration dans notre appli
   return (
-    <>
-      <Header />
-      <NotFound
-        errorMessage={getErrorMessage(error)}
-        errorStatut={getStatus(error)}
-      />
-      <Footer />
-    </>
+    <NotFound
+      errorMessage={getErrorMessage(error)}
+      errorStatut={getStatus(error)}
+    />
   );
 }
 
