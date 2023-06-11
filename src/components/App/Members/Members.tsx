@@ -1,6 +1,5 @@
 // Librairies
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
 // Fonctions asynchrones
@@ -36,9 +35,8 @@ function Members() {
       <div className="Members--containerCard">
         {members.map((member) => (
           // <Link to={`/members/${member.id}`} key={member.id}>
-          <Link to="/member" key="">
-            <CardMember key={member.id} member={member} />
-          </Link>
+
+          <CardMember key={member.id} member={member} />
         ))}
       </div>
     </div>

@@ -1,10 +1,11 @@
 @use '../../../styles/variables' as v;
 @use '../../../styles/mixins' as m; // @include pour utiliser
 
+//? Container des cartes
 .Members {
-    flex-grow: 1;
+    flex-grow: 1; // Permet de descendre le footer en bas de page
     &--containerCard {
-        display: grid;
+        display: grid; // Permet de mettre les cartes en grille
         justify-items: center;
     }
     & h2 {
@@ -12,12 +13,16 @@
     }
     @media screen and (min-width: v.$mq-xlarge) {
         &--containerCard {
-            grid-template-columns: repeat(3, 1fr);
-            margin: 0 auto;
-            max-width: 140rem;
-            gap: v.$font-medium;
+            grid-template-columns: repeat(
+                3,
+                1fr
+            ); // Permet de mettre 3 cartes par ligne
+            margin: 0 auto; // Permet de centrer les cartes
+            max-width: 140rem; // Permet de limiter la largeur du container
+            gap: v.$font-medium; // Permet de gérer un espace entre les cartes
             padding: v.$font-xsmall;
         }
+        //? Titre
         & h2 {
             padding: v.$font-xsmall;
             font-size: v.$font-xxlarge;
@@ -25,10 +30,13 @@
     }
     @media screen and (max-width: v.$mq-xlarge) {
         &--containerCard {
-            grid-template-columns: repeat(2, 1fr);
-            margin: 0 auto;
-            max-width: 110rem;
-            gap: v.$font-medium;
+            grid-template-columns: repeat(
+                2,
+                1fr
+            ); // Permet de mettre 2 cartes par ligne
+            margin: 0 auto; // Permet de centrer les cartes
+            max-width: 110rem; // Permet de limiter la largeur du container
+            gap: v.$font-medium; // Permet de gérer un espace entre les cartes
             padding: v.$font-xsmall;
         }
         & h2 {
@@ -38,10 +46,13 @@
     }
     @media screen and (max-width: v.$mq-large) {
         &--containerCard {
-            grid-template-columns: repeat(2, 1fr);
-            margin: 0 auto;
-            max-width: 75rem;
-            gap: v.$font-medium;
+            grid-template-columns: repeat(
+                2,
+                1fr
+            ); // Permet de mettre 2 cartes par ligne
+            margin: 0 auto; // Permet de centrer les cartes
+            max-width: 75rem; // Permet de limiter la largeur du container
+            gap: v.$font-medium; // Permet de gérer un espace entre les cartes
             padding: v.$font-xsmall;
         }
         & h2 {
@@ -51,29 +62,35 @@
     }
     @media screen and (max-width: v.$mq-medium) {
         &--containerCard {
-            grid-template-columns: repeat(1, 1fr);
-            gap: v.$font-small;
+            grid-template-columns: repeat(
+                1,
+                1fr
+            ); // Permet de mettre 1 carte par ligne
+            gap: v.$font-small; // Permet de gérer un espace entre les cartes
         }
     }
     @media screen and (max-width: v.$mq-small) {
         &--containerCard {
-            gap: v.$font-xsmall;
+            gap: v.$font-xsmall; // Permet de gérer un espace entre les cartes
         }
         & h2 {
             font-size: v.$font-large;
         }
     }
 }
+
+//? Carte d'un membre
 .CardMember {
     &--card {
-        margin: 0 auto;
+        margin: 0 auto; // Permet de centrer la carte
         border: 2px solid black;
         &--header {
-            display: flex;
+            display: flex; // Permet de mettre les éléments en ligne
             justify-content: space-between;
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid black; // Permet de mettre une bordure en bas de la carte
             &--text {
                 & p {
+                    //* Si membre ouvert aux projet, couleur verte, sinon rouge
                     &.open {
                         color: green;
                     }
@@ -86,37 +103,39 @@
         &--body {
             padding: v.$font-small;
             &--text {
-                overflow: auto;
-                text-align: justify;
+                overflow: auto; // Permet de gérer le scroll si le texte dépasse
+                text-align: justify; // Permet de justifier le texte
                 & p {
                     font-size: v.$font-xsmall;
                 }
             }
             &--technos {
-                display: flex;
+                display: flex; // Permet de mettre les éléments en ligne
                 justify-content: left;
                 align-items: center;
             }
         }
         &--footer {
             padding: v.$font-small;
-            & p {
-                font-size: v.$font-small;
+            //? Titre des projets
+            & li > span {
+                padding-right: v.$font-xsmall;
                 font-weight: 700;
                 text-decoration: underline;
             }
-            & ul {
-                & li {
-                    white-space: nowrap; //* Empêche le retour à la ligne
-                    overflow: hidden; //* Cache le contenu dépassant du cadre
-                    text-overflow: ellipsis; //* Ajoute des points de suspension
-                }
+            //? Description des projets
+            & li {
+                white-space: nowrap; //* Empêche le retour à la ligne
+                overflow: hidden; //* Cache le contenu dépassant du cadre
+                text-overflow: ellipsis; //* Ajoute des points de suspension
             }
         }
         @media screen and (min-width: v.$mq-large) {
+            // Taille de la carte
             width: 45rem;
             height: 60rem;
 
+            // Taille de police
             & p,
             & li {
                 font-size: v.$font-medium;
@@ -158,8 +177,10 @@
             }
         }
         @media screen and (max-width: v.$mq-large) {
+            // Taille de la carte
             width: 35rem;
             height: 56rem;
+            // Taille de police
             & p,
             & li,
             & h4 {
@@ -200,6 +221,7 @@
             }
         }
         @media screen and (max-width: v.$mq-medium) {
+            // Taille de la carte
             width: 40rem;
             height: 45rem;
             &--header {
@@ -226,8 +248,10 @@
             }
         }
         @media screen and (max-width: v.$mq-small) {
+            // Taille de la carte
             width: 30rem;
             height: 39rem;
+            // Taille de police
             & p,
             & li {
                 font-size: v.$font-small;
@@ -259,8 +283,10 @@
             }
         }
         @media screen and (max-width: v.$mq-xsmall) {
+            // Taille de la carte
             width: 22rem;
             height: 28rem;
+            // Taille de police
             & p,
             & li {
                 font-size: v.$font-xsmall;
@@ -285,6 +311,7 @@
                     }
                 }
             }
+            //* On masque le footer
             &--footer {
                 display: none;
             }

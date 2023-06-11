@@ -1,3 +1,6 @@
+// Link pour rediriger vers la page du membre
+import { Link } from 'react-router-dom';
+
 import './style.scss';
 import { technos } from '../../../data/technosPath';
 
@@ -6,17 +9,20 @@ function CardMember({ member }: { member: {} }) {
   return (
     <div className="CardMember">
       <section className="CardMember--card">
-        <div className="CardMember--card--header">
-          <div className="CardMember--card--header--text">
-            <h3>
-              {member.firstname} {member.name}
-            </h3>
-            <p className={member.availability ? 'open' : 'close'}>
-              {member.availability ? 'Disponible' : 'Indisponible'}
-            </p>
+        {/* //? On utilise Link sur le header uniquement} */}
+        <Link to="/member" key="">
+          <div className="CardMember--card--header">
+            <div className="CardMember--card--header--text">
+              <h3>
+                {member.firstname} {member.name}
+              </h3>
+              <p className={member.availability ? 'open' : 'close'}>
+                {member.availability ? 'Disponible' : 'Indisponible'}
+              </p>
+            </div>
+            <img src="/images/profil/profil.svg" alt="vite" />
           </div>
-          <img src="/images/profil/profil.svg" alt="vite" />
-        </div>
+        </Link>
         <div className="CardMember--card--body">
           <p className="CardMember--card--body--text">{member.description}</p>
           <div className="CardMember--card--body--technos">
@@ -35,9 +41,28 @@ function CardMember({ member }: { member: {} }) {
           <h4>Projets :</h4>
           {/* //! On map dessus en dur et limite à 3 l'affichage */}
           <ul className="CardMember--card--footer--list">
-            <li>Projet 1 : Lorem ipsum dolor sit amet.</li>
-            <li>Projet 2 : Amet consectetur adipisicing elit.</li>
-            <li>Projet 3 : Animi quis magni dolore iure?</li>
+            <li>
+              <span className="CardMember--card--footer--list--span">
+                Projet 1 :
+              </span>
+              Lorem ipsum dolor sit amet.
+            </li>
+            <li>
+              <span className="CardMember--card--footer--list--span">
+                Projet 2 :
+              </span>
+              Amet consectetur adipisicing elit. Lorem ipsum, dolor sit amet
+              consectetur adipisicing elit. Et vitae veritatis officiis,
+              nostrum, repellendus facilis, dolorum voluptates repudiandae aut
+              quos dicta accusamus itaque autem harum earum aperiam perspiciatis
+              rem ab.
+            </li>
+            <li>
+              <span className="CardMember--card--footer--list--span">
+                Projet 3 :
+              </span>
+              Animi quis magni dolore iure?
+            </li>
           </ul>
         </div>
       </section>
