@@ -91,15 +91,6 @@
 
             &--text {
                 width: 74+5%;
-                & p {
-                    //* Si membre ouvert aux projet, couleur verte, sinon rouge
-                    &.open {
-                        color: green;
-                    }
-                    &.close {
-                        color: red;
-                    }
-                }
                 & h3 {
                     white-space: nowrap; //* Empêche le retour à la ligne
                     overflow: hidden; //* Cache le contenu dépassant du cadre

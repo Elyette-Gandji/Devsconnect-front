@@ -11,12 +11,20 @@ interface MemberState {
     data: [];
     loading: boolean; // Nouvelle propriété
   };
+  member: {
+    data: {};
+    loading: boolean; // Nouvelle propriété
+  };
 }
 
 // ? Initialisation
 export const initialState: MemberState = {
   list: {
     data: [],
+    loading: false, // Nouvelle propriété
+  },
+  member: {
+    data: {},
     loading: false, // Nouvelle propriété
   },
 };
@@ -38,26 +46,60 @@ export const fetchAllMembers = createAsyncThunk(
   }
 );
 
+export const fetchOneMember = createAsyncThunk(
+  'user/fetchOneMember',
+  async (id: string) => {
+    try {
+      const { data } = await axiosInstance.get(`/api/users/${id}`);
+      // ? On retourne le state
+      return data;
+    } catch (error) {
+      // Gérez les erreurs potentielles ici
+      console.error('Error:', error);
+      throw error;
+    }
+  }
+);
+
 // ? Construction du reducer user avec builder qui utilise les actions pour modifier le state initial
 const membersReducer = createReducer(initialState, (builder) => {
   // ? On retourne le state selon les cas de figure suivants :
   builder
-    //* Cas de la connexion réussie
+    //* Cas de la connexion réussie de fetchAllMembers
     .addCase(fetchAllMembers.fulfilled, (state, action) => {
       // ? On modifie le state
       state.list.data = action.payload.data;
       state.list.loading = false; // Définir l'état de chargement sur false
     })
-    //* Cas de la connexion échouée
+    //* Cas de la connexion échouée de fetchAllMembers
     .addCase(fetchAllMembers.rejected, (state, action) => {
       // ? On modifie le state
       state.data = [];
       state.loading = false; // Définir l'état de chargement sur false
     })
-    //* Cas de la connexion en cours
+    //* Cas de la connexion en cours de fetchAllMembers
     .addCase(fetchAllMembers.pending, (state, action) => {
       // ? On modifie le state
       state.loading = true; // Définir l'état de chargement sur true
+    });
+
+  //* Cas de la connexion réussie de fetchOneMember
+  builder
+    .addCase(fetchOneMember.fulfilled, (state, action) => {
+      // ? On modifie le state
+      state.member.data = action.payload.data;
+      state.member.loading = false; // Définir l'état de chargement sur false
+    })
+    //* Cas de la connexion échouée de fetchOneMember
+    .addCase(fetchOneMember.rejected, (state, action) => {
+      // ? On modifie le state
+      state.member.data = {};
+      state.member.loading = false; // Définir l'état de chargement sur false
+    })
+    //* Cas de la connexion en cours de fetchOneMember
+    .addCase(fetchOneMember.pending, (state, action) => {
+      // ? On modifie le state
+      state.member.loading = true; // Définir l'état de chargement sur true
     });
 });
 

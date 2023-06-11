@@ -18,13 +18,6 @@
         //? Disponibilité
         &--availability {
             font-weight: 700;
-            // Couleur du texte en fonction de la disponibilité
-            &--open {
-                color: green;
-            }
-            &--close {
-                color: red;
-            }
         }
     }
     &--secondField {

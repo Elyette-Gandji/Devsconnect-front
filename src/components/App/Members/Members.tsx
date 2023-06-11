@@ -6,10 +6,10 @@ import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 import { fetchAllMembers } from '../../../store/reducer/members';
 
 // Composants
+import NotFound from '../../NotFound/NotFound';
 import FilterBar from '../Layout/FilterBar/FilterBar';
 import CardMember from './CardMember';
 import './style.scss';
-import OneMember from './OneMember/OneMember';
 
 function Members() {
   const dispatch = useAppDispatch();
@@ -25,7 +25,7 @@ function Members() {
   }
 
   if (members.length === 0) {
-    return <p>No members found.</p>;
+    return <NotFound />;
   }
 
   return (
@@ -34,8 +34,6 @@ function Members() {
       <h2>Tous les membres</h2>
       <div className="Members--containerCard">
         {members.map((member) => (
-          // <Link to={`/members/${member.id}`} key={member.id}>
-
           <CardMember key={member.id} member={member} />
         ))}
       </div>

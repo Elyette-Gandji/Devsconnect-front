@@ -23,7 +23,7 @@ const Router = createBrowserRouter(
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Home />} /> {/* Remplacer App par le contenu */}
         <Route path="/users" element={<Members />} />
-        <Route path="/member" element={<OneMember />} />
+        <Route path="/users/:id" element={<OneMember />} />
         <Route path="/projects" element={<Projects />} />
         {/* Autres routes... */}
       </Route>

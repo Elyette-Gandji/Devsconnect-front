@@ -10,7 +10,7 @@ function CardMember({ member }: { member: {} }) {
     <div className="CardMember">
       <section className="CardMember--card">
         {/* //? On utilise Link sur le header uniquement} */}
-        <Link to="/member" key="">
+        <Link to={`/users/${member.id}`} key={member.id}>
           <div className="CardMember--card--header">
             <div className="CardMember--card--header--text">
               <h3>
