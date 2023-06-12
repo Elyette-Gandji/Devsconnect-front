@@ -2,11 +2,13 @@
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../hook/redux';
 
+// Utils
+import { technos } from '../../../utils/technosPath';
+
 // Typage
 import { MemberI } from '../../../@types/interface';
 
 import './style.scss';
-import { technos } from '../../../data/technosPath';
 
 interface CardMemberI {
   member: MemberI;

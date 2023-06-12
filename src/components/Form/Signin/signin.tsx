@@ -2,8 +2,8 @@
 import { useState, useRef, useEffect } from 'react';
 
 // ? Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
-import { Switch } from '@mui/material';
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
+import CustomSwitch from '../../../utils/customSwitchUI';
 
 // ? Actions du reducer
 import {
@@ -16,8 +16,8 @@ import { signinUser } from '../../../store/reducer/user';
 import Input from '../Input';
 // import FlashMessage from '../FlashMessage/FlashMessage';
 
-// ? Data
-import { technos } from '../../../data/technosPath'; // Pour le choix des technos
+// ? Utils
+import { technos } from '../../../utils/technosPath'; // Pour le choix des technos
 
 // Styles
 import './style.scss';
@@ -134,7 +134,7 @@ function Signin() {
             <Input name="password" type="password" placeholder="Mot de passe" />
             <div className="Signin--openToWork">
               <p>Ouvert aux projets</p>
-              <Switch
+              <CustomSwitch
                 name="availability"
                 checked={checked}
                 onChange={handleSwitch}

@@ -35,7 +35,7 @@ function Members() {
   return (
     <div className="Members">
       <FilterBar />
-      <h2>Tous les membres</h2>
+      <h2 className="Members--title">Tous les membres</h2>
       <div className="Members--containerCard">
         {members.map((member: MemberI) => (
           <CardMember key={member.id} member={member} />

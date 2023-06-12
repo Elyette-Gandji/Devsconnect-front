@@ -2,10 +2,11 @@
 
 //? Colors
 $color: #e6e6e6;
+// $color: #af87ab;
 $color-dark: color.scale($color, $lightness: -50%);
 $color-light: color.scale($color, $lightness: 70%);
 
-$color-darkest: #333;
+$color-darkest: #333333;
 
 //? Fonts
 $font: 'Roboto', sans-serif;

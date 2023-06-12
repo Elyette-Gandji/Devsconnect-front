@@ -12,7 +12,7 @@ import ProjectCard from './ProjectCard';
 import ErrorPage from '../../../../routes/ErrorPage';
 
 // data
-import { technos } from '../../../../data/technosPath';
+import { technos } from '../../../../utils/technosPath';
 
 import './style.scss';
 

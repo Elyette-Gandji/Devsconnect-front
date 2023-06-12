@@ -8,7 +8,7 @@
         display: grid; // Permet de mettre les cartes en grille
         justify-items: center;
     }
-    & h2 {
+    &--title {
         text-align: center;
     }
     @media screen and (min-width: v.$mq-xlarge) {
@@ -39,9 +39,9 @@
             gap: v.$font-medium; // Permet de gérer un espace entre les cartes
             padding: v.$font-xsmall;
         }
-        & h2 {
+        &--title {
             padding: v.$font-xsmall;
-            font-size: v.$font-xxlarge;
+            font-size: v.$font-large;
         }
     }
     @media screen and (max-width: v.$mq-large) {
@@ -55,9 +55,9 @@
             gap: v.$font-medium; // Permet de gérer un espace entre les cartes
             padding: v.$font-xsmall;
         }
-        & h2 {
+        &--title {
             padding: v.$font-xsmall;
-            font-size: v.$font-xlarge;
+            font-size: v.$font-large;
         }
     }
     @media screen and (max-width: v.$mq-medium) {
@@ -73,8 +73,13 @@
         &--containerCard {
             gap: v.$font-xsmall; // Permet de gérer un espace entre les cartes
         }
-        & h2 {
+        &--title {
             font-size: v.$font-large;
+        }
+    }
+    @media screen and (max-width: v.$mq-xsmall) {
+        &--title {
+            font-size: v.$font-medium;
         }
     }
 }
