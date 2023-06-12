@@ -1,10 +1,15 @@
 // Librairies
+import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../../../hook/redux';
 
+// Typage
+import { BurgerI } from '../../../../../@types/interface';
+
+// Actions
 import { logout } from '../../../../../store/reducer/user';
 
 // Fonction du composant
-function LogoutComponent(props) {
+function LogoutComponent(props: BurgerI) {
   // Props de la gestion du burger
   const { setIsOpen } = props;
 
@@ -26,9 +31,11 @@ function LogoutComponent(props) {
 
   return (
     <div className="Header--connect">
-      <button className="Header--connect--profil" type="button">
-        Mon Profil
-      </button>
+      <Link to="/profil" className="Header--connect--profil">
+        <button className="Header--connect--profil" type="button">
+          Mon Profil
+        </button>
+      </Link>
       <button
         onClick={handleLogout}
         className="Header--connect--logout"

@@ -6,23 +6,41 @@ import {
 } from '@reduxjs/toolkit';
 
 //* message est utilisé pour afficher un message pop-up. On importe son typage.
-import { Flash } from '../../@types/interface';
+import { FlashI } from '../../@types/interface';
 
 // ? fonctions maison pour l'instance Axios
 import axiosInstance from '../../utils/axios';
 
 // ? Typage
 interface UserState {
-  logged: boolean;
-  pseudo: string | null;
-  message: Flash | null;
+  signin: {
+    id: number | null;
+    message: FlashI | null;
+    status?: string | null;
+  };
+  login: {
+    id: number | null;
+    logged: boolean;
+    pseudo: string | null;
+    message: FlashI | null;
+    status?: string | null;
+  };
 }
 
 // ? Initialisation
 export const initialState: UserState = {
-  logged: false,
-  pseudo: null,
-  message: null,
+  signin: {
+    id: null,
+    message: null,
+    status: null,
+  },
+  login: {
+    id: null,
+    logged: false,
+    pseudo: null,
+    message: null,
+    status: null,
+  },
 };
 
 // ? Fonctions synchrones
@@ -49,6 +67,8 @@ export const loginUser = createAsyncThunk(
       return data as {
         logged: boolean;
         pseudo: string;
+        id: number;
+        status: string;
       };
     } catch (error) {
       // Gérez les erreurs potentielles ici
@@ -66,10 +86,12 @@ export const signinUser = createAsyncThunk(
       const objData = Object.fromEntries(formData);
 
       const { data } = await axiosInstance.post('/api/users', objData);
-      console.log(data);
       // ? On retourne le state
       return data as {
         status: string;
+        logged: boolean;
+        pseudo: string;
+        id: number;
       };
     } catch (error) {
       // Gérez les erreurs potentielles ici
@@ -85,16 +107,18 @@ const userReducer = createReducer(initialState, (builder) => {
   builder
     //* Cas de la connexion en cours
     .addCase(loginUser.pending, (state) => {
-      state.logged = false;
-      state.pseudo = null;
-      state.message = null;
+      state.login.logged = false;
+      state.login.pseudo = null;
+      state.login.message = null;
+      state.login.id = null;
     })
 
     //* Cas de la connexion échouée
     .addCase(loginUser.rejected, (state, action) => {
-      state.logged = false;
-      state.pseudo = null;
-      state.message = {
+      state.login.logged = false;
+      state.login.pseudo = null;
+      state.login.id = null;
+      state.login.message = {
         type: 'error',
         children: action.error.code || 'UNKNOWN_ERROR',
         duration: 5000,
@@ -103,22 +127,23 @@ const userReducer = createReducer(initialState, (builder) => {
 
     //* Cas de la connexion réussie
     .addCase(loginUser.fulfilled, (state, action) => {
-      const { logged, pseudo } = action.payload;
-      state.logged = logged;
-      state.pseudo = pseudo;
-      state.message = {
+      const { logged, pseudo, id } = action.payload;
+      state.login.logged = logged;
+      state.login.pseudo = pseudo;
+      state.login.id = id;
+      state.login.message = {
         type: 'success',
         children: `Bienvenue ${pseudo} !`,
       };
     })
     //* Cas de l'inscription en cours
     .addCase(signinUser.pending, (state) => {
-      state.message = null;
+      state.signin.message = null;
     })
 
     //* Cas de l'inscription échouée
     .addCase(signinUser.rejected, (state, action) => {
-      state.message = {
+      state.signin.message = {
         type: 'error',
         children: action.error.code || 'UNKNOWN_ERROR',
         duration: 5000,
@@ -128,7 +153,7 @@ const userReducer = createReducer(initialState, (builder) => {
     //* Cas de l'inscription réussie
     .addCase(signinUser.fulfilled, (state, action) => {
       const { status } = action.payload;
-      state.message = {
+      state.signin.message = {
         type: 'success',
         children: status,
       };
@@ -136,8 +161,8 @@ const userReducer = createReducer(initialState, (builder) => {
 
     //* Cas de la déconnexion
     .addCase(logout, (state) => {
-      state.logged = false;
-      state.pseudo = null;
+      state.login.logged = false;
+      state.login.pseudo = null;
 
       //! à la déconnexion, on supprime le token
       // delete axiosInstance.defaults.headers.common.Authorization;

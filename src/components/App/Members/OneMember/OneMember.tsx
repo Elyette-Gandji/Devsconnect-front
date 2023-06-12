@@ -12,7 +12,7 @@ import ProjectCard from './ProjectCard';
 import ErrorPage from '../../../../routes/ErrorPage';
 
 // data
-import { technos } from '../../../../data/technosPath';
+import { technos } from '../../../../utils/technosPath';
 
 import './style.scss';
 
@@ -25,7 +25,7 @@ function OneMember() {
   const loading = useAppSelector((state) => state.members.member.loading);
 
   useEffect(() => {
-    dispatch(fetchOneMember(id));
+    if (id) dispatch(fetchOneMember(id));
   }, [dispatch, id]);
 
   if (loading) {

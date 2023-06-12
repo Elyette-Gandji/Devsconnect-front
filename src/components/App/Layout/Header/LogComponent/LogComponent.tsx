@@ -1,6 +1,8 @@
 // Permet de lire les state du store et d'effectuer des actions sur le store
 import { useAppSelector, useAppDispatch } from '../../../../../hook/redux';
 
+// Typage
+import { BurgerI } from '../../../../../@types/interface';
 // Actions du reducer
 import {
   toggleModalLogin,
@@ -8,7 +10,7 @@ import {
 } from '../../../../../store/reducer/log';
 
 // Fonction du composant
-function LogComponent(props) {
+function LogComponent(props: BurgerI) {
   // Props de la gestion du burger
   const { setIsOpen } = props;
 

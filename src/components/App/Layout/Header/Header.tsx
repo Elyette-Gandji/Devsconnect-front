@@ -29,7 +29,7 @@ function Header() {
 
     // On retourne une fonction de nettoyage pour supprimer l'écouteur d'évènement
     return () => window.removeEventListener('resize', handleWindowResize);
-  }, []);
+  }, [dispatch]);
 
   // On retourne le composant HeaderLarge si la largeur de la fenêtre navigateur est supérieure à 768px
   // Sinon on retourne le composant HeaderSmall

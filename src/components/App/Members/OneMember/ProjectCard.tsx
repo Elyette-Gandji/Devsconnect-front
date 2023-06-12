@@ -1,4 +1,4 @@
-import { technos } from '../../../../data/technosPath';
+import { technos } from '../../../../utils/technosPath';
 
 import './style.scss';
 

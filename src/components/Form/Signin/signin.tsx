@@ -2,8 +2,8 @@
 import { useState, useRef, useEffect } from 'react';
 
 // ? Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
-import { Switch } from '@mui/material';
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
+import CustomSwitch from '../../../utils/customSwitchUI';
 
 // ? Actions du reducer
 import {
@@ -14,19 +14,22 @@ import { signinUser } from '../../../store/reducer/user';
 
 // ? Composants
 import Input from '../Input';
-import FlashMessage from '../FlashMessage/FlashMessage';
+// import FlashMessage from '../FlashMessage/FlashMessage';
 
-// ? Data
-import { technos } from '../../../data/technosPath'; // Pour le choix des technos
+// ? Utils
+import { technos } from '../../../utils/technosPath'; // Pour le choix des technos
 
 // Styles
 import './style.scss';
 
+// ? Typage
+import { TechnoMapI } from '../../../@types/interface';
+
 function Signin() {
-  const flash = useAppSelector((state) => state.user.message);
+  const flash = useAppSelector((state) => state.user.signin.message);
 
   // State pour la selection des technos
-  const [selectedTechnos, setSelectedTechnos] = useState([]);
+  const [selectedTechnos, setSelectedTechnos] = useState<string[]>([]);
   // State pour le check de open to work
   const [checked, setChecked] = useState(false);
 
@@ -38,8 +41,13 @@ function Signin() {
 
   //! useEffect pour clic externe à la modale
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        //* On précise que modalRef.current éun element html (Element)
+        //* On précise que event.target représente un noeud du DOM (Node)
+        !(modalRef.current as Element).contains(event.target as Node)
+      ) {
         // Clic en dehors de la modale
         dispatch(toggleModalSignin());
       }
@@ -50,7 +58,7 @@ function Signin() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [dispatch]);
 
   //! Fonction pour fermer la modale avec la croix
   const handleSignin = () => {
@@ -67,7 +75,7 @@ function Signin() {
   };
 
   //! Fonction pour la selection des technos
-  const handleImageClick = (imageId) => {
+  const handleImageClick = (imageId: string) => {
     if (selectedTechnos.includes(imageId)) {
       setSelectedTechnos(selectedTechnos.filter((id) => id !== imageId));
     } else {
@@ -77,7 +85,10 @@ function Signin() {
   // * Une div n'est pas un element clickable
   // * Fonction d’accessibilité pour le clavier.
   // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
-  const handleImageKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleImageKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>,
+    imageId: string
+  ) => {
     if (event.key === 'enter' || event.key === ' ') {
       handleImageClick(imageId);
     }
@@ -89,7 +100,7 @@ function Signin() {
   };
 
   //! Fonction pour l'envoie du formulaire
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -123,7 +134,7 @@ function Signin() {
             <Input name="password" type="password" placeholder="Mot de passe" />
             <div className="Signin--openToWork">
               <p>Ouvert aux projets</p>
-              <Switch
+              <CustomSwitch
                 name="availability"
                 checked={checked}
                 onChange={handleSwitch}
@@ -140,22 +151,26 @@ function Signin() {
               <h3>Mes technos</h3>
               <p>(Plusieurs choix possibles)</p>
               <div className="Signin--techno">
-                {technos.map((techno) => (
+                {technos.map((techno: TechnoMapI) => (
                   <div className="Signin--inputCheckbox" key={techno.id}>
                     <input
                       type="checkbox"
-                      id={techno.id}
-                      name={techno.id}
-                      value={techno.id}
+                      id={techno.label}
+                      name={techno.label}
+                      value={techno.label}
                     />
-                    <label htmlFor={techno.id}>{techno.label}</label>
+                    <label htmlFor={techno.label}>{techno.label}</label>
                     <div
                       role="button"
-                      onClick={() => handleImageClick(techno.id)}
-                      onKeyDown={handleImageKeyDown}
+                      onClick={() => handleImageClick(techno.id.toString())} //! toString() pour le typage de selectedTechnos (string[])
+                      onKeyDown={(event) =>
+                        handleImageKeyDown(event, techno.id.toString())
+                      }
                       tabIndex={0}
                       className={`Signin--inputCheckbox--img ${
-                        selectedTechnos.includes(techno.id) ? 'selected' : ''
+                        selectedTechnos.includes(techno.id.toString()) //! toString() pour le typage de selectedTechnos (string[])
+                          ? 'selected'
+                          : ''
                       }`}
                     >
                       <img
