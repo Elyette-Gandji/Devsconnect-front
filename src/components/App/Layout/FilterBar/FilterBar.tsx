@@ -1,5 +1,5 @@
 // ? Librairies
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 // ? Composants externes
@@ -19,30 +19,46 @@ function FilterBar({
   members: MemberI;
   setFilteredMembers: any;
 }) {
-  //! State pour le check de open to work
-  const [checked, setChecked] = useState(false);
+  //! States
+  const [checked, setChecked] = useState(false); // Sert à gérer le switch open to work
+  const [searchParams, setSearchParams] = useSearchParams(); // Sert à récupérer les paramètres de l'url
+  const searchText = searchParams.get('search') || ''; // Sert à récupérer la valeur du paramètre search de l'url
+
   //! Fonction pour le switch open to work
   const handleSwitch = () => {
     setChecked(!checked);
   };
 
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const searchText = searchParams.get('search') || '';
-
+  //! Fonction pour enregistrer la recherche dans l'url
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const results = event.target.value;
-    const filteredResults = results
-      ? members.filter((member) => {
-          return (
-            member.name.toLowerCase().includes(results.toLowerCase()) ||
-            member.firstname.toLowerCase().includes(results.toLowerCase())
-          );
-        })
-      : members;
-    setFilteredMembers(filteredResults);
+    // On met à jour les paramètres de l'url avec la valeur de la recherche (event.target.value)
     setSearchParams({ search: results });
   };
+  //! A chaque fois que `members`, `searchText` ou `setFilteredMembers` change, on fait une mise à jour des membres filtrés
+  useEffect(() => {
+    // On filtre sur tous les membres
+    const filteredResults = members.filter((member) => {
+      // on filtre le nom du membre par rapport à la valeur de la recherche
+      const nameResult = member.name
+        .toLowerCase()
+        .includes(searchText.toLowerCase());
+      // on filtre le prénom du membre par rapport à la valeur de la recherche
+      const firstnameResult = member.firstname
+        .toLowerCase()
+        .includes(searchText.toLowerCase());
+
+      //* Filtre par nom ou prénom
+      const textResult = nameResult || firstnameResult;
+
+      //* Filtre par disponibilité
+      const available = !checked || member.availability;
+
+      return textResult && available;
+    });
+    // On met à jour les membres filtrés du composant parent <Membres />
+    setFilteredMembers(filteredResults);
+  }, [searchText, members, checked, setFilteredMembers]);
 
   return (
     <div className="FilterBar">

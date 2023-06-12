@@ -41,3 +41,10 @@ body {
 .close {
     color: red;
 }
+
+//! Pour le résultat de recherche vide
+.noResult {
+    color: rgb(125, 10, 10);
+    font-size: 2rem;
+    text-align: center;
+}

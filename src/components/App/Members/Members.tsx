@@ -4,7 +4,6 @@ import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
 // Typage
 import { MemberI } from '../../../@types/interface';
-
 // Fonctions asynchrones
 import { fetchAllMembers } from '../../../store/reducer/members';
 
@@ -37,6 +36,9 @@ function Members() {
     <div className="Members">
       <FilterBar members={members} setFilteredMembers={setFilteredMembers} />
       <h2 className="Members--title">Tous les membres</h2>
+      {filteredMembers.length === 0 && (
+        <p className="noResult">Aucun résultat pour vos critères</p>
+      )}
       <div className="Members--containerCard">
         {filteredMembers.map((member: MemberI) => (
           <CardMember key={member.id} member={member} />

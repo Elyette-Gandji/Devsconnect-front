@@ -23,6 +23,10 @@ export interface MemberI {
   technos: TechnoI[];
 }
 
+export interface MembersI {
+  members: MemberI[];
+}
+
 export interface ProjectI {
   id: number;
   title: string;
