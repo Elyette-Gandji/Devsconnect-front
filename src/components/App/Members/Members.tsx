@@ -1,5 +1,5 @@
 // Librairies
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
 // Typage
@@ -18,6 +18,7 @@ function Members() {
   const dispatch = useAppDispatch();
   const members = useAppSelector((state) => state.members.list.data);
   const loading = useAppSelector((state) => state.members.list.loading); // Nouvelle variable loading
+  const [filteredMembers, setFilteredMembers] = useState<MemberI[]>(members); // Nouvelle variable filteredMembers
 
   useEffect(() => {
     dispatch(fetchAllMembers());
@@ -34,10 +35,10 @@ function Members() {
 
   return (
     <div className="Members">
-      <FilterBar />
+      <FilterBar members={members} setFilteredMembers={setFilteredMembers} />
       <h2 className="Members--title">Tous les membres</h2>
       <div className="Members--containerCard">
-        {members.map((member: MemberI) => (
+        {filteredMembers.map((member: MemberI) => (
           <CardMember key={member.id} member={member} />
         ))}
       </div>

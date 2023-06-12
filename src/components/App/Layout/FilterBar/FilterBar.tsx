@@ -1,20 +1,47 @@
-// Librairies
+// ? Librairies
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
-// Composants externes
+// ? Composants externes
 import CustomSwitch from '../../../../utils/customSwitchUI';
 
-// Styles
+// ? Styles
 import './style.scss';
 import SelectComponent from './Select/Select';
 
-function FilterBar() {
-  // State pour le check de open to work
-  const [checked, setChecked] = useState(false);
+// ? Typage
+import { MemberI } from '../../../../@types/interface';
 
+function FilterBar({
+  members,
+  setFilteredMembers,
+}: {
+  members: MemberI;
+  setFilteredMembers: any;
+}) {
+  //! State pour le check de open to work
+  const [checked, setChecked] = useState(false);
   //! Fonction pour le switch open to work
   const handleSwitch = () => {
     setChecked(!checked);
+  };
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const searchText = searchParams.get('search') || '';
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const results = event.target.value;
+    const filteredResults = results
+      ? members.filter((member) => {
+          return (
+            member.name.toLowerCase().includes(results.toLowerCase()) ||
+            member.firstname.toLowerCase().includes(results.toLowerCase())
+          );
+        })
+      : members;
+    setFilteredMembers(filteredResults);
+    setSearchParams({ search: results });
   };
 
   return (
@@ -28,6 +55,9 @@ function FilterBar() {
         <div className="FilterBar--secondField">
           <input
             type="text"
+            name="search"
+            value={searchText}
+            onChange={handleSearch}
             className="FilterBar--secondField--search"
             placeholder="Entrez votre recherche"
           />

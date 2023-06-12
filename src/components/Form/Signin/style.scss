@@ -132,7 +132,7 @@
             top: v.$font-large;
             right: v.$font-large;
             padding: 0 v.$font-xsmall;
-            font-size: 2em;
+            font-size: 1.5em;
         }
 
         //? Formulaire
@@ -195,7 +195,6 @@
             }
         }
     }
-
     @media screen and (max-width: v.$mq-large) {
         font-size: 70%;
         //? Entête et formulaire
@@ -212,7 +211,7 @@
             top: v.$font-large;
             right: v.$font-medium;
             padding: 0 v.$font-xsmall;
-            font-size: 1.5em;
+            font-size: 1.7em;
         }
 
         //? Formulaire
@@ -326,6 +325,7 @@
             right: v.$font-small;
             padding: 0 v.$font-xxsmall;
             font-size: 1em;
+            border: 2px solid v.$color;
         }
 
         //? Formulaire
