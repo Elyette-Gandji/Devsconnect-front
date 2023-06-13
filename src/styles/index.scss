@@ -22,6 +22,7 @@ body {
 
 .devsConnect {
     display: flex; // On passe le conteneur en flexbox pour pouvoir utiliser les propriétés flex grow
+    flex-grow: 1;
     flex-direction: column;
     min-height: 100vh; // On règle la hauteur à 100vh pour que tout l'espace vertical soit pris
 }
@@ -31,4 +32,19 @@ body {
     display: flex; // On passe le conteneur en flexbox pour pouvoir utiliser les propriétés flex grow
     flex-direction: column; // On règle la direction du flexbox en colonne
     min-height: 100vh; // On règle la hauteur à 100vh pour que tout l'espace vertical soit pris
+}
+
+//! Couleur du texte `disponible/indisponible` dans membre(s)/projet(s)
+.open {
+    color: green;
+}
+.close {
+    color: red;
+}
+
+//! Pour le résultat de recherche vide
+.noResult {
+    color: rgb(125, 10, 10);
+    font-size: 2rem;
+    text-align: center;
 }

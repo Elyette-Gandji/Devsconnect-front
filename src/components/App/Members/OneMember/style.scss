@@ -1,0 +1,518 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m; // @include pour utiliser
+
+.OneMember {
+    flex-grow: 1; // Pour que le container prenne toute la place disponible
+    border: 2px solid black;
+    &--firstField {
+        //? Bouton contact
+        &--contact {
+            border-radius: 2rem;
+            background: #6558f7;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+        }
+        a {
+            color: v.$color;
+        }
+        //? Disponibilité
+        &--availability {
+            font-weight: 700;
+        }
+    }
+    &--secondField {
+        &--description {
+            overflow: auto;
+            text-align: justify;
+        }
+    }
+    @media screen and (min-width: v.$mq-large) {
+        //? Bouton retour
+        &--return {
+            width: 80%;
+            max-width: 100rem;
+            margin: v.$font-medium auto; // Pour centrer le container
+            & button {
+                padding: v.$font-xxsmall v.$font-large;
+                background: v.$color;
+                border-radius: v.$font-medium;
+                color: v.$color-darkest;
+                font-weight: 700;
+                cursor: pointer;
+                &:hover {
+                    background: v.$color-darkest;
+                    color: v.$color;
+                }
+            }
+        }
+        width: 80%; // Largeur du container
+        max-width: 100rem; // Largeur max du container
+        margin: v.$font-medium auto; // Pour centrer le container
+        padding: v.$font-small 0;
+        //* Taille de la police
+        font-size: v.$font-small;
+        & h4 {
+            font-size: v.$font-medium;
+        }
+        //? firstField et secondField
+        &--content {
+            display: flex;
+            flex-direction: row; //* Pour mettre les champs en ligne
+        }
+        //? Titre desktop
+        &--title {
+            padding: v.$font-medium 0 v.$font-xlarge;
+            font-size: v.$font-xlarge;
+            text-align: center;
+        }
+
+        &--firstField {
+            padding: 0 v.$font-medium;
+            width: 40%; // Largeur du champ
+            //? Nom du membre
+            &--title {
+                display: none; //* Pour cacher le titre interne (desktop uniquement)
+            }
+            //? Image du membre
+            &--image {
+                display: block; // Pour centrer l'image
+                margin: v.$font-small auto v.$font-xlarge; // Pour centrer l'image
+                width: v.$font-xxlarge + 6rem;
+                height: v.$font-xxlarge + rem;
+            }
+            //? Bouton contact
+            &--contact {
+                display: block;
+                margin: v.$font-medium auto; // Pour centrer le bouton
+                padding: v.$font-small v.$font-xlarge;
+                width: 30%;
+                min-width: 18rem;
+                height: v.$font-xlarge;
+                line-height: v.$font-xsmall;
+            }
+            //? Technos
+            &--technos {
+                & h4 {
+                    margin: v.$font-medium 0;
+                }
+                //? Images des technos
+                &--technos {
+                    display: grid; // Pour mettre les images en grille
+                    grid-template-columns: 2, 1fr 4fr;
+                    // Pour mettre image et titre par colonne
+                    align-items: center; // Pour centrer les images et textes
+                    gap: v.$font-large 0; // Pour espacer les images
+                    //? Images des technos
+                    &--group {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        gap: v.$font-small;
+                        & img {
+                            width: v.$font-xxlarge;
+                            height: v.$font-xxlarge;
+                        }
+                        & p {
+                            font-weight: 700;
+                        }
+                    }
+                }
+            }
+        }
+        &--secondField {
+            padding: 0 v.$font-small;
+            width: 60%;
+            //? Description du membre
+            &--description {
+                max-height: 35rem; // Taille de la description
+            }
+            &--projects > h4 {
+                padding-top: v.$font-xlarge; // Pour espacer le titre de la description
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-large) {
+        //? Bouton retour
+        &--return {
+            width: 90%;
+            max-width: 75rem;
+            margin: v.$font-medium auto; // Pour centrer le container
+            & button {
+                padding: v.$font-xxsmall v.$font-medium;
+                background: v.$color;
+                border-radius: v.$font-medium;
+                color: v.$color-darkest;
+                font-weight: 700;
+                cursor: pointer;
+                &:hover {
+                    background: v.$color-darkest;
+                    color: v.$color;
+                }
+            }
+        }
+        width: 90%; // Largeur du container
+        max-width: 75rem; // Largeur max du container
+        margin: v.$font-small auto; // Pour centrer le container
+        padding: v.$font-small 0;
+        //* Taille de la police
+        font-size: v.$font-small;
+        & h4 {
+            font-size: v.$font-medium;
+        }
+        //? firstField et secondField
+        &--content {
+            display: flex;
+            flex-direction: row; //* Pour mettre les champs en ligne
+        }
+        //? Titre desktop
+        &--title {
+            padding: v.$font-medium 0 v.$font-xlarge;
+            font-size: v.$font-xlarge;
+            text-align: center;
+        }
+        &--firstField {
+            padding: 0 v.$font-small;
+            width: 40%; // Largeur du champ
+            //? Nom du membre
+            &--title {
+                display: none; //* Pour cacher le titre interne (desktop uniquement)
+            }
+            //? Image du membre
+            &--image {
+                display: block; // Pour centrer l'image
+                margin: v.$font-small auto v.$font-xlarge; // Pour centrer l'image
+                width: v.$font-xxlarge + 5rem;
+                height: v.$font-xxlarge + 5rem;
+            }
+            //? Bouton contact
+            &--contact {
+                display: block;
+                margin: v.$font-medium auto; // Pour centrer le bouton
+                padding: v.$font-small v.$font-xlarge;
+                width: 30%;
+                min-width: 18rem;
+                height: v.$font-xlarge;
+                line-height: v.$font-xsmall;
+            }
+            //? Technos
+            &--technos {
+                & h4 {
+                    margin: v.$font-medium 0 0 0;
+                }
+                //? Images des technos
+                &--technos {
+                    display: grid; // Pour mettre les images en grille
+                    grid-template-columns: 2, 1fr 4fr;
+                    // Pour mettre image et titre par colonne
+                    align-items: center; // Pour centrer les images et textes
+                    gap: v.$font-large 0; // Pour espacer les images
+                    //? Images des technos
+                    &--group {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        gap: v.$font-small;
+                        & img {
+                            width: v.$font-xlarge;
+                            height: v.$font-xlarge;
+                        }
+                        & p {
+                            font-weight: 700;
+                        }
+                    }
+                }
+            }
+        }
+        &--secondField {
+            padding: 0 v.$font-small;
+            width: 60%;
+            //? Description du membre
+            &--description {
+                max-height: 30rem; // Taille de la description
+            }
+            &--projects > h4 {
+                padding-top: v.$font-large; // Pour espacer le titre de la description
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-medium) {
+        //? Bouton retour
+        &--return {
+            max-width: 50rem;
+            & button {
+                padding: 0.4rem v.$font-small;
+            }
+        }
+        max-width: 50rem; // Largeur max du container
+        padding: v.$font-small;
+        //* Taille de la police
+        font-size: v.$font-small;
+        & h4 {
+            font-size: v.$font-medium;
+        }
+
+        //? firstField et secondField
+        &--content {
+            flex-direction: column; //* Pour mettre les champs en colonne
+        }
+        &--title {
+            display: none; // Pour cacher le titre externe (desktop uniquement)
+        }
+        &--firstField {
+            width: 100%; // Largeur du champ
+            //? Nom du membre
+            &--title {
+                display: block; //* Pour afficher le titre interne (mobile uniquement)
+                font-size: v.$font-large;
+                text-align: center;
+            }
+            //? Image du membre
+            & img {
+                margin: v.$font-xsmall auto; // Pour centrer l'image
+                width: v.$font-xxlarge + 2rem;
+                height: v.$font-xxlarge + 2rem;
+            }
+            //? Bouton contact
+            &--contact {
+                margin: v.$font-small auto; // Pour centrer le bouton
+                min-width: 20rem;
+            }
+            //? Technos
+            &--technos {
+                margin-top: v.$font-xsmall;
+                //? Images des technos
+                &--technos {
+                    display: flex; // Pour mettre les images en ligne
+                    justify-content: space-around; // Pour les espacer
+                    //? Images des technos
+                    & img {
+                        width: v.$font-large;
+                        height: v.$font-large;
+                    }
+                    & p {
+                        display: none; // Pour cacher le texte (mobile uniquement)
+                    }
+                }
+            }
+        }
+        &--secondField {
+            width: 100%;
+            //? Description du membre
+            &--description {
+                max-height: 20rem; // Taille de la description
+            }
+            &--projects > h4 {
+                padding-top: v.$font-small; // Pour espacer le titre de la description
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-small) {
+        //? Bouton retour
+        &--return {
+            max-width: 40rem;
+            & button {
+                padding: 0.2rem v.$font-small;
+            }
+        }
+        max-width: 40rem; // Largeur max du container
+        margin: v.$font-xsmall auto; // Pour centrer le container
+        padding: v.$font-xsmall;
+        //* Taille de la police
+        font-size: v.$font-xsmall;
+        & h4 {
+            font-size: v.$font-small;
+        }
+        &--firstField {
+            //? Nom du membre
+            &--title {
+                font-size: v.$font-medium;
+            }
+            //? Image du membre
+            & img {
+                width: v.$font-xxlarge;
+                height: v.$font-xxlarge;
+            }
+            //? Bouton contact
+            &--contact {
+                margin: v.$font-xsmall auto;
+                width: 40%;
+                min-width: 15rem;
+                height: v.$font-large;
+                line-height: 0;
+            }
+            //? Technos
+            &--technos {
+                //? Images des technos
+                &--technos {
+                    //? Images des technos
+                    & img {
+                        width: v.$font-medium;
+                        height: v.$font-medium;
+                    }
+                }
+            }
+        }
+        &--secondField {
+            //? Description du membre
+            &--description {
+                max-height: 16rem; // Taille de la description
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-xsmall) {
+        //? Bouton retour
+        &--return {
+            max-width: 30rem;
+            & button {
+                padding: 0 v.$font-xsmall;
+            }
+        }
+        width: 95%; // Largeur du container
+        max-width: 30rem; // Largeur max du container
+        margin: v.$font-xxsmall auto; // Pour centrer le container
+        padding: v.$font-xxsmall;
+    }
+}
+
+.ProjectCard {
+    border: 1px solid black;
+    &--firstField {
+        &--title {
+        }
+        &--technos {
+            display: flex;
+            justify-content: space-around;
+        }
+    }
+    &--secondField {
+        &--description {
+            overflow: auto;
+            text-align: justify;
+        }
+    }
+
+    @media screen and (min-width: v.$mq-large) {
+        display: flex;
+        flex-direction: row;
+        margin: v.$font-xsmall auto;
+        padding: v.$font-xsmall v.$font-xsmall v.$font-xsmall 0;
+        width: 95%;
+        &--firstField {
+            width: 30%;
+            &--title {
+                padding: 0 v.$font-xsmall;
+                font-size: v.$font-medium;
+            }
+            &--technos {
+                display: grid;
+                justify-items: center;
+                grid-template-columns: repeat(2, 1fr);
+                margin: v.$font-xsmall auto;
+                gap: v.$font-small;
+                & img {
+                    width: v.$font-large;
+                    height: v.$font-large;
+                }
+            }
+        }
+        &--secondField {
+            width: 70%;
+            &--description {
+                max-height: 17rem;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-large) {
+        display: flex;
+        flex-direction: row;
+        margin: v.$font-xsmall auto;
+        padding: v.$font-xsmall v.$font-xsmall v.$font-xsmall 0;
+        &--firstField {
+            width: 30%;
+            &--title {
+                padding: 0 v.$font-xsmall;
+                font-size: v.$font-medium;
+            }
+            &--technos {
+                display: grid;
+                justify-items: center;
+                grid-template-columns: repeat(2, 1fr);
+                margin: v.$font-xsmall auto;
+                gap: v.$font-small;
+                & img {
+                    width: v.$font-large;
+                    height: v.$font-large;
+                }
+            }
+        }
+        &--secondField {
+            width: 70%;
+            &--description {
+                max-height: 17rem;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-medium) {
+        display: flex;
+        flex-direction: column;
+        padding: v.$font-xsmall;
+        font-size: v.$font-small;
+        & h4 {
+            font-size: v.$font-small;
+        }
+        &--firstField {
+            width: 100%;
+            &--technos {
+                display: flex;
+                padding: v.$font-xsmall;
+                & img {
+                    width: v.$font-medium;
+                    height: v.$font-medium;
+                }
+            }
+        }
+        &--secondField {
+            width: 100%;
+            &--description {
+                max-height: 13rem;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-small) {
+        margin: v.$font-xsmall auto;
+        padding: v.$font-xxsmall;
+        font-size: v.$font-xsmall;
+        & h4 {
+            font-size: v.$font-small;
+        }
+        &--firstField {
+            &--technos {
+                & img {
+                    width: v.$font-small;
+                    height: v.$font-small;
+                }
+            }
+        }
+        &--secondField {
+            &--description {
+                max-height: 10rem;
+            }
+        }
+    }
+    @media screen and (max-width: v.$mq-xsmall) {
+        & h4 {
+            font-size: v.$font-xsmall;
+        }
+        &--firstField {
+            &--technos {
+                padding: v.$font-xxsmall;
+            }
+        }
+        &--secondField {
+            &--description {
+                max-height: 8rem;
+            }
+        }
+    }
+}

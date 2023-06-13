@@ -1,6 +1,10 @@
+// Typage
+import { BurgerI } from '../../../../../../@types/interface';
+
 import './style.scss';
 
-function Burger(props) {
+// * On récupère isOpen et setIsOpen depuis HeaderSmall
+function Burger(props: BurgerI) {
   const { isOpen, setIsOpen } = props;
 
   const handleClick = () => {

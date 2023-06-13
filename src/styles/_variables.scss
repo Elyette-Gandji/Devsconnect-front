@@ -2,10 +2,11 @@
 
 //? Colors
 $color: #e6e6e6;
+// $color: #af87ab;
 $color-dark: color.scale($color, $lightness: -50%);
 $color-light: color.scale($color, $lightness: 70%);
 
-$color-darkest: #333;
+$color-darkest: #333333;
 
 //? Fonts
 $font: 'Roboto', sans-serif;
@@ -27,7 +28,7 @@ $font-xsmall: 1rem;
 $font-xxsmall: 0.6rem;
 
 //? Media Queries
-$mq-xlarge: 1200px;
+$mq-xlarge: 1500px;
 $mq-large: 1080px;
 $mq-medium: 768px;
 $mq-small: 500px;

@@ -1,34 +1,53 @@
+// ? Librairies
 import { useState, useRef, useEffect } from 'react';
 
-// Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
-import { Switch } from '@mui/material';
-import { useAppDispatch } from '../../../hook/redux';
+// ? Permet de relancer le rendu de ce composant à chaque fois que le state de la modale change
+import { useAppSelector, useAppDispatch } from '../../../hook/redux';
+import CustomSwitch from '../../../utils/customSwitchUI';
 
-// Actions du reducer
-import { toggleModalSignin } from '../../../store/reducer/log';
+// ? Actions du reducer
+import {
+  toggleModalLogin,
+  toggleModalSignin,
+} from '../../../store/reducer/log';
+import { signinUser } from '../../../store/reducer/user';
 
-// Composants
+// ? Composants
 import Input from '../Input';
-// Icone switch open to work
+// import FlashMessage from '../FlashMessage/FlashMessage';
+
+// ? Utils
+import { technos } from '../../../utils/technosPath'; // Pour le choix des technos
 
 // Styles
 import './style.scss';
 
-function Signin() {
-  // State pour la selection des technos
+// ? Typage
+import { TechnoMapI } from '../../../@types/interface';
 
-  const [selectedTechnos, setSelectedTechnos] = useState([]);
+function Signin() {
+  const flash = useAppSelector((state) => state.user.signin.message);
+
+  // State pour la selection des technos
+  const [selectedTechnos, setSelectedTechnos] = useState<string[]>([]);
   // State pour le check de open to work
   const [checked, setChecked] = useState(false);
 
+  //! Ref pour la modale
   const modalRef = useRef(null);
 
-  // Dispatch
+  // ! Dispatch
   const dispatch = useAppDispatch();
 
+  //! useEffect pour clic externe à la modale
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        //* On précise que modalRef.current éun element html (Element)
+        //* On précise que event.target représente un noeud du DOM (Node)
+        !(modalRef.current as Element).contains(event.target as Node)
+      ) {
         // Clic en dehors de la modale
         dispatch(toggleModalSignin());
       }
@@ -39,9 +58,24 @@ function Signin() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [dispatch]);
 
-  const handleImageClick = (imageId) => {
+  //! Fonction pour fermer la modale avec la croix
+  const handleSignin = () => {
+    // On dispatch l'action qui va gérer l'ouverture de la modale
+    dispatch(toggleModalSignin());
+  };
+  // * Une div n'est pas un element clickable
+  // * Fonction d’accessibilité pour le clavier.
+  // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
+  const handleSigninKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'enter' || event.key === ' ') {
+      handleSignin();
+    }
+  };
+
+  //! Fonction pour la selection des technos
+  const handleImageClick = (imageId: string) => {
     if (selectedTechnos.includes(imageId)) {
       setSelectedTechnos(selectedTechnos.filter((id) => id !== imageId));
     } else {
@@ -51,7 +85,10 @@ function Signin() {
   // * Une div n'est pas un element clickable
   // * Fonction d’accessibilité pour le clavier.
   // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
-  const handleImageKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleImageKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>,
+    imageId: string
+  ) => {
     if (event.key === 'enter' || event.key === ' ') {
       handleImageClick(imageId);
     }
@@ -62,51 +99,15 @@ function Signin() {
     setChecked(!checked);
   };
 
-  //! Fonction pour la modale Signin
-  const handleSignin = () => {
-    // On dispatch l'action qui va gérer l'ouverture de la modale
-    dispatch(toggleModalSignin());
-  };
-
-  // * Une div n'est pas un element clickable
-  // * Fonction d’accessibilité pour le clavier.
-  // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
-  const handleSigninKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'enter' || event.key === ' ') {
-      handleSignin();
-    }
-  };
-
   //! Fonction pour l'envoie du formulaire
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Utilisez la valeur `checked` comme nécessaire lors de la soumission du formulaire
-    console.log('Valeur du bouton de commutation :', checked);
 
-    // Récupérer la valeur du champ CGU
-    const cguAccepted = event.target.cgu.checked;
-
-    // Préparez les données du formulaire
-    const formData = {
-      openToWork: checked,
-      firstname: event.target.firstname.value,
-      lastname: event.target.lastname.value,
-      pseudo: event.target.pseudo.value,
-      email: event.target.email.value,
-      password: event.target.password.value,
-      aboutMe: event.target.aboutMe.value,
-
-      // Récupérer la valeur du champ CGU
-      cguAccepted,
-      // Récupérer les technos sélectionnées
-      technos: selectedTechnos,
-    };
-
-    // Utilisez les données du formulaire comme nécessaire
-    console.log('Données du formulaire :', formData);
-
-    // Effectuez les actions nécessaires avec les données du formulaire
-    // Par exemple, vous pouvez réinitialiser le formulaire, afficher un message de confirmation, etc.
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    dispatch(signinUser(formData));
+    dispatch(toggleModalSignin());
+    dispatch(toggleModalLogin());
   };
 
   return (
@@ -127,17 +128,21 @@ function Signin() {
         <form onSubmit={handleSubmit} className="Signin--form">
           <fieldset className="Signin--field">
             <Input name="firstname" type="text" placeholder="Prénom" />
-            <Input name="lastname" type="text" placeholder="Nom" />
+            <Input name="name" type="text" placeholder="Nom" />
             <Input name="pseudo" type="text" placeholder="Pseudo" />
             <Input name="email" type="email" placeholder="Adresse Email" />
             <Input name="password" type="password" placeholder="Mot de passe" />
             <div className="Signin--openToWork">
               <p>Ouvert aux projets</p>
-              <Switch checked={checked} onChange={handleSwitch} />
+              <CustomSwitch
+                name="availability"
+                checked={checked}
+                onChange={handleSwitch}
+              />
             </div>
-            <label htmlFor="aboutMe" className="Signin--inputTextarea">
+            <label htmlFor="description" className="Signin--inputTextarea">
               A propos de moi
-              <textarea name="aboutMe" id="aboutMe" />
+              <textarea name="description" id="description" />
             </label>
           </fieldset>
 
@@ -146,94 +151,36 @@ function Signin() {
               <h3>Mes technos</h3>
               <p>(Plusieurs choix possibles)</p>
               <div className="Signin--techno">
-                <div className="Signin--inputCheckbox">
-                  <input
-                    type="checkbox"
-                    id="react"
-                    name="react"
-                    value="react"
-                  />
-                  <label htmlFor="html"> React</label>
-                  <div
-                    role="button"
-                    onClick={() => handleImageClick('react')}
-                    onKeyDown={handleImageKeyDown}
-                    tabIndex={0}
-                    className={`Signin--inputCheckbox--img ${
-                      selectedTechnos.includes('react') ? 'selected' : ''
-                    }`}
-                  >
-                    <img src="/images/technos/react.svg" alt="react" />
-                  </div>
-                </div>
-                <div className="Signin--inputCheckbox">
-                  <input type="checkbox" id="css" name="css" value="css" />
-                  <label htmlFor="html"> CSS</label>
-                  <div
-                    role="button"
-                    onClick={() => handleImageClick('css')}
-                    onKeyDown={handleImageKeyDown}
-                    tabIndex={0}
-                    className={`Signin--inputCheckbox--img ${
-                      selectedTechnos.includes('css') ? 'selected' : ''
-                    }`}
-                  >
-                    <img src="/images/technos/css.svg" alt="css" />
-                  </div>
-                </div>
-                <div className="Signin--inputCheckbox">
-                  <input type="checkbox" id="vite" name="vite" value="vite" />
-                  <label htmlFor="html"> Vite</label>
-                  <div
-                    role="button"
-                    onClick={() => handleImageClick('vite')}
-                    onKeyDown={handleImageKeyDown}
-                    tabIndex={0}
-                    className={`Signin--inputCheckbox--img ${
-                      selectedTechnos.includes('vite') ? 'selected' : ''
-                    }`}
-                  >
-                    <img src="/images/technos/vite.svg" alt="vite" />
-                  </div>
-                </div>
-                <div className="Signin--inputCheckbox">
-                  <input
-                    type="checkbox"
-                    id="typescript"
-                    name="typescript"
-                    value="typescript"
-                  />
-                  <label htmlFor="html"> Typescript</label>
-                  <div
-                    role="button"
-                    onClick={() => handleImageClick('typescript')}
-                    onKeyDown={handleImageKeyDown}
-                    tabIndex={0}
-                    className={`Signin--inputCheckbox--img ${
-                      selectedTechnos.includes('typescript') ? 'selected' : ''
-                    }`}
-                  >
-                    <img
-                      src="/images/technos/typescript.svg"
-                      alt="typescript"
+                {technos.map((techno: TechnoMapI) => (
+                  <div className="Signin--inputCheckbox" key={techno.id}>
+                    <input
+                      type="checkbox"
+                      id={techno.label}
+                      name={techno.label}
+                      value={techno.label}
                     />
+                    <label htmlFor={techno.label}>{techno.label}</label>
+                    <div
+                      role="button"
+                      onClick={() => handleImageClick(techno.id.toString())} //! toString() pour le typage de selectedTechnos (string[])
+                      onKeyDown={(event) =>
+                        handleImageKeyDown(event, techno.id.toString())
+                      }
+                      tabIndex={0}
+                      className={`Signin--inputCheckbox--img ${
+                        selectedTechnos.includes(techno.id.toString()) //! toString() pour le typage de selectedTechnos (string[])
+                          ? 'selected'
+                          : ''
+                      }`}
+                    >
+                      <img
+                        src={techno.path}
+                        title={techno.label}
+                        alt={techno.label}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="Signin--inputCheckbox">
-                  <input type="checkbox" id="html" name="html" value="html" />
-                  <label htmlFor="html"> HTML</label>
-                  <div
-                    role="button"
-                    onClick={() => handleImageClick('html')}
-                    onKeyDown={handleImageKeyDown}
-                    tabIndex={0}
-                    className={`Signin--inputCheckbox--img ${
-                      selectedTechnos.includes('html') ? 'selected' : ''
-                    }`}
-                  >
-                    <img src="/images/technos/html.svg" alt="html" />
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
             <div className="Signin--cgu">
@@ -241,6 +188,7 @@ function Signin() {
                 J&apos;accepte les CGU
                 <input
                   type="checkbox"
+                  // required
                   id="cgu"
                   name="cgu"
                   value="cgu"

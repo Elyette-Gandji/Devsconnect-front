@@ -1,8 +1,8 @@
-import { Flash } from '../../@types/interface';
+import { FlashI } from '../../../@types/interface';
 
 import './style.scss';
 
-function FlashMessage({ type, duration, children }: Flash) {
+function FlashMessage({ type, duration, children }: FlashI) {
   return (
     <div
       className={`Flash Flash--${type}`}

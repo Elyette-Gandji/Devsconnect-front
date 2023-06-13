@@ -5,18 +5,18 @@ import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
 // Actions du reducer
 import { toggleModalLogin } from '../../../store/reducer/log';
-import { loginUser, logout } from '../../../store/reducer/user';
+import { loginUser } from '../../../store/reducer/user';
 
 // Composants
 import Input from '../Input';
-import FlashMessage from '../FlashMessage/FlashMessage';
+// import FlashMessage from '../FlashMessage/FlashMessage';
 
 // Styles
 import './style.scss';
 
 // ? Fonction
 function Login() {
-  const flash = useAppSelector((state) => state.user.message);
+  const flash = useAppSelector((state) => state.user.login.message);
 
   //! Ref pour la modale
   const modalRef = useRef(null);
@@ -26,8 +26,13 @@ function Login() {
 
   //! useEffect pour clic externe à la modale
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        //* On précise que modalRef.current éun element html (Element)
+        //* On précise que event.target représente un noeud du DOM (Node)
+        !(modalRef.current as Element).contains(event.target as Node)
+      ) {
         // Clic en dehors de la modale
         dispatch(toggleModalLogin());
       }
@@ -38,7 +43,7 @@ function Login() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [dispatch]);
 
   //! Fonction pour fermer la modale avec la croix
   const handleLogin = () => {

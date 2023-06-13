@@ -1,16 +1,19 @@
 // Hook pour la lecture des state, avec typage inclus
 import { useAppSelector } from '../../../../../../hook/redux';
 
+// Typage
+import { BurgerI } from '../../../../../../@types/interface';
+
 // Components
 import LinksComponent from '../../LinksComponent/LinksComponent';
 import LogoutComponent from '../../LogoutComponent/LogoutComponent';
 import LogComponent from '../../LogComponent/LogComponent';
 import Footer from '../../../Footer/Footer';
 
-function LeftMenu(props) {
+function LeftMenu(props: BurgerI) {
   // On récupère la state isOpen du composant parent HeaderSmall
   const { isOpen, setIsOpen } = props;
-  const isLogged = useAppSelector((state) => state.user.logged);
+  const isLogged = useAppSelector((state) => state.user.login.logged);
 
   return (
     // On ajoute la classe active si isOpen est à true => Gestion dans le CSS ensuite

@@ -1,10 +1,11 @@
 import './style.scss';
 
-function NotFound(
-  { errorMessage }: { errorMessage: string },
-  { errorStatut }: { errorStatut: number }
-) {
-  // Je ne sais pas comment les typer sur un markdown, à tester en réel si cela fonctionne
+interface NotFoundI {
+  errorMessage: string;
+  errorStatut: number | string;
+}
+
+function NotFound({ errorMessage, errorStatut }: NotFoundI) {
   return (
     <div className="not-found">
       <h1>{errorStatut}</h1>

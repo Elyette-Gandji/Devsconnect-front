@@ -1,0 +1,325 @@
+@use '../../../styles/variables' as v;
+@use '../../../styles/mixins' as m; // @include pour utiliser
+
+//? Container des cartes
+.Members {
+    flex-grow: 1; // Permet de descendre le footer en bas de page
+    &--containerCard {
+        display: grid; // Permet de mettre les cartes en grille
+        justify-items: center;
+    }
+    &--title {
+        text-align: center;
+    }
+    @media screen and (min-width: v.$mq-xlarge) {
+        &--containerCard {
+            grid-template-columns: repeat(
+                4,
+                1fr
+            ); // Permet de mettre 3 cartes par ligne
+            margin: 0 auto; // Permet de centrer les cartes
+            max-width: 140rem; // Permet de limiter la largeur du container
+            gap: v.$font-medium; // Permet de gérer un espace entre les cartes
+            padding: v.$font-xsmall;
+        }
+        //? Titre
+        & h2 {
+            padding: v.$font-xsmall;
+            font-size: v.$font-large;
+        }
+    }
+    @media screen and (max-width: v.$mq-xlarge) {
+        &--containerCard {
+            grid-template-columns: repeat(
+                3,
+                1fr
+            ); // Permet de mettre 2 cartes par ligne
+            margin: 0 auto; // Permet de centrer les cartes
+            max-width: 100rem; // Permet de limiter la largeur du container
+            gap: v.$font-medium; // Permet de gérer un espace entre les cartes
+            padding: v.$font-xsmall;
+        }
+        &--title {
+            padding: v.$font-xsmall;
+            font-size: v.$font-large;
+        }
+    }
+    @media screen and (max-width: v.$mq-large) {
+        &--containerCard {
+            grid-template-columns: repeat(
+                2,
+                1fr
+            ); // Permet de mettre 2 cartes par ligne
+            margin: 0 auto; // Permet de centrer les cartes
+            max-width: 75rem; // Permet de limiter la largeur du container
+            gap: v.$font-medium; // Permet de gérer un espace entre les cartes
+            padding: v.$font-xsmall;
+        }
+        &--title {
+            padding: v.$font-xsmall;
+            font-size: v.$font-large;
+        }
+    }
+    @media screen and (max-width: v.$mq-medium) {
+        &--containerCard {
+            grid-template-columns: repeat(
+                1,
+                1fr
+            ); // Permet de mettre 1 carte par ligne
+            gap: v.$font-small; // Permet de gérer un espace entre les cartes
+        }
+    }
+    @media screen and (max-width: v.$mq-small) {
+        &--containerCard {
+            gap: v.$font-xsmall; // Permet de gérer un espace entre les cartes
+        }
+        &--title {
+            font-size: v.$font-large;
+        }
+    }
+    @media screen and (max-width: v.$mq-xsmall) {
+        &--title {
+            font-size: v.$font-medium;
+        }
+    }
+}
+
+//? Carte d'un membre
+.CardMember {
+    &--card {
+        margin: 0 auto; // Permet de centrer la carte
+        border: 2px solid black;
+        &--header {
+            display: flex; // Permet de mettre les éléments en ligne
+            justify-content: space-between;
+            border-bottom: 1px solid black; // Permet de mettre une bordure en bas de la carte
+
+            &--text {
+                width: 74+5%;
+                & h3 {
+                    white-space: nowrap; //* Empêche le retour à la ligne
+                    overflow: hidden; //* Cache le contenu dépassant du cadre
+                    text-overflow: ellipsis; //* Ajoute des points de suspension
+                }
+            }
+        }
+        &--body {
+            padding: v.$font-small;
+            &--text {
+                overflow: auto; // Permet de gérer le scroll si le texte dépasse
+                text-align: justify; // Permet de justifier le texte
+                & p {
+                    font-size: v.$font-xsmall;
+                }
+            }
+            &--technos {
+                display: flex; // Permet de mettre les éléments en ligne
+                justify-content: left;
+                align-items: center;
+            }
+        }
+        &--footer {
+            padding: v.$font-small;
+            //? Titre des projets
+            & li > span {
+                padding-right: v.$font-xsmall;
+                font-weight: 700;
+                text-decoration: underline;
+            }
+            //? Description des projets
+            & li {
+                white-space: nowrap; //* Empêche le retour à la ligne
+                overflow: hidden; //* Cache le contenu dépassant du cadre
+                text-overflow: ellipsis; //* Ajoute des points de suspension
+            }
+        }
+        @media screen and (min-width: v.$mq-large) {
+            // Taille de la carte
+            width: 30rem;
+            height: 43rem;
+
+            // Taille de police
+            & p,
+            & li {
+                font-size: v.$font-small;
+            }
+            & h4 {
+                font-size: v.$font-medium;
+            }
+            &--header {
+                padding: v.$font-medium;
+                &--text {
+                    & h3 {
+                        font-size: v.$font-medium;
+                    }
+                    & p {
+                        font-weight: 700;
+                    }
+                }
+                & img {
+                    width: v.$font-xlarge + 1rem;
+                    height: v.$font-xlarge + 1rem;
+                }
+            }
+            &--body {
+                padding: v.$font-medium;
+                &--text {
+                    max-height: 14rem;
+                }
+                &--technos {
+                    padding-top: v.$font-medium;
+                    & img {
+                        margin-right: v.$font-large;
+                        width: v.$font-large;
+                        height: v.$font-large;
+                    }
+                }
+            }
+            &--footer {
+                padding: 0 v.$font-medium v.$font-medium;
+            }
+        }
+        @media screen and (max-width: v.$mq-large) {
+            // Taille de la carte
+            width: 30rem;
+            height: 43rem;
+            // Taille de police
+            & p,
+            & li {
+                font-size: v.$font-small;
+            }
+            & h4 {
+                font-size: v.$font-medium;
+            }
+
+            &--header {
+                padding: v.$font-medium;
+                &--text {
+                    & h3 {
+                        font-size: v.$font-medium;
+                    }
+                    & p {
+                        font-weight: 700;
+                    }
+                }
+                & img {
+                    width: v.$font-xlarge + 1rem;
+                    height: v.$font-xlarge + 1rem;
+                }
+            }
+            &--body {
+                padding: v.$font-medium;
+                &--text {
+                    max-height: 14rem;
+                }
+                &--technos {
+                    padding-top: v.$font-medium;
+                    & img {
+                        margin-right: v.$font-medium;
+                        width: v.$font-medium;
+                        height: v.$font-medium;
+                    }
+                }
+            }
+            &--footer {
+                padding: 0 v.$font-medium v.$font-medium;
+            }
+        }
+        @media screen and (max-width: v.$mq-medium) {
+            // Taille de la carte
+            width: 46rem;
+            height: 41rem;
+            &--header {
+                & img {
+                    width: v.$font-xlarge + 2rem;
+                    height: v.$font-xlarge + 2rem;
+                }
+            }
+            &--body {
+                padding: v.$font-small v.$font-medium 0;
+                &--text {
+                    max-height: 12rem;
+                }
+                &--technos {
+                    padding-top: v.$font-small;
+                    & img {
+                        width: v.$font-large;
+                        height: v.$font-large;
+                    }
+                }
+            }
+            &--footer {
+                padding: v.$font-medium;
+            }
+        }
+        @media screen and (max-width: v.$mq-small) {
+            // Taille de la carte
+            width: 30rem;
+            height: 39rem;
+            // Taille de police
+            & p,
+            & li {
+                font-size: v.$font-small;
+            }
+
+            &--header {
+                padding: v.$font-small;
+                &--text {
+                    & h3 {
+                        font-size: v.$font-medium;
+                    }
+                }
+                & img {
+                    width: v.$font-xlarge + 2rem;
+                    height: v.$font-xlarge + 2rem;
+                }
+            }
+            &--body {
+                padding: v.$font-xsmall v.$font-xsmall 0;
+                &--technos {
+                    & img {
+                        width: 3rem;
+                        height: 3rem;
+                    }
+                }
+            }
+            &--footer {
+                padding: v.$font-xsmall;
+            }
+        }
+        @media screen and (max-width: v.$mq-xsmall) {
+            // Taille de la carte
+            width: 22rem;
+            height: 28rem;
+            // Taille de police
+            & p,
+            & li {
+                font-size: v.$font-xsmall;
+            }
+            &--header {
+                &--text {
+                    & h3 {
+                        font-size: v.$font-small;
+                    }
+                }
+            }
+            &--body {
+                padding: v.$font-small;
+
+                &--text {
+                    max-height: 10rem;
+                }
+                &--technos {
+                    & img {
+                        width: 2rem;
+                        height: 2rem;
+                    }
+                }
+            }
+            //* On masque le footer
+            &--footer {
+                display: none;
+            }
+        }
+    }
+}
