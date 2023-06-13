@@ -46,6 +46,9 @@ function ProjectDetail() {
         <div className="title-description-container">
           <h2 className="project-description-title">Description</h2>
           <p className="card-project-description">{project.description}</p>
+          <div>
+            <h1>Participants</h1>
+          </div>
         </div>
 
         <div className="project-technos-container">
