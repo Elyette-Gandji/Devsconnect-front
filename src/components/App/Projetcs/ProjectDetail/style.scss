@@ -1,0 +1,128 @@
+.card {
+    flex-grow: 1;
+}
+
+.card-header {
+    width: 100%;
+    background-color: white;
+    margin: 2rem 0 2rem 0;
+    text-align: center;
+    padding: 4rem;
+    box-shadow: 5px 5px 5px rgb(190, 190, 190);
+    position: relative;
+}
+.card-project-title {
+    font-size: 8rem;
+}
+
+.apply-btn {
+    float: right;
+    margin: 2rem;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 10rem;
+}
+
+.project-technos-container {
+    width: 15%;
+    float: right;
+    background-color: white;
+    padding: 1rem;
+    height: auto;
+    box-shadow: 5px 5px 5px rgb(190, 190, 190);
+}
+
+.project-technos-img {
+    flex-direction: column;
+    display: flex;
+    width: 40px;
+    height: 80%;
+    margin: 0 auto;
+    align-content: space-around;
+    justify-content: space-between;
+}
+
+.return-btn {
+    margin: 3rem;
+    width: 100px;
+    border-radius: 6px;
+    border: none;
+    background-color: #7c7b79;
+    color: white;
+    padding: 0.5rem;
+}
+
+.project-description-title {
+    margin: 2rem;
+    border-bottom: 1px solid black;
+    width: 135px;
+}
+
+.card-project-description {
+    margin: 2rem;
+}
+.description-container {
+    width: 100%;
+    display: flex;
+}
+
+.technos-title {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.project-open-card {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    background-color: rgba(36, 177, 90, 0.699);
+    border-radius: 10px;
+    width: 10vw;
+}
+
+.project-close-card {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    background-color: rgba(221, 62, 62, 0.603);
+    border-radius: 10px;
+    width: 10vw;
+}
+
+.title-description-container {
+    margin-right: 15rem;
+    padding-right: 5rem;
+    padding-right: 2rem;
+    margin-left: 2rem;
+    min-height: 30rem;
+}
+
+@media (max-width: 768px) {
+    .project-technos-container {
+        width: 100%;
+        float: none;
+        margin-top: 2rem;
+        height: 30rem;
+    }
+
+    .project-technos-img {
+        flex-direction: column;
+        display: flex;
+        width: 40px;
+        height: 80%;
+        margin: 0 auto;
+        align-content: space-around;
+        justify-content: space-between;
+    }
+
+    .description-container {
+        flex-direction: column;
+    }
+
+    .title-description-container {
+        margin-right: 0;
+        margin-bottom: 2rem;
+        padding: 2rem;
+    }
+}

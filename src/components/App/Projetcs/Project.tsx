@@ -12,7 +12,7 @@ function Project({ project }) {
         </div>
 
         <div className="project-technos">
-          <p>{project.technos}</p>
+          <div className="project-technos-containers">{project.technos}</div>
         </div>
       </div>
       <div className="project-description">

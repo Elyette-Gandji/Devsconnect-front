@@ -1,9 +1,15 @@
+img {
+    width: 40px;
+    height: 40px;
+}
+
 .projects-flex {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 2fr));
     justify-items: center;
     gap: 3rem;
     padding: 1rem 3rem;
+    flex-grow: 1;
 }
 
 .project {
@@ -15,6 +21,11 @@
     max-width: 600px;
     margin: 3rem;
     transition: all 300ms;
+    flex-grow: 1;
+}
+
+.projects {
+    flex-grow: 1;
 }
 
 .project:hover {
@@ -60,11 +71,24 @@
 }
 
 .project-technos {
-    max-width: 5vw;
     max-height: 70px;
-    min-height: 70px;
+    min-height: 50px;
     margin: 1rem;
-    min-width: 70px;
+    min-width: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.project-technos-containers {
+    width: 400px;
+    margin: 0.5rem;
+    height: 40px;
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
 }
 
 .project-open {
@@ -90,10 +114,11 @@
 .return {
     margin: 3rem;
     width: 100px;
-    border-radius: 10px;
+    border-radius: 6px;
     border: none;
     background-color: #7c7b79;
     color: white;
+    padding: 0.5rem;
 }
 
 @media screen and (max-width: 750px) {

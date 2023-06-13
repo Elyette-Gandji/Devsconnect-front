@@ -8,7 +8,7 @@ function Projects() {
   };
 
   return (
-    <div>
+    <div className="projects">
       <button className="return" type="button" onClick={handleReturn}>
         Retour
       </button>
