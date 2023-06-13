@@ -37,7 +37,7 @@ export interface ProjectI {
   updatedAt: Date;
 }
 
-export interface TechnoI {
+export interface TagI {
   id: number;
   name: string;
   createdAt: Date;
