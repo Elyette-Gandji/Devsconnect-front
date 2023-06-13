@@ -45,9 +45,7 @@ export interface TagI {
 }
 
 //* Utiliser dans Signin par exemple pour l'affichage des technos
-export interface TechnoMapI {
+export interface TagSelectedI {
   id: number | string;
-  label: string;
-  value: string;
-  path: string;
+  name: string;
 }

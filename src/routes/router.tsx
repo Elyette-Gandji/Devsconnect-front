@@ -4,6 +4,7 @@ import {
   createRoutesFromElements,
 } from 'react-router-dom';
 import Root from './Root';
+
 import ErrorPage from './ErrorPage';
 import Home from '../components/App/Home/Home';
 
