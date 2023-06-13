@@ -20,7 +20,7 @@ function FilterBar({
   setFilteredMembers: any;
 }) {
   //! States
-  const [checked, setChecked] = useState(false); // Sert à gérer le switch open to work
+  const [checked, setChecked] = useState(true); // Sert à gérer le switch open to work
   const [searchParams, setSearchParams] = useSearchParams(); // Sert à récupérer les paramètres de l'url
   const searchText = searchParams.get('search') || ''; // Sert à récupérer la valeur du paramètre search de l'url
 

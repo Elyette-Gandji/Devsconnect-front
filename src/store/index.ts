@@ -5,6 +5,7 @@ import mainReducer from './reducer/main';
 import userReducer from './reducer/user';
 import logReducer from './reducer/log';
 import membersReducer from './reducer/members';
+import tagReducer from './reducer/tag';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     user: userReducer,
     log: logReducer,
     members: membersReducer,
+    tag: tagReducer,
   },
 });
 

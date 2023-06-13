@@ -11,11 +11,11 @@ interface MemberState {
   status?: string;
   list: {
     data: [];
-    loading: boolean; // Nouvelle propriété
+    loading: boolean;
   };
   member: {
     data: MemberI | null;
-    loading: boolean; // Nouvelle propriété
+    loading: boolean;
   };
 }
 
@@ -34,7 +34,7 @@ export const initialState: MemberState = {
 };
 
 // ? Fonctions asynchrones
-//* Authentification
+//* Rechercher tous les membres
 export const fetchAllMembers = createAsyncThunk(
   'user/fetchAllMembers',
   async () => {
@@ -50,6 +50,7 @@ export const fetchAllMembers = createAsyncThunk(
   }
 );
 
+//* Rechercher un seul membre
 export const fetchOneMember = createAsyncThunk(
   'user/fetchOneMember',
   async (id: string) => {

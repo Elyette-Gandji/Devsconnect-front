@@ -37,7 +37,7 @@ export interface ProjectI {
   updatedAt: Date;
 }
 
-export interface TechnoI {
+export interface TagI {
   id: number;
   name: string;
   createdAt: Date;
@@ -45,9 +45,7 @@ export interface TechnoI {
 }
 
 //* Utiliser dans Signin par exemple pour l'affichage des technos
-export interface TechnoMapI {
+export interface TagSelectedI {
   id: number | string;
-  label: string;
-  value: string;
-  path: string;
+  name: string;
 }
