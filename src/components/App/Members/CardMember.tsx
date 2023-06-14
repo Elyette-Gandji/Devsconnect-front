@@ -2,9 +2,6 @@
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../hook/redux';
 
-// Utils
-// import { technos } from '../../../utils/technosPath';
-
 // Typage
 import { MemberI } from '../../../@types/interface';
 
@@ -16,8 +13,7 @@ interface CardMemberI {
 
 function CardMember({ member }: CardMemberI) {
   const userId = useAppSelector((state) => state.user.login.id);
-  const { id, firstname, name, availability, description, projects, tags } =
-    member;
+  const { id, firstname, name, availability, description } = member;
 
   //! variable pour verifier si la page est celle de l'utilisateur connecté
   const profilePath =
@@ -39,13 +35,16 @@ function CardMember({ member }: CardMemberI) {
                 {availability ? 'Disponible' : 'Indisponible'}
               </p>
             </div>
-            <img src="/images/profil/profil.svg" alt="vite" />
+            <img
+              src="/images/profil/profil.svg"
+              alt="profil"
+              title={member.pseudo}
+            />
           </div>
         </Link>
         <div className="CardMember--card--body">
           <p className="CardMember--card--body--text">{description}</p>
           <div className="CardMember--card--body--technos">
-            {/* //! On importe toutes les données depuis data, on map dessus en dur et limite à 5 l'affichage */}
             {member.tags && member.tags.length > 0 ? (
               member.tags
                 .slice(0, 5)

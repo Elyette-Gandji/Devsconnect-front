@@ -15,12 +15,13 @@ export interface MemberI {
   firstname: string;
   email: string;
   password: string;
+  pseudo: string;
   description: string;
   availability: boolean;
-  createdAt: Date;
-  updatedAt: Date;
   projects: ProjectI[];
   tags: TagI[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface MembersI {
@@ -32,7 +33,8 @@ export interface ProjectI {
   title: string;
   description: string;
   availability: boolean;
-  userId: number;
+  user: MemberI[];
+  tags: TagI[];
   createdAt: Date;
   updatedAt: Date;
 }

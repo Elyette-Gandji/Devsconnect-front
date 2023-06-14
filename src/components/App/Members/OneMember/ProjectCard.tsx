@@ -1,42 +1,56 @@
-import { technos } from '../../../../utils/technosPath';
+import { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../../../../hook/redux';
+
+import {
+  fetchOneProject,
+  fetchAllProjects,
+} from '../../../../store/reducer/projects';
+
+import { ProjectI } from '../../../../@types/interface';
 
 import './style.scss';
+import { Link } from 'react-router-dom';
 
-function ProjectCard() {
+function ProjectCard({ projectID }: { projectID: ProjectI }) {
+  const project = useAppSelector(
+    (state) => state.projects.list.data.find((p) => p.id === projectID.id)
+    // ?  recherche le projet correspondant dans la liste complète des projets (state.projects.list.data) en utilisant l'ID du projet fourni dans les props (projectID.id).
+  );
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAllProjects());
+  }, [dispatch]);
+
+  // Vérifier si le projet est disponible
+  if (!project) {
+    return null; // Afficher un indicateur de chargement ou un message approprié si les détails du projet ne sont pas encore disponibles
+  }
+
   return (
-    <div className="ProjectCard">
-      <div className="ProjectCard--firstField">
-        <h4 className="ProjectCard--firstField--title">Projet 1</h4>
-        <div className="ProjectCard--firstField--technos">
-          {/* //! On importe toutes les données depuis data, on map dessus en dur et limite à 5 l'affichage */}
-          {technos.slice(0, 4).map((techno) => (
-            <img
-              src={techno.path}
-              alt={techno.label}
-              title={techno.label}
-              key={techno.id}
-            />
-          ))}
+    <Link to={`/projects/${project.id}`}>
+      <div className="ProjectCard" key={project.id}>
+        <div className="ProjectCard--firstField">
+          <h4 className="ProjectCard--firstField--title">{project.title}</h4>
+          <div className="ProjectCard--firstField--technos">
+            {project.tags.slice(0, 4).map((tag) => (
+              <img
+                key={`${project.id}-${tag.id}`}
+                src={`/images/technos/${tag.name.toLowerCase()}.svg`}
+                alt={tag.name}
+                title={tag.name}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="ProjectCard--secondField">
+          <div className="ProjectCard--secondField--description">
+            {project.description}
+          </div>
         </div>
       </div>
-      <div className="ProjectCard--secondField">
-        <div className="ProjectCard--secondField--description">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam
-          culpa labore, voluptas neque fugiat deleniti aliquam fugit. Labore
-          nesciunt quod sunt tempora provident ratione in voluptatem, sed eius
-          commodi dolorum minus animi consequatur optio ut ducimus nihil
-          expedita ipsum excepturi rem possimus voluptatibus. Vero consequatur
-          recusandae ad delectus assumenda, corrupti unde quisquam voluptatem
-          tempora architecto accusantium velit minus sit ullam tenetur veniam id
-          rem facilis voluptas atque, voluptate aspernatur amet dignissimos!
-          Laudantium earum possimus ipsam accusamus quos error provident, nisi
-          animi maiores dolore veniam libero enim corrupti labore consectetur
-          nihil hic laboriosam expedita in quam tempora odit. Laboriosam, unde
-          expedita.
-        </div>
-      </div>
-    </div>
+    </Link>
   );
 }
-
 export default ProjectCard;

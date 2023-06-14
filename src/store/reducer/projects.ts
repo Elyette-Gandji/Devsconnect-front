@@ -5,29 +5,29 @@ import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../utils/axios';
 
 // ? Typage
-import { MemberI } from '../../@types/interface';
+import { ProjectI } from '../../@types/interface';
 
-interface MemberState {
+interface ProjectState {
   status?: string;
   list: {
     data: [];
     loading: boolean;
   };
-  member: {
-    data: MemberI | null;
+  project: {
+    data: ProjectI | null;
     loading: boolean;
   };
 }
 
 // ? Initialisation
-export const initialState: MemberState = {
-  // Liste des membres
+export const initialState: ProjectState = {
+  // Liste des projets
   list: {
     data: [],
     loading: false, // Nouvelle propriété
   },
-  // Un seul membre
-  member: {
+  // Un seul projet
+  project: {
     data: null,
     loading: false, // Nouvelle propriété
   },
@@ -35,11 +35,11 @@ export const initialState: MemberState = {
 
 // ? Fonctions asynchrones
 //* Rechercher tous les membres
-export const fetchAllMembers = createAsyncThunk(
-  'user/fetchAllMembers',
+export const fetchAllProjects = createAsyncThunk(
+  'user/fetchAllProjects',
   async () => {
     try {
-      const { data } = await axiosInstance.get('/api/users');
+      const { data } = await axiosInstance.get('/api/projects');
       // ? On retourne le state
       return data;
     } catch (error) {
@@ -51,11 +51,11 @@ export const fetchAllMembers = createAsyncThunk(
 );
 
 //* Rechercher un seul membre
-export const fetchOneMember = createAsyncThunk(
-  'user/fetchOneMember',
+export const fetchOneProject = createAsyncThunk(
+  'user/fetchOneProject',
   async (id: string) => {
     try {
-      const { data } = await axiosInstance.get(`/api/users/${id}`);
+      const { data } = await axiosInstance.get(`/api/projects/${id}`);
       // ? On retourne le state
       return data;
     } catch (error) {
@@ -66,45 +66,45 @@ export const fetchOneMember = createAsyncThunk(
 );
 
 // ? Construction du reducer user avec builder qui utilise les actions pour modifier le state initial
-const membersReducer = createReducer(initialState, (builder) => {
+const projectsReducer = createReducer(initialState, (builder) => {
   // ? On retourne le state selon les cas de figure suivants :
   builder
-    //* Cas de la connexion réussie de fetchAllMembers
-    .addCase(fetchAllMembers.fulfilled, (state, action) => {
+    //* Cas de la connexion réussie de fetchAllProjects
+    .addCase(fetchAllProjects.fulfilled, (state, action) => {
       // ? On modifie le state
       state.list.data = action.payload.data;
       state.list.loading = false; // Définir l'état de chargement sur false
     })
-    //* Cas de la connexion échouée de fetchAllMembers
-    .addCase(fetchAllMembers.rejected, (state) => {
+    //* Cas de la connexion échouée de fetchAllProjects
+    .addCase(fetchAllProjects.rejected, (state) => {
       // ? On modifie le state
       state.list.data = [];
       state.list.loading = false; // Définir l'état de chargement sur false
     })
-    //* Cas de la connexion en cours de fetchAllMembers
-    .addCase(fetchAllMembers.pending, (state) => {
+    //* Cas de la connexion en cours de fetchAllProjects
+    .addCase(fetchAllProjects.pending, (state) => {
       // ? On modifie le state
       state.list.loading = true; // Définir l'état de chargement sur true
     });
 
-  //* Cas de la connexion réussie de fetchOneMember
+  //* Cas de la connexion réussie de fetchOneProject
   builder
-    .addCase(fetchOneMember.fulfilled, (state, action) => {
+    .addCase(fetchOneProject.fulfilled, (state, action) => {
       // ? On modifie le state
-      state.member.data = action.payload.data;
-      state.member.loading = false; // Définir l'état de chargement sur false
+      state.project.data = action.payload.data;
+      state.project.loading = false; // Définir l'état de chargement sur false
     })
-    //* Cas de la connexion échouée de fetchOneMember
-    .addCase(fetchOneMember.rejected, (state) => {
+    //* Cas de la connexion échouée de fetchOneProject
+    .addCase(fetchOneProject.rejected, (state) => {
       // ? On modifie le state
-      state.member.data = null;
-      state.member.loading = false; // Définir l'état de chargement sur false
+      state.project.data = null;
+      state.project.loading = false; // Définir l'état de chargement sur false
     })
-    //* Cas de la connexion en cours de fetchOneMember
-    .addCase(fetchOneMember.pending, (state) => {
+    //* Cas de la connexion en cours de fetchOneProject
+    .addCase(fetchOneProject.pending, (state) => {
       // ? On modifie le state
-      state.member.loading = true; // Définir l'état de chargement sur true
+      state.project.loading = true; // Définir l'état de chargement sur true
     });
 });
 
-export default membersReducer;
+export default projectsReducer;
