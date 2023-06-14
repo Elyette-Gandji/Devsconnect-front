@@ -1,10 +1,9 @@
 import './style.scss';
 import Project from './Project';
-import { list } from '../../../assets/projects-list';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
-import { ProjectI } from '../../../@types/interface';
+
 import { fetchAllProjects } from '../../../store/reducer/projects';
 
 import NotFound from '../../NotFound/NotFound';

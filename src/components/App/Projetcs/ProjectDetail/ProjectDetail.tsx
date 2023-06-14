@@ -1,23 +1,42 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { list } from '../../../../assets/projects-list';
+
 import './style.scss';
+
+import { useAppSelector, useAppDispatch } from '../../../../hook/redux';
+
+import { fetchOneProject } from '../../../../store/reducer/projects';
+import ErrorPage from '../../../../routes/ErrorPage';
+import { technos } from '../../../../utils/technosPath';
 
 function ProjectDetail() {
   const { id } = useParams();
 
-  const project = list.find((p) => p.id === parseInt(id));
+  const dispatch = useAppDispatch();
+  const projectData = useAppSelector((state) => state.projects.project.data);
+  const loading = useAppSelector((state) => state.projects.project.loading);
 
-  if (!project) {
-    return <div>Projet non trouvé</div>;
+  useEffect(() => {
+    if (id) dispatch(fetchOneProject(Number(id)));
+  }, [dispatch, id]);
+
+  if (loading) {
+    return <p>Loading...</p>;
   }
 
-  const classname = project.open ? 'project-open-card' : 'project-close-card';
+  if (!projectData) {
+    return <ErrorPage />;
+  }
+
+  const classname = projectData.availability
+    ? 'project-open-card'
+    : 'project-close-card';
 
   const handleReturn = () => {
     window.history.back();
   };
 
-  const isProjectAvailable = project.open;
+  const isProjectAvailable = projectData.availability;
 
   const handleApply = () => {
     if (!isProjectAvailable) {
@@ -32,12 +51,12 @@ function ProjectDetail() {
       </button>
 
       <div className="card-header">
-        <h1 className="card-project-title">{project.title}</h1>
+        <h1 className="card-project-title">{projectData.title}</h1>
         <h2>Créateur du projet</h2>
 
         <div className={classname}>
           <p className="project-status">
-            {project.open ? 'Disponible' : 'Non disponible'}
+            {projectData.availability ? 'Disponible' : 'Non disponible'}
           </p>
         </div>
       </div>
@@ -45,7 +64,7 @@ function ProjectDetail() {
       <div className="description-container">
         <div className="title-description-container">
           <h2 className="project-description-title">Description</h2>
-          <p className="card-project-description">{project.description}</p>
+          <p className="card-project-description">{projectData.description}</p>
           <div>
             <h1>Participants</h1>
           </div>
@@ -53,7 +72,7 @@ function ProjectDetail() {
 
         <div className="project-technos-container">
           <h2 className="technos-title">Technos utilisées</h2>
-          <div className="project-technos-img">{project.technos}</div>
+          <div className="project-technos-img"></div>
         </div>
       </div>
 
