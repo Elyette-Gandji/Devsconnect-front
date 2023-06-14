@@ -19,23 +19,33 @@ function FilterBar({
   members: MemberI;
   setFilteredMembers: any;
 }) {
-  //! States
+  //! States Redux
   const [checked, setChecked] = useState(true); // Sert à gérer le switch open to work
   const [searchParams, setSearchParams] = useSearchParams(); // Sert à récupérer les paramètres de l'url
+
+  //! Params url
   const searchText = searchParams.get('search') || ''; // Sert à récupérer la valeur du paramètre search de l'url
 
   //! Fonction pour le switch open to work
+  // Si on clique sur le switch, on inverse le state checked
   const handleSwitch = () => {
     setChecked(!checked);
   };
 
-  //! Fonction pour enregistrer la recherche dans l'url
+  /* //! Fonction pour enregistrer la recherche dans l'url
+  /  Fonction appelée à chaque fois que l'utilisateur tape dans le champ de recherche
+  /  On récupère la valeur de la recherche (event.target.value)
+  /  On utilise setSearchParams pour mettre à jour les paramètres de l'url
+  */
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const results = event.target.value;
-    // On met à jour les paramètres de l'url avec la valeur de la recherche (event.target.value)
     setSearchParams({ search: results });
   };
-  //! A chaque fois que `members`, `searchText` ou `setFilteredMembers` change, on fait une mise à jour des membres filtrés
+
+  /* //! UseEffect pour filtrer les membres
+  /  A chaque fois que `members`, `searchText` ou `setFilteredMembers` change, on fait une mise à jour des membres filtrés
+  /  On met à jour les membres filtrés du composant parent <Membres />
+  */
   useEffect(() => {
     // On filtre sur tous les membres
     const filteredResults = members.filter((member) => {

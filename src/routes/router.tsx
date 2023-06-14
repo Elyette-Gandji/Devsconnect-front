@@ -14,15 +14,8 @@ import ProjectDetail from '../components/App/Projetcs/ProjectDetail/ProjectDetai
 import OneMember from '../components/App/Members/OneMember/OneMember';
 import MyProfile from '../components/App/Members/OneMember/MyProfile/MyProfile';
 
-
 const Router = createBrowserRouter(
-  // On crée un tableau de route à partir d'éléments React
   createRoutesFromElements(
-    // Route principale
-    // Gestion de l'erreur sur toutes les routes
-    // Route index
-    // Autres routes
-
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Home />} /> {/* Remplacer App par le contenu */}

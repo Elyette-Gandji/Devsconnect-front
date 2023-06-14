@@ -20,7 +20,7 @@ export interface MemberI {
   createdAt: Date;
   updatedAt: Date;
   projects: ProjectI[];
-  technos: TechnoI[];
+  tags: TagI[];
 }
 
 export interface MembersI {

@@ -41,6 +41,7 @@ export const fetchAllMembers = createAsyncThunk(
     try {
       const { data } = await axiosInstance.get('/api/users');
       // ? On retourne le state
+      console.log(data);
       return data;
     } catch (error) {
       // Gérez les erreurs potentielles ici
@@ -57,9 +58,9 @@ export const fetchOneMember = createAsyncThunk(
     try {
       const { data } = await axiosInstance.get(`/api/users/${id}`);
       // ? On retourne le state
+      console.log(data);
       return data;
     } catch (error) {
-      // Gérez les erreurs potentielles ici
       console.error('Error:', error);
       throw error;
     }
