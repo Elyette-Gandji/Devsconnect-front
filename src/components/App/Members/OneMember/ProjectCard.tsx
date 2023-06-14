@@ -1,20 +1,21 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../../hook/redux';
 
-import {
-  fetchOneProject,
-  fetchAllProjects,
-} from '../../../../store/reducer/projects';
+import { fetchAllProjects } from '../../../../store/reducer/projects';
 
 import { ProjectI } from '../../../../@types/interface';
 
 import './style.scss';
-import { Link } from 'react-router-dom';
 
 function ProjectCard({ projectID }: { projectID: ProjectI }) {
   const project = useAppSelector(
-    (state) => state.projects.list.data.find((p) => p.id === projectID.id)
-    // ?  recherche le projet correspondant dans la liste complète des projets (state.projects.list.data) en utilisant l'ID du projet fourni dans les props (projectID.id).
+    (state) =>
+      state.projects.list.data.find(
+        (projectFromApi) => projectFromApi.id === projectID.id
+      )
+    // ?  filtre le projet correspondant dans la liste complète des projets (state.projects.list.data)
+    // ?  en utilisant l'ID du projet fourni dans les props (projectID.id).
   );
 
   const dispatch = useAppDispatch();
@@ -22,11 +23,6 @@ function ProjectCard({ projectID }: { projectID: ProjectI }) {
   useEffect(() => {
     dispatch(fetchAllProjects());
   }, [dispatch]);
-
-  // Vérifier si le projet est disponible
-  if (!project) {
-    return null; // Afficher un indicateur de chargement ou un message approprié si les détails du projet ne sont pas encore disponibles
-  }
 
   return (
     <Link to={`/projects/${project.id}`}>

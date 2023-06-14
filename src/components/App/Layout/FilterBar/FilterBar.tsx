@@ -10,7 +10,7 @@ import './style.scss';
 import SelectComponent from './Select/Select';
 
 // ? Typage
-import { MemberI } from '../../../../@types/interface';
+import { MemberI, TagI } from '../../../../@types/interface';
 
 function FilterBar({
   members,
@@ -20,9 +20,11 @@ function FilterBar({
   setFilteredMembers: any;
 }) {
   //! States Redux
-  const [checked, setChecked] = useState(true); // Sert à gérer le switch open to work
+  const [checked, setChecked] = useState(false); // Sert à gérer le switch open to work
   const [searchParams, setSearchParams] = useSearchParams(); // Sert à récupérer les paramètres de l'url
 
+  //! States local
+  const [selectValue, setSelectValue] = useState([]); // Sert à stocker les technos sélectionnées
   //! Params url
   const searchText = searchParams.get('search') || ''; // Sert à récupérer la valeur du paramètre search de l'url
 
@@ -30,6 +32,12 @@ function FilterBar({
   // Si on clique sur le switch, on inverse le state checked
   const handleSwitch = () => {
     setChecked(!checked);
+  };
+
+  const handleTechnoChange = (selectedTechnos) => {
+    setSelectValue(selectedTechnos);
+    // Valeur de la techno sélectionnée récupéré depuis le composant <Select />
+    // On l'enregistre dans selectValue
   };
 
   /* //! Fonction pour enregistrer la recherche dans l'url
@@ -43,7 +51,7 @@ function FilterBar({
   };
 
   /* //! UseEffect pour filtrer les membres
-  /  A chaque fois que `members`, `searchText` ou `setFilteredMembers` change, on fait une mise à jour des membres filtrés
+  /  A chaque fois que `members`, `searchText` ou `setFilteredMembers` ou `selectValue` change, on fait une mise à jour des membres filtrés
   /  On met à jour les membres filtrés du composant parent <Membres />
   */
   useEffect(() => {
@@ -64,19 +72,29 @@ function FilterBar({
       //* Filtre par disponibilité
       const available = !checked || member.availability;
 
-      return textResult && available;
+      //* Filtre par techno
+      const technoResult =
+        selectValue.length === 0 ||
+        (member.tags &&
+          // every pour que les filtres technos soient cumulatifs
+          selectValue.every((techno) =>
+            member.tags.some(
+              (tag) => tag.name.toLowerCase() === techno.value.toLowerCase()
+            )
+          ));
+
+      return textResult && available && technoResult;
     });
     // On met à jour les membres filtrés du composant parent <Membres />
     setFilteredMembers(filteredResults);
-  }, [searchText, members, checked, setFilteredMembers]);
-
+  }, [searchText, members, checked, selectValue, setFilteredMembers]);
   return (
     <div className="FilterBar">
       <h3 className="FilterBar--title">Filtrer les résultats</h3>
       <div className="FilterBar--container">
         <div className="FilterBar--firstField">
           <p className="FilterBar--firstField--text">Choix des technos :</p>
-          <SelectComponent />
+          <SelectComponent handleTechnoChange={handleTechnoChange} />
         </div>
         <div className="FilterBar--secondField">
           <input

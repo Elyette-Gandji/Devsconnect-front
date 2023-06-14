@@ -6,34 +6,44 @@ import { useAppSelector, useAppDispatch } from '../../../../../hook/redux';
 
 // ? Actions
 import { resizeWindow } from '../../../../../store/reducer/main';
-
-// ? Datas
-import { technos } from '../../../../../utils/technosPath';
+import { fetchAllTags } from '../../../../../store/reducer/tag';
 
 // ? Styles
 import './style.scss';
 
 // ? Typage
 //* Pour typer les options du select
-type TechnoI = {
-  label: string;
-  value: string;
-  path: string;
+type TagI = {
+  id: number;
+  name: string;
 };
 //* Pour typer le state css `isFocused`
 type StateI = {
   isFocused: boolean;
 };
 
-function SelectComponent({ handleTechnoChange }) {
+function SelectComponent() {
   //! States Redux
   const windowWidth = useAppSelector((state) => state.main.windowWidth); // On récupère la largeur de la fenêtre navigateur
+  const tags = useAppSelector((state) => state.tag.list.data); // On récupère les tags
   //! States local
-  const [selectedTechnos, setSelectedTechnos] = useState<TechnoI[]>([]); // Servira à stocker les technos sélectionnées
+  const [selectedTechnos, setSelectedTechnos] = useState<TagI[]>([]); // Servira à stocker les technos sélectionnées
+  const [selectedTechnoLabels, setSelectedTechnoLabels] = useState<string[]>(
+    []
+  );
+  const [selectTechnosFromApi, setSelectTechnosFromApi] = useState<TagI[]>([]); // Servira à stocker les technos récupérées depuis l'api
 
   //! Dispatch
   const dispatch = useAppDispatch();
 
+  //! useEffect
+  //* On utilise useEffect pour récupérer les tags
+  useEffect(() => {
+    dispatch(fetchAllTags());
+    setSelectTechnosFromApi(tags);
+  }, [dispatch]);
+
+  //! Gestion du placeholder
   /* //* On utilise useEffect pour mettre à jour la state windowWidth
   /  //* à chaque fois que la largeur de la fenêtre navigateur change
   */
@@ -60,38 +70,51 @@ function SelectComponent({ handleTechnoChange }) {
   /  Fonction appelée à chaque fois que l'utilisateur sélectionne ou désélectionne une option
   /  Elle met à jour la state selectedTechnos avec le tableau d'objets
   */
-  const handleOptionChange = (selected: OnChangeValue<TechnoI, true>) => {
+  const handleOptionChange = (selected: OnChangeValue<TagI>) => {
     // On vérifie que selected est bien un tableau (Array.isArray(selected))
     // Si c'est le cas, on met à jour la state selectedTechnos
-    if (selected && Array.isArray(selected)) {
-      setSelectedTechnos(selected);
-      handleTechnoChange(selected); // On passe le tableau de technos sélectionnées au parent pour filtre
-    }
+
+    setSelectedTechnos(selected);
+
+    // Pour chaque option sélectionnée, on récupère le nom (pour l'affichage dans la barre de selection)
+    // On ajoute le nom de chaque techno sélectionnée dans un tableau
+    const names = selected.map((option) => option.name);
+    // On met à jour la state selectedTechnoLabels avec le tableau de noms
+    setSelectedTechnoLabels(names);
   };
 
   //! Fonction pour désactiver les options si 5 technos sont sélectionnées
   // Si le tableau de technos sélectionnées contient 5 éléments, on désactive les options
-  const isOptionDisabled = () => selectedTechnos.length >= 5;
+  const isOptionDisabled = (selected: TagI | null) => {
+    return selectedTechnos.length >= 5;
+  };
 
   /* //! Fonction pour personnaliser le rendu des options
   / Fonction appelée pour chaque option et reçoit en paramètre un objet avec les propriétés label, value et icon
   / Elle filtre le tableau de technos sélectionnées et si l'option est présente, elle n'affiche que le label et disparait de la liste déroulante.
   / Sinon, elle affiche le label et l'icône (dans la liste déroulante).
   */
-  const formatOptionLabel = ({ label, value, path }: TechnoI) => {
-    if (selectedTechnos.some((option) => option.value === value)) {
-      return label; // Afficher uniquement le value sans l'icône
+  const formatOptionLabel = ({ name }: TagI) => {
+    const isOptionSelected = selectedTechnoLabels.includes(name);
+
+    // On affiche seulement le nom présent dans la barre de sélection
+    if (isOptionSelected) {
+      return name; // Afficher uniquement le label sans l'icône
     }
     return (
       <div className="Select--techno--flex">
-        <img src={path} alt={value} className="Select--techno-svg" />
-        {value}
+        <img
+          src={`images/technos/${name.toLowerCase()}.svg`}
+          alt={name}
+          className="Select--techno-svg"
+        />
+        {name}
       </div>
     );
   };
 
   // //! Style du select
-  const customStyles: StylesConfig<TechnoI, true> = {
+  const customStyles: StylesConfig<TagI, true> = {
     // CSSObject est un type de typescript pour typer les styles en ligne (inline styles)
     // On l'importe depuis react-select et on l'utilise comme type pour typer les styles
     //! container complet
@@ -144,7 +167,7 @@ function SelectComponent({ handleTechnoChange }) {
       opacity: '0.6',
     }),
     // ! Menu déroulant
-    menu: (baseStyles: CSSObject, state) => ({
+    menu: (baseStyles: CSSObject) => ({
       ...baseStyles,
       margin: '0rem 0',
       width: '100%', // Largeur du menu déroulant, même largeur que le select
@@ -170,13 +193,17 @@ function SelectComponent({ handleTechnoChange }) {
       color: '#f4fefe',
     }),
   };
+  console.log('selectedTechnoFromApi', selectTechnosFromApi);
 
+  // console.log('tags', tags);
+  // console.log('technos', selectedTechnoLabels);
+  // console.log('selectedTechnos', selectedTechnos);
   return (
     <Select
       id="selectTechnos"
       isMulti // Choix multiple
       name="technos"
-      options={technos} // Tableau des technos (importé de utils/technosOptions)
+      options={selectTechnosFromApi} // Tableau des technos (importé de l'api)
       className="FilterBar--select"
       placeholder={placeHolderText} // variable définie plus haut
       value={selectedTechnos} // Valeur de la sélection (voir state plus haut)
