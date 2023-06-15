@@ -39,6 +39,10 @@ export interface ProjectI {
   updatedAt: Date;
 }
 
+export interface ProjectsI {
+  projects: ProjectI[];
+}
+
 export interface TagI {
   id: number;
   name: string;
