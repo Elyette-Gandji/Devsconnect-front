@@ -13,6 +13,7 @@ import Projects from '../components/App/Projetcs/Projects';
 import ProjectDetail from '../components/App/Projetcs/ProjectDetail/ProjectDetail';
 import OneMember from '../components/App/Members/OneMember/OneMember';
 import MyProfile from '../components/App/Members/OneMember/MyProfile/MyProfile';
+import FormProject from '../components/App/Projetcs/ProjectCreation/FormProject';
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +22,7 @@ const Router = createBrowserRouter(
         <Route index element={<Home />} /> {/* Remplacer App par le contenu */}
         <Route path="/users" element={<Members />} />
         <Route path="/users/:id" element={<OneMember />} />
+        <Route path="/create-my-project" element={<FormProject />} />
         <Route path="/profil" element={<MyProfile />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/:id" element={<ProjectDetail />} />

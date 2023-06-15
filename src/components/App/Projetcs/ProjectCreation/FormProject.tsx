@@ -1,7 +1,7 @@
 import './style.scss';
 import { useState } from 'react';
 
-function Form() {
+function FormProject() {
   return (
     <div>
       <p>helloworld</p>
@@ -9,4 +9,4 @@ function Form() {
   );
 }
 
-export default Form;
+export default FormProject;
