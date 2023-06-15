@@ -232,7 +232,7 @@ function Signin() {
                       tabIndex={0}
                       // On ajoute la classe selected si la techno est sélectionnée
                       className={`Signin--inputCheckbox--img ${
-                        selectedTags.some((tag) => tag.id === techno.id) //! toString() pour le typage de selectedTechnos (string[])
+                        selectedTags.some((tag) => tag.id === techno.id)
                           ? 'selected'
                           : ''
                       }`}
