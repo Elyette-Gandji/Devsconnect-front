@@ -8,7 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import { technos } from '../../../../utils/technosPath';
+import { technos } from '../../../../../utils/technosPath';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -21,7 +21,7 @@ const MenuProps = {
   },
 };
 
-function SelecetCheckmarks() {
+function SelectCheckmarks() {
   const [personName, setPersonName] = React.useState<string[]>([]);
 
   const handleChange = (event: SelectChangeEvent<typeof personName>) => {
@@ -62,4 +62,4 @@ function SelecetCheckmarks() {
   );
 }
 
-export default SelecetCheckmarks;
+export default SelectCheckmarks;
