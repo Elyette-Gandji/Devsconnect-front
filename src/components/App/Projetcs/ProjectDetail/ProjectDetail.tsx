@@ -7,7 +7,6 @@ import { useAppSelector, useAppDispatch } from '../../../../hook/redux';
 
 import { fetchOneProject } from '../../../../store/reducer/projects';
 import ErrorPage from '../../../../routes/ErrorPage';
-import { technos } from '../../../../utils/technosPath';
 
 function ProjectDetail() {
   const { id } = useParams();
@@ -73,6 +72,7 @@ function ProjectDetail() {
         <div className="project-technos-container">
           <h2 className="technos-title">Technos utilisées</h2>
           <div className="project-technos-img"></div>
+          {/* ajouter les technos!!! */}
         </div>
       </div>
 
