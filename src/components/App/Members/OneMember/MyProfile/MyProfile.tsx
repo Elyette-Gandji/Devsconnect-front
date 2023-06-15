@@ -1,9 +1,192 @@
+// Librairies
+import { useState, useEffect } from 'react';
+// import Carousel from 'react-multi-carousel';
+import { useAppDispatch, useAppSelector } from '../../../../../hook/redux';
+
+// Composants
+import CustomSwitch from '../../../../../utils/customSwitchUI';
+import ProjectCard from '../ProjectCard';
+import Input from '../../../../Form/Input';
+import SelectComponent from '../../../Layout/FilterBar/Select/Select';
+// import 'react-multi-carousel/lib/styles.css';
+
+// Fonctions asynchrones
+import { fetchOneMember } from '../../../../../store/reducer/members';
+
+// Styles
 import './style.scss';
+// import { Key, ReactElement, JSXElementConstructor, ReactNode } from 'react';
 
 function MyProfile() {
+  // State pour le check de open to work
+  const [checked, setChecked] = useState(false);
+
+  const userId = useAppSelector((state) => state.user.login.id);
+  const member = useAppSelector((state) => state.members.member.data);
+
+  const selectedTechnos = member?.tags;
+
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (userId) dispatch(fetchOneMember(userId));
+  }, [dispatch, userId]);
+
+  //! Fonction pour le switch open to work
+  const handleSwitch = () => {
+    setChecked(!checked);
+  };
+
+  //! Fonction pour le select des technos
+  const handleTechnoChange = (selectedTechnos) => {
+    setSelectValue(selectedTechnos);
+    // Valeur de la techno sélectionnée récupéré depuis le composant <Select />
+    // On l'enregistre dans selectValue
+  };
+
+  //! Fonction pour le bouton edit
+  const handleEditClick = (event) => {
+    event.preventDefault();
+    setIsEditMode(!isEditMode);
+
+    if (isEditMode) {
+      console.log('update envoyé');
+      // TODO : dispatch de la fonction d'update du profil
+      // const form = event.currentTarget;
+      // const formData = new FormData(form);
+      // dispatch(updateMember(formData));
+      // etc...
+    }
+  };
+
   return (
     <div className="MyProfile">
-      <h2 className="OneMember--title">Lorraine Ipsum</h2>
+      <h2 className="MyProfile--title">
+        {member?.firstname} {member?.name}
+      </h2>
+
+      <fieldset className="OneMember--firstField">
+        {' '}
+        {/* //! Style de OneMember */}
+        <img
+          src="/images/profil/profil.svg"
+          alt="profil"
+          className="OneMember--firstField--image" //! Style de OneMember
+        />
+        <Input
+          name="Prénom"
+          type="text"
+          placeholder={member?.firstname || ''}
+          disabled={!isEditMode}
+        />
+        <Input
+          name="Nom"
+          type="text"
+          placeholder={member?.name || ''}
+          disabled={!isEditMode}
+        />
+        <Input
+          name="Pseudo"
+          type="text"
+          placeholder={member?.pseudo || ''}
+          disabled={!isEditMode}
+        />
+        <Input
+          name="Email"
+          type="email"
+          placeholder={member?.email || ''}
+          disabled={!isEditMode}
+        />
+        <Input
+          name="Mot de passe"
+          type="password"
+          placeholder="*****"
+          disabled={!isEditMode}
+        />
+        <div className="Signin--openToWork">
+          {' '}
+          {/* //! Style de Signin */}
+          <p>Ouvert aux projets</p>
+          <CustomSwitch
+            name="availability"
+            checked={member?.availability || !checked}
+            onChange={handleSwitch}
+            disabled={!isEditMode}
+          />
+        </div>
+        <label htmlFor="description" className="Signin--inputTextarea">
+          {' '}
+          {/* //! Style de Signin  */}A propos de moi
+          <textarea
+            name="description"
+            id="description"
+            placeholder={member?.description || ''}
+            disabled={!isEditMode}
+          />
+        </label>
+      </fieldset>
+      <fieldset>
+        <div className="OneMember--firstField--technos">
+          <h4 className="OneMember--firstField--technos--title">
+            Technos maitrisées
+          </h4>
+          <div className="OneMember--firstField--technos--technos">
+            {/* //! Style de OneMember (changer en secondField egalement) */}
+            {/* Si le membre à des tags, et si les tags sont sous la forme d'un tableau */}
+            {!isEditMode ? (
+              member?.tags &&
+              Array.isArray(member.tags) &&
+              member.tags.map((tag) => (
+                <div
+                  className="OneMember--firstField--technos--technos--group"
+                  key={tag.id}
+                >
+                  <img
+                    src={`/images/technos/${tag.name.toLowerCase()}.svg`}
+                    alt={tag.name}
+                    title={tag.name}
+                  />
+                  <p>{tag.name}</p>
+                </div>
+              ))
+            ) : (
+              <SelectComponent
+                handleTechnoChange={handleTechnoChange}
+                memberTechnos={member?.tags}
+                selectedValues={selectedTechnos}
+              />
+            )}
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div className="OneMember--secondField--projects">
+          <h4 className="OneMember--secondField--projects--title">
+            Projets réalisés
+          </h4>
+          {member?.projects &&
+            member.projects.length > 0 &&
+            member.projects.map((project) => (
+              <ProjectCard key={project.id} projectID={project} />
+            ))}
+        </div>
+      </fieldset>
+      <fieldset>
+        <button
+          onClick={handleEditClick}
+          type="submit"
+          className={`MyProfile--footer--button--submit ${
+            isEditMode ? 'updatedMode' : 'submittedMode'
+          }`}
+        >
+          {isEditMode ? 'Valider les modifications' : 'Modifier mon profil'}
+        </button>
+        <button type="submit" className="MyProfile--footer--button--delete">
+          Supprimer le profil
+        </button>
+      </fieldset>
     </div>
   );
 }

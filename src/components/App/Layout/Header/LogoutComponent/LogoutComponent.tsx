@@ -29,10 +29,22 @@ function LogoutComponent(props: BurgerI) {
     setIsOpen(false);
   };
 
+  const handleClick = () => {
+    // Si windowWidth > 768, on ignore, sinon inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
+    if (windowWidth > 768) {
+      return;
+    }
+    setIsOpen(false);
+  };
+
   return (
     <div className="Header--connect">
-      <Link to="/profil" className="Header--connect--profil">
-        <button className="Header--connect--profil" type="button">
+      <Link to="/profil" className="Header--connect--profil-link">
+        <button
+          onClick={handleClick}
+          className="Header--connect--profil"
+          type="button"
+        >
           Mon Profil
         </button>
       </Link>
