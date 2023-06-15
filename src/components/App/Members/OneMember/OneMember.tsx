@@ -11,19 +11,18 @@ import { fetchOneMember } from '../../../../store/reducer/members';
 import ProjectCard from './ProjectCard';
 import ErrorPage from '../../../../routes/ErrorPage';
 
-// data
-import { technos } from '../../../../utils/technosPath';
-
 import './style.scss';
 
 function OneMember() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const dispatch = useAppDispatch();
   const member = useAppSelector((state) => state.members.member.data);
   const loading = useAppSelector((state) => state.members.member.loading);
 
+  const dispatch = useAppDispatch();
+
+  // On recupere les infos du membre avec l'id en url
   useEffect(() => {
     if (id) dispatch(fetchOneMember(id));
   }, [dispatch, id]);
@@ -75,22 +74,18 @@ function OneMember() {
               <h4 className="OneMember--firstField--technos--title">
                 Technos maitrisées
               </h4>
-              <div
-                key={technos.id}
-                className="OneMember--firstField--technos--technos"
-              >
-                {/* //! On importe toutes les données depuis data, on map dessus en dur et limite à 8 l'affichage */}
-                {technos.slice(0, 8).map((techno) => (
+              <div className="OneMember--firstField--technos--technos">
+                {member.tags.slice(0, 8).map((tag) => (
                   <div
                     className="OneMember--firstField--technos--technos--group"
-                    key={techno.id}
+                    key={tag.id}
                   >
                     <img
-                      src={techno.path}
-                      alt={techno.label}
-                      title={techno.label}
+                      src={`/images/technos/${tag.name.toLowerCase()}.svg`}
+                      alt={tag.name}
+                      title={tag.name}
                     />
-                    <p>{techno.label}</p>
+                    <p>{tag.name}</p>
                   </div>
                 ))}
               </div>
@@ -104,10 +99,9 @@ function OneMember() {
               <h4 className="OneMember--secondField--projects--title">
                 Projets réalisés
               </h4>
-              {/* Envoyer en props les infos des projets, faire un map() pour les afficher ensuite */}
-              <ProjectCard />
-              <ProjectCard />
-              <ProjectCard />
+              {member.projects.map((project) => (
+                <ProjectCard key={project.id} projectID={project} />
+              ))}
             </div>
           </div>
         </div>

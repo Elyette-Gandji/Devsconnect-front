@@ -15,12 +15,13 @@ export interface MemberI {
   firstname: string;
   email: string;
   password: string;
+  pseudo: string;
   description: string;
   availability: boolean;
+  projects: ProjectI[];
+  tags: TagI[];
   createdAt: Date;
   updatedAt: Date;
-  projects: ProjectI[];
-  technos: TechnoI[];
 }
 
 export interface MembersI {
@@ -32,7 +33,8 @@ export interface ProjectI {
   title: string;
   description: string;
   availability: boolean;
-  userId: number;
+  user: MemberI[];
+  tags: TagI[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -41,7 +43,7 @@ export interface ProjectsI {
   projects: ProjectI[];
 }
 
-export interface TechnoI {
+export interface TagI {
   id: number;
   name: string;
   createdAt: Date;
@@ -49,9 +51,7 @@ export interface TechnoI {
 }
 
 //* Utiliser dans Signin par exemple pour l'affichage des technos
-export interface TechnoMapI {
+export interface TagSelectedI {
   id: number | string;
-  label: string;
-  value: string;
-  path: string;
+  name: string;
 }

@@ -2,9 +2,6 @@
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../hook/redux';
 
-// Utils
-import { technos } from '../../../utils/technosPath';
-
 // Typage
 import { MemberI } from '../../../@types/interface';
 
@@ -38,49 +35,45 @@ function CardMember({ member }: CardMemberI) {
                 {availability ? 'Disponible' : 'Indisponible'}
               </p>
             </div>
-            <img src="/images/profil/profil.svg" alt="vite" />
+            <img
+              src="/images/profil/profil.svg"
+              alt="profil"
+              title={member.pseudo}
+            />
           </div>
         </Link>
         <div className="CardMember--card--body">
           <p className="CardMember--card--body--text">{description}</p>
           <div className="CardMember--card--body--technos">
-            {/* //! On importe toutes les données depuis data, on map dessus en dur et limite à 5 l'affichage */}
-            {technos.slice(0, 5).map((techno) => (
-              <img
-                src={techno.path}
-                alt={techno.label}
-                title={techno.label}
-                key={techno.id}
-              />
-            ))}
+            {member.tags && member.tags.length > 0 ? (
+              member.tags
+                .slice(0, 5)
+                .map((tag) => (
+                  <img
+                    src={`/images/technos/${tag.name.toLowerCase()}.svg`}
+                    alt={tag.name}
+                    title={tag.name}
+                    key={tag.id}
+                  />
+                ))
+            ) : (
+              <p>Aucune techno</p>
+            )}
           </div>
         </div>
         <div className="CardMember--card--footer">
           <h4>Projets :</h4>
           {/* //! On map dessus en dur et limite à 3 l'affichage */}
           <ul className="CardMember--card--footer--list">
-            <li>
-              <span className="CardMember--card--footer--list--span">
-                Projet 1 :
-              </span>
-              Lorem ipsum dolor sit amet.
-            </li>
-            <li>
-              <span className="CardMember--card--footer--list--span">
-                Projet 2 :
-              </span>
-              Amet consectetur adipisicing elit. Lorem ipsum, dolor sit amet
-              consectetur adipisicing elit. Et vitae veritatis officiis,
-              nostrum, repellendus facilis, dolorum voluptates repudiandae aut
-              quos dicta accusamus itaque autem harum earum aperiam perspiciatis
-              rem ab.
-            </li>
-            <li>
-              <span className="CardMember--card--footer--list--span">
-                Projet 3 :
-              </span>
-              Animi quis magni dolore iure?
-            </li>
+            {member.projects && member.projects.length > 0 ? (
+              member.projects.slice(0, 3).map((project) => (
+                <Link key={project.id} to={`/projects/${project.id}`}>
+                  <li key={project.id}>- {project.title}</li>
+                </Link>
+              ))
+            ) : (
+              <li>Aucun projet</li>
+            )}
           </ul>
         </div>
       </section>

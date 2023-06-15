@@ -120,12 +120,6 @@
         }
         &--footer {
             padding: v.$font-small;
-            //? Titre des projets
-            & li > span {
-                padding-right: v.$font-xsmall;
-                font-weight: 700;
-                text-decoration: underline;
-            }
             //? Description des projets
             & li {
                 white-space: nowrap; //* Empêche le retour à la ligne

@@ -11,25 +11,29 @@ import {
   toggleModalSignin,
 } from '../../../store/reducer/log';
 import { signinUser } from '../../../store/reducer/user';
+import { fetchAllTags } from '../../../store/reducer/tag';
 
 // ? Composants
 import Input from '../Input';
 // import FlashMessage from '../FlashMessage/FlashMessage';
 
 // ? Utils
-import { technos } from '../../../utils/technosPath'; // Pour le choix des technos
+// import { technos } from '../../../utils/technosPath'; // Pour le choix des technos
 
 // Styles
 import './style.scss';
 
 // ? Typage
-import { TechnoMapI } from '../../../@types/interface';
+import { TagSelectedI } from '../../../@types/interface';
 
 function Signin() {
   const flash = useAppSelector((state) => state.user.signin.message);
 
-  // State pour la selection des technos
-  const [selectedTechnos, setSelectedTechnos] = useState<string[]>([]);
+  // Tags provenant de l'API
+  const allTagsFromApi = useAppSelector((state) => state.tag.list.data);
+  // Gestion locale des tags sélectionnés
+  const [selectedTags, setSelectedTags] = useState<TagSelectedI[]>([]);
+
   // State pour le check de open to work
   const [checked, setChecked] = useState(false);
 
@@ -39,7 +43,17 @@ function Signin() {
   // ! Dispatch
   const dispatch = useAppDispatch();
 
-  //! useEffect pour clic externe à la modale
+  /* //! useEffect pour clic externe à la modale
+  !* On utilise le hook useEffect pour effectuer une action au chargement du composant (donc de la page)
+  !* On précise en 1er paramètre du hook useEffect une fonction qui va effectuer l'action
+  !* On utilise le dispatch pour appeler l'action toggleModalSignin qui va gérer l'ouverture de la modale
+  !* On précise en 2eme paramètre du hook useEffect dispatch pour que l'action ne soit effectuée qu'une seule fois
+  !* On ajoute un écouteur d'évènement sur le document pour écouter les clics
+  !* On précise en 1er paramètre du addEventListener le type d'évènement écouté (ici mousedown)
+  !* On précise en 2eme paramètre du addEventListener une fonction qui va effectuer l'action
+  !* A chaque clic, on vérifie si le clic a eu lieu en dehors de la modale
+  !* Si le clic a eu lieu en dehors de la modale, on ferme la modale
+  */
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -74,17 +88,56 @@ function Signin() {
     }
   };
 
-  //! Fonction pour la selection des technos
-  const handleImageClick = (imageId: string) => {
-    if (selectedTechnos.includes(imageId)) {
-      setSelectedTechnos(selectedTechnos.filter((id) => id !== imageId));
-    } else {
-      setSelectedTechnos([...selectedTechnos, imageId]);
+  /* //! UseEffect pour la récupération des tags depuis l'API
+    !* On utilise le hook useEffect pour effectuer une action au chargement du composant (donc de la page)
+    !* On précise en 1er paramètre du hook useEffect une fonction qui va effectuer l'action
+    !* On utilise une fonction asynchrone donc > await
+    !* On utilise le dispatch pour appeler l'action fetchAllTags qui va récupérer les tags depuis l'API
+    !* On précise en 2eme paramètre du hook useEffect un tableau vide pour que l'action ne soit effectuée qu'une seule fois
+    */
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        // Appel à l'action fetchAllTags pour récupérer les tags depuis l'API
+        await dispatch(fetchAllTags());
+      } catch (error) {
+        console.error('Erreur lors de la récupération des tags:', error);
+      }
+    };
+
+    fetchTags();
+  }, [dispatch]);
+
+  /* //! Fonction pour la selection des technos (au clic sur une techno)
+   !* Prend en paramètre l'id de la techno
+   !* 1ere étape: on récupère la techno correspondant à l'id dans le tableau des technos récupérées depuis l'API
+   !* //* const selectedTag = allTagsFromApi.find((tag) => tag.id === id);
+   !* 2eme étape: on vérifie si la techno est déjà sélectionnée ou non
+   !* 3eme étape: si la techno est déjà sélectionnée, on la supprime du tableau des technos sélectionnées
+   !* 4eme étape: si la techno n'est pas sélectionnée, on l'ajoute au tableau des technos sélectionnées
+   !* 5eme étape: on met à jour le state des technos sélectionnées
+   *  `setSelectedTags(updatedTags)`
+   */
+  const handleImageClick = (id: number) => {
+    const selectedTag = allTagsFromApi.find((tag) => tag.id === id);
+    if (selectedTag) {
+      if (selectedTags.some((tag) => tag.id === selectedTag.id)) {
+        // Le tag est déjà sélectionné, on le supprime
+        const updatedTags = selectedTags.filter(
+          (tag) => tag.id !== selectedTag.id
+        );
+        setSelectedTags(updatedTags);
+      } else {
+        // Le tag n'est pas sélectionné, on l'ajoute
+        const updatedTags = [...selectedTags, selectedTag];
+        setSelectedTags(updatedTags);
+      }
     }
   };
-  // * Une div n'est pas un element clickable
-  // * Fonction d’accessibilité pour le clavier.
-  // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
+  /* Une div n'est pas un element clickable
+   * Fonction d’accessibilité pour le clavier.
+   * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
+   */
   const handleImageKeyDown = (
     event: React.KeyboardEvent<HTMLDivElement>,
     imageId: string
@@ -105,6 +158,7 @@ function Signin() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    console.log('formData:', formData);
     dispatch(signinUser(formData));
     dispatch(toggleModalSignin());
     dispatch(toggleModalLogin());
@@ -151,32 +205,39 @@ function Signin() {
               <h3>Mes technos</h3>
               <p>(Plusieurs choix possibles)</p>
               <div className="Signin--techno">
-                {technos.map((techno: TechnoMapI) => (
+                {/* //? On map sur le tableau des technos récupérées depuis l'API */}
+                {allTagsFromApi.map((techno: TechnoMapI) => (
                   <div className="Signin--inputCheckbox" key={techno.id}>
+                    {/* //? Pour chaque techno, on lui donne un id, un name et une value provenant de la table tag */}
                     <input
                       type="checkbox"
-                      id={techno.label}
-                      name={techno.label}
-                      value={techno.label}
+                      id={techno.id}
+                      name={techno.name}
+                      value={techno.name}
                     />
-                    <label htmlFor={techno.label}>{techno.label}</label>
+                    {/* // On lui donne un label et htmlFor provenant de la table name */}
+                    <label htmlFor={techno.name}>{techno.name}</label>
                     <div
                       role="button"
-                      onClick={() => handleImageClick(techno.id.toString())} //! toString() pour le typage de selectedTechnos (string[])
+                      // Au clic, on appelle la fonction handleImageClick() et on lui passe l'id de la techno
+                      onClick={() => handleImageClick(techno.id)}
+                      // Fonction d’accessibilité pour le clavier. Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
                       onKeyDown={(event) =>
-                        handleImageKeyDown(event, techno.id.toString())
+                        handleImageKeyDown(event, techno.id)
                       }
+                      // On ajoute un tabIndex pour que l'élément soit focusable (accessibilité)
                       tabIndex={0}
+                      // On ajoute la classe selected si la techno est sélectionnée
                       className={`Signin--inputCheckbox--img ${
-                        selectedTechnos.includes(techno.id.toString()) //! toString() pour le typage de selectedTechnos (string[])
+                        selectedTags.some((tag) => tag.id === techno.id) //! toString() pour le typage de selectedTechnos (string[])
                           ? 'selected'
                           : ''
                       }`}
                     >
                       <img
-                        src={techno.path}
-                        title={techno.label}
-                        alt={techno.label}
+                        src={`/images/technos/${techno.name.toLocaleLowerCase()}.svg`}
+                        title={techno.name.toLocaleLowerCase()}
+                        alt={techno.name.toLocaleLowerCase()}
                       />
                     </div>
                   </div>
@@ -188,7 +249,7 @@ function Signin() {
                 J&apos;accepte les CGU
                 <input
                   type="checkbox"
-                  // required
+                  required
                   id="cgu"
                   name="cgu"
                   value="cgu"

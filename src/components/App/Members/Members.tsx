@@ -19,6 +19,7 @@ function Members() {
   const loading = useAppSelector((state) => state.members.list.loading); // Nouvelle variable loading
   const [filteredMembers, setFilteredMembers] = useState<MemberI[]>(members); // Nouvelle variable filteredMembers
 
+  // useEffect pour récupérer les membres
   useEffect(() => {
     dispatch(fetchAllMembers());
   }, [dispatch]);

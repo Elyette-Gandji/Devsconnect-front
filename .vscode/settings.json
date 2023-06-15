@@ -28,5 +28,9 @@
     "airbnb"
   ],
   "files.eol": "\n",
-  "window.zoomLevel": 0
+  "window.zoomLevel": 0,
+  "editor.tokenColorCustomizations": {
+    "comments": "",
+    "textMateRules": []
+  }
 }
