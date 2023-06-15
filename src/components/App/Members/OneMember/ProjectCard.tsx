@@ -24,6 +24,10 @@ function ProjectCard({ projectID }: { projectID: ProjectI }) {
     dispatch(fetchAllProjects());
   }, [dispatch]);
 
+  if (!project) {
+    return null; // Ou un autre rendu conditionnel approprié en cas de projet manquant
+  }
+
   return (
     <Link to={`/projects/${project.id}`}>
       <div className="ProjectCard" key={project.id}>
