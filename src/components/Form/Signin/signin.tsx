@@ -249,7 +249,7 @@ function Signin() {
                 J&apos;accepte les CGU
                 <input
                   type="checkbox"
-                  // required
+                  required
                   id="cgu"
                   name="cgu"
                   value="cgu"
