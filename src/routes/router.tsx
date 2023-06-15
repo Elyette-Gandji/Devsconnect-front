@@ -13,7 +13,7 @@ import Projects from '../components/App/Projetcs/Projects';
 import ProjectDetail from '../components/App/Projetcs/ProjectDetail/ProjectDetail';
 import OneMember from '../components/App/Members/OneMember/OneMember';
 import MyProfile from '../components/App/Members/OneMember/MyProfile/MyProfile';
-import FormProject from '../components/App/Projetcs/ProjectCreation/FormProject';
+import FormProject from '../components/App/Projetcs/FormProject/FormProject';
 
 const Router = createBrowserRouter(
   createRoutesFromElements(

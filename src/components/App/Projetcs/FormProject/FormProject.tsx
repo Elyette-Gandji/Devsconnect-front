@@ -1,10 +1,9 @@
 import './style.scss';
-import { useState } from 'react';
 
 function FormProject() {
   return (
     <div>
-      <p>helloworld</p>
+      <h1>Créer mon projet</h1>
     </div>
   );
 }
