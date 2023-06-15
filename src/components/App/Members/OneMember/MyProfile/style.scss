@@ -3,4 +3,39 @@
 
 .MyProfile {
     flex-grow: 1;
+
+    &--fourthField--button {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin: 2rem;
+        border: none;
+        &--submit,
+        &--delete {
+            display: block;
+            margin: v.$font-xsmall auto;
+            padding: v.$font-xsmall v.$font-large;
+            border-radius: v.$font-xsmall;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        &--delete {
+            background-color: rgb(125, 26, 26);
+            color: v.$color;
+            border: 0.2rem solid v.$color;
+        }
+    }
+}
+
+.updatedMode {
+    background-color: v.$color;
+    color: v.$color;
+    border: 0.2rem solid v.$color;
+    background: green;
+}
+.submittedMode {
+    background-color: v.$color;
+    color: v.$color;
+    border: 0.2rem solid v.$color;
+    background: rgb(240, 168, 35);
 }

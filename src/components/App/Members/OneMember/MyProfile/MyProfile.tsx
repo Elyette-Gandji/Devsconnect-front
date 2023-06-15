@@ -166,19 +166,19 @@ function MyProfile() {
               ))}
           </div>
         </fieldset>
-        <fieldset className="MyProfile--fourthField--buttons">
+        <fieldset className="MyProfile--fourthField--button">
           <button
             onClick={handleEditClick}
             type="submit"
-            className={`MyProfile--footer--button--submit ${
+            className={`MyProfile--fourthField--button--submit ${
               isEditMode ? 'updatedMode' : 'submittedMode'
             }`}
           >
-            {isEditMode ? 'Valider les modifications' : 'Modifier mon profil'}
+            {isEditMode ? 'Valider' : 'Modifier mon profil'}
           </button>
           <button
             type="submit"
-            className="MyProfile--footer--button--delete"
+            className="MyProfile--fourthField--button--delete"
             onClick={handleDeleteModale}
           >
             Supprimer le profil
