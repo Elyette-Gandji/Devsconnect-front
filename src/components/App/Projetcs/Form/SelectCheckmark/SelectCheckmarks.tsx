@@ -21,14 +21,14 @@ const MenuProps = {
   },
 };
 
-function SelectCheckmarks() {
-  const [personName, setPersonName] = React.useState<string[]>([]);
+function SelectCheckMarks() {
+  const [technoName, setTechnoName] = React.useState<string[]>([]);
 
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+  const handleChange = (event: SelectChangeEvent<typeof technoName>) => {
     const {
       target: { value },
     } = event;
-    setPersonName(typeof value === 'string' ? value.split(',') : value);
+    setTechnoName(typeof value === 'string' ? value.split(',') : value);
   };
 
   return (
@@ -39,7 +39,7 @@ function SelectCheckmarks() {
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
-          value={personName}
+          value={technoName}
           onChange={handleChange}
           input={<OutlinedInput label="Tag" />}
           renderValue={(selected) =>
@@ -52,7 +52,7 @@ function SelectCheckmarks() {
         >
           {technos.map((techno) => (
             <MenuItem key={techno.id} value={techno.id}>
-              <Checkbox checked={personName.includes(techno.id)} />
+              <Checkbox checked={technoName.includes(techno.id)} />
               <ListItemText primary={techno.label} />
             </MenuItem>
           ))}
@@ -62,4 +62,4 @@ function SelectCheckmarks() {
   );
 }
 
-export default SelectCheckmarks;
+export default SelectCheckMarks;

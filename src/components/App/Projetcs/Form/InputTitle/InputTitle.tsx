@@ -1,8 +1,13 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import { useState } from 'react';
 
 function InputTitle() {
+  const [title, setTitle] = useState('');
+  const handleChange = (event) => {
+    setTitle(event.target.value);
+  };
+
   return (
     <Box
       component="form"
@@ -17,8 +22,9 @@ function InputTitle() {
           required
           id="standard-required"
           label="Required"
-          defaultValue="Titre..."
+          value={title}
           variant="standard"
+          onChange={handleChange}
         />
       </div>
     </Box>

@@ -1,12 +1,9 @@
-import './style.scss';
-import Project from './Project';
-
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
-
 import { fetchAllProjects } from '../../../store/reducer/projects';
-
 import NotFound from '../../NotFound/NotFound';
+import Project from './Project';
 
 function Projects() {
   const dispatch = useAppDispatch();
@@ -35,8 +32,8 @@ function Projects() {
         Retour
       </button>
       <div className="projects-flex">
-        {projects.map((project, i) => (
-          <Project project={project} key={i} />
+        {projects.map((project) => (
+          <Project project={project} key={project.id} />
         ))}
       </div>
     </div>
