@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useAppDispatch } from '../../../../hook/redux';
+import { postOneProject } from '../../../../store/reducer/projects';
 import './style.scss';
 import InputTitle from '../Form/InputTitle/InputTitle';
 import SelectCheckMarks from '../Form/SelectCheckmark/SelectCheckMarks';
@@ -7,6 +9,8 @@ import ControlledSwitch from '../Form/Switch/Switch';
 import ValidateButton from '../Form/Button/ValidateButton';
 
 function FormProject() {
+  const dispatch = useAppDispatch();
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -16,8 +20,30 @@ function FormProject() {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    // Envoyer les données du formulaire à l'API ou effectuer d'autres actions nécessaires
-    console.log(formData);
+
+    // Créer un objet contenant les données du formulaire
+    const projectData = {
+      title: formData.title,
+      description: formData.description,
+      availability: formData.open,
+    };
+
+    // Dispatch l'action pour créer un nouveau projet
+    dispatch(postOneProject(projectData))
+      .then((response) => {
+        // Gérer la réponse de l'API en cas de succès
+        console.log('Projet créé avec succès:', response.payload);
+
+        setFormData({
+          title: '',
+          description: '',
+          technos: [],
+          open: false,
+        });
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la création du projet:', error);
+      });
   };
 
   const handleInputChange = (event) => {

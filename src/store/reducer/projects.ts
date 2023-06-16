@@ -1,4 +1,3 @@
-
 // ? Librairies
 import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -53,13 +52,27 @@ export const fetchAllProjects = createAsyncThunk(
   }
 );
 
-
 //* Rechercher un seul projet
 export const fetchOneProject = createAsyncThunk(
   'project/fetchOneProject',
   async (id: string) => {
     try {
       const { data } = await axiosInstance.get(`/api/projects/${id}`);
+      // ? On retourne le state
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  }
+);
+
+//* Créer un nouveau projet
+export const postOneProject = createAsyncThunk(
+  'project/postOneProject',
+  async (projectData: ProjectI) => {
+    try {
+      const { data } = await axiosInstance.post('/api/projects', projectData);
       // ? On retourne le state
       return data;
     } catch (error) {
