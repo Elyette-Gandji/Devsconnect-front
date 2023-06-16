@@ -120,6 +120,24 @@ const membersReducer = createReducer(initialState, (builder) => {
       // ? On modifie le state
       state.member.loading = true; // Définir l'état de chargement sur true
     });
+  builder
+    //* Cas de la connexion réussie de updateMember
+    .addCase(updateMember.fulfilled, (state, action) => {
+      // ? On modifie le state
+      state.member.data = action.payload.data;
+      state.member.loading = false; // Définir l'état de chargement sur false
+    })
+    //* Cas de la connexion échouée de updateMember
+    .addCase(updateMember.rejected, (state) => {
+      // ? On modifie le state
+      state.member.data = null;
+      state.member.loading = false; // Définir l'état de chargement sur false
+    })
+    //* Cas de la connexion en cours de updateMember
+    .addCase(updateMember.pending, (state) => {
+      // ? On modifie le state
+      state.member.loading = true; // Définir l'état de chargement sur true
+    });
 });
 
 export default membersReducer;
