@@ -1,6 +1,14 @@
 @use '../../../../../styles/variables' as v;
 @use '../../../../../styles/mixins' as m; // @include pour utiliser
 
+.Signin--inputText input {
+    width: 40%;
+}
+
+//! Techno selectionnées (a inserer ensuite
+.selected {
+    background-color: rgb(91, 166, 91);
+}
 .MyProfile {
     flex-grow: 1;
 
@@ -10,6 +18,29 @@
         justify-content: space-between;
         margin: 2rem;
         border: none;
+        &--group {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem;
+
+            &--visible,
+            &--hidden {
+                // display: block;
+                margin: v.$font-xsmall auto;
+                padding: v.$font-xsmall v.$font-large;
+                border-radius: v.$font-xsmall;
+                font-weight: 700;
+                cursor: pointer;
+            }
+            &--visble {
+                display: block;
+            }
+            &--hidden {
+                display: none;
+            }
+        }
         &--submit,
         &--delete {
             display: block;

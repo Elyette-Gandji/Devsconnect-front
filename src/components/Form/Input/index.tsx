@@ -1,9 +1,6 @@
 //* Librairies
 import { useId, useState } from 'react';
 
-//* Styles
-import './styles.scss';
-
 interface InputProps {
   //! Obligation d'avoir une propriété `name` sur l'input
   name: string;

@@ -11,7 +11,11 @@ import DeleteModale from './DeleteModale/DeleteModale';
 // import 'react-multi-carousel/lib/styles.css';
 
 // Fonctions asynchrones
-import { fetchOneMember } from '../../../../../store/reducer/members';
+import {
+  fetchOneMember,
+  updateMember,
+} from '../../../../../store/reducer/members';
+import { fetchAllTags } from '../../../../../store/reducer/tag';
 
 // Styles
 import './style.scss';
@@ -24,39 +28,108 @@ function MyProfile() {
   const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
   const member = useAppSelector((state) => state.members.member.data); // On récupère les données du membre
 
+  const allTags = useAppSelector((state) => state.tag.list.data); // On récupère les données du membre
+  const [selectedTags, setSelectedTags] = useState([member?.tags]); // On récupère les tags du membre qu'on stocke pour la gestion de l'update
+
   const [isEditMode, setIsEditMode] = useState(false); // State pour le mode édition
-  const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(true); // State pour la modale de <suppression></suppression>
+  const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(false); // State pour la modale de <suppression></suppression>
 
   const dispatch = useAppDispatch();
 
   //! On récupère les données du membre
   useEffect(() => {
     if (userId) dispatch(fetchOneMember(userId));
-  }, [dispatch, userId]);
+  }, []);
+
+  /** //! On récupère les tags
+   * * Qu'on stocke dans un state pour la gestion de l'update
+   * * A chaque modification des tags du membre (validation de l'update), on met à jour le state
+   * * Quand il sera rappelé, il sera à jour
+   */
+  useEffect(() => {
+    dispatch(fetchAllTags());
+    setSelectedTags(member?.tags);
+  }, [dispatch, member?.tags]);
 
   //! Fonction pour le switch open to work
   const handleSwitch = () => {
     setChecked(!checked);
   };
 
+  //! Fonction d'envoi du formulaire
+  const handleSubmit = (event) => {
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    console.log('formData', formData);
+    // dispatch(updateMember(formData));
+  };
+
   //! Fonction pour le bouton edit
   const handleEditClick = (event) => {
     event.preventDefault();
+
     setIsEditMode(!isEditMode);
 
     if (isEditMode) {
+      console.log('selectedTags', selectedTags); // On envoie les tags sélectionnés en remplacement
       console.log('update envoyé');
-      // TODO : dispatch de la fonction d'update du profil
-      // const form = event.currentTarget;
-      // const formData = new FormData(form);
-      // dispatch(updateMember(formData));
-      // etc...
+      handleSubmit(event.currentTarget);
     }
   };
 
-  //! Fonction pour le bouton delete
+  /* //! Fonction pour le bouton delete
+   * * On ouvre la modale de confirmation de suppression
+   */
   const handleDeleteModale = () => {
     setIsOpenDeleteModale(!isOpenDeleteModale);
+  };
+
+  /* //! Fonction pour la modification du tableau selectedTags
+   * * On récupère l'id du tag cliqué
+   * * On vérifie si le tag est déjà sélectionné (find)
+   * * Si oui, on le retire du tableau et on retire la classe `selected` du tag grace a son id
+   * * Si non, on l'ajoute au tableau et on ajoute la classe `selected` au tag grace a son id
+   */
+  const handleImageClick = (id: number) => {
+    const selectedTag = allTags.find((tag) => tag.id === id);
+    if (selectedTag) {
+      if (
+        selectedTags &&
+        selectedTags.some((tag) => tag.id === selectedTag.id)
+      ) {
+        //! Le tag est déjà sélectionné, on le supprime
+        const updatedTags = selectedTags.filter(
+          (tag) => tag.id !== selectedTag.id
+        );
+        console.log(`On retire le tag ${selectedTag.name}`);
+        setSelectedTags(updatedTags);
+
+        //* On retire la classe `selected` du tag
+        const tagElement = document.getElementById(`tag-${selectedTag.id}`); // On cible l'element par son id spécifique
+        if (tagElement) tagElement.classList.remove('selected');
+      } else {
+        //! Le tag n'est pas sélectionné, on l'ajoute
+        const updatedTags = [...selectedTags, selectedTag];
+        console.log(`On ajoute le tag ${selectedTag.name}`);
+        setSelectedTags(updatedTags);
+
+        //* On ajoute la classe `selected` au tag
+        const tagElement = document.getElementById(`tag-${selectedTag.id}`); // On cible l'element par son id spécifique
+        if (tagElement) tagElement.classList.add('selected');
+      }
+    }
+  };
+  /* //* Une div n'est pas un element clickable
+   * Fonction d’accessibilité pour le clavier.
+   * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
+   */
+  const handleImageKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>,
+    imageId: string
+  ) => {
+    if (event.key === 'enter' || event.key === ' ') {
+      handleImageClick(imageId);
+    }
   };
 
   return (
@@ -65,95 +138,141 @@ function MyProfile() {
         <h2 className="MyProfile--title">
           {member?.firstname} {member?.name}
         </h2>
-
-        <fieldset className="OneMember--firstField">
-          {' '}
-          {/* //! Style de OneMember */}
-          <img
-            src="/images/profil/profil.svg"
-            alt="profil"
-            className="OneMember--firstField--image" //! Style de OneMember
-          />
-          <Input
-            name="Prénom"
-            type="text"
-            placeholder={member?.firstname || ''}
-            disabled={!isEditMode}
-          />
-          <Input
-            name="Nom"
-            type="text"
-            placeholder={member?.name || ''}
-            disabled={!isEditMode}
-          />
-          <Input
-            name="Pseudo"
-            type="text"
-            placeholder={member?.pseudo || ''}
-            disabled={!isEditMode}
-          />
-          <Input
-            name="Email"
-            type="email"
-            placeholder={member?.email || ''}
-            disabled={!isEditMode}
-          />
-          <Input
+        <form action="PUT" onSubmit={handleSubmit}>
+          <fieldset className="OneMember--firstField">
+            {' '}
+            {/* //! Style de OneMember */}
+            <img
+              src="/images/profil/profil.svg"
+              alt="profil"
+              className="OneMember--firstField--image" //! Style de OneMember
+            />
+            <Input
+              name="Prénom"
+              type="text"
+              placeholder={member?.firstname || ''}
+              disabled={!isEditMode}
+            />
+            <Input
+              name="Nom"
+              type="text"
+              placeholder={member?.name || ''}
+              disabled={!isEditMode}
+            />
+            <Input
+              name="Pseudo"
+              type="text"
+              placeholder={member?.pseudo || ''}
+              disabled={!isEditMode}
+            />
+            <Input
+              name="Email"
+              type="email"
+              placeholder={member?.email || ''}
+              disabled={!isEditMode}
+            />
+            <Input
+              name="Mot de passe"
+              type="password"
+              placeholder="*****"
+              disabled={!isEditMode}
+            />
+            {/* <Input
             name="Mot de passe"
-            type="password"
-            placeholder="*****"
-            disabled={!isEditMode}
-          />
-          <div className="Signin--openToWork">
-            {' '}
-            {/* //! Style de Signin */}
-            <p>Ouvert aux projets</p>
-            <CustomSwitch
-              name="availability"
-              checked={member?.availability || !checked}
-              onChange={handleSwitch}
-              disabled={!isEditMode}
-            />
-          </div>
-          <label htmlFor="description" className="Signin--inputTextarea">
-            {' '}
-            {/* //! Style de Signin  */}A propos de moi
-            <textarea
-              name="description"
-              id="description"
-              placeholder={member?.description || ''}
-              disabled={!isEditMode}
-            />
-          </label>
-        </fieldset>
-        <fieldset>
-          <div className="OneMember--firstField--technos">
-            <h4 className="OneMember--firstField--technos--title">
-              Technos maitrisées
-            </h4>
-            <div className="OneMember--firstField--technos--technos">
-              {/* //! Style de OneMember (changer en secondField egalement) */}
-              {/* Si le membre à des tags, et si les tags sont sous la forme d'un tableau */}
-              {!isEditMode
-                ? member?.tags &&
-                  Array.isArray(member.tags) &&
-                  member.tags.map((tag) => (
-                    <div
-                      className="OneMember--firstField--technos--technos--group"
-                      key={tag.id}
-                    >
-                      <img
-                        src={`/images/technos/${tag.name.toLowerCase()}.svg`}
-                        alt={tag.name}
-                        title={tag.name}
-                      />
-                      <p>{tag.name}</p>
-                    </div>
-                  ))
-                : console.log('edit mode')}
+            type="submit"
+            value="Modifier le mot de passe"
+            onClick={handleDeleteModale}
+          /> */}
+            <div className="Signin--openToWork">
+              {' '}
+              {/* //! Style de Signin */}
+              <p>Ouvert aux projets</p>
+              <CustomSwitch
+                name="availability"
+                checked={member?.availability || !checked}
+                onChange={handleSwitch}
+                disabled={!isEditMode}
+              />
             </div>
-          </div>
-        </fieldset>
+            <label htmlFor="description" className="Signin--inputTextarea">
+              {' '}
+              {/* //! Style de Signin  */}A propos de moi
+              <textarea
+                name="description"
+                id="description"
+                placeholder={member?.description || ''}
+                disabled={!isEditMode}
+              />
+            </label>
+          </fieldset>
+          <fieldset>
+            <div className="OneMember--firstField--technos">
+              <h4 className="OneMember--firstField--technos--title">
+                Technos maitrisées
+              </h4>
+              <div className="MyProfile--secondField--technos--technos">
+                {/* //! Style dans OneMember */}
+                {/* Rendu conditionnel : 
+              si on est en mode édition, on affiche tous les tags
+              sinon on affiche les tags du membre
+              Dans la partie lecture, on map sur les tags du membre directement
+              Dans la partie edition, on map sur all tags pour tous les afficher,
+              puis on compare chaque tag avec ceux du membre pour avoir la classe selected si il le possède
+              */}
+                {!isEditMode
+                  ? member?.tags &&
+                    member.tags.map((tag) => (
+                      <div
+                        className="OneMember--firstField--technos--technos--group"
+                        key={tag.id}
+                      >
+                        <img
+                          src={`/images/technos/${tag.name.toLowerCase()}.svg`}
+                          alt={tag.name}
+                          title={tag.name}
+                        />
+                        <p>{tag.name}</p>
+                      </div>
+                    ))
+                  : allTags &&
+                    allTags.map((tag) => {
+                      const isMatchingTag =
+                        member?.tags.find(
+                          (selectedTag) => selectedTag.id === tag.id
+                        ) !== undefined;
+                      const className = isMatchingTag
+                        ? 'OneMember--firstField--technos--technos--group selected'
+                        : 'OneMember--firstField--technos--technos--group';
+
+                      {
+                        /* Dans le rendu JSX on lance la fonction handleImageClick */
+                      }
+                      return (
+                        <div
+                          className={className}
+                          role="button"
+                          key={tag.id}
+                          id={`tag-${tag.id}`} // Sert de référence pour la fonction handleImageClick ( permet d'ajouter ou de retirer la classe selected quand on ajoute/supprime le tag)
+                          onClick={() => handleImageClick(tag.id)}
+                          onKeyDown={(event) =>
+                            handleImageKeyDown(event, tag.id)
+                          }
+                          // On ajoute un tabIndex pour que l'élément soit focusable (accessibilité)
+                          tabIndex={0}
+                        >
+                          <img
+                            src={`/images/technos/${tag.name.toLowerCase()}.svg`}
+                            alt={tag.name}
+                            title={tag.name}
+                          />
+                          <p>{tag.name}</p>
+                        </div>
+                      );
+                    })}
+              </div>
+            </div>
+          </fieldset>
+        </form>
         <fieldset>
           <div className="OneMember--secondField--projects">
             <h4 className="OneMember--secondField--projects--title">
@@ -167,15 +286,30 @@ function MyProfile() {
           </div>
         </fieldset>
         <fieldset className="MyProfile--fourthField--button">
-          <button
-            onClick={handleEditClick}
-            type="submit"
-            className={`MyProfile--fourthField--button--submit ${
-              isEditMode ? 'updatedMode' : 'submittedMode'
-            }`}
-          >
-            {isEditMode ? 'Valider' : 'Modifier mon profil'}
-          </button>
+          <div className="MyProfile--fourthField--button--group">
+            <button
+              onClick={handleEditClick}
+              type="submit"
+              // className=`{MyProfile--fourthField--button--cancel isEditMode ? 'visible' : 'hidden'}`
+              className={`MyProfile--fourthField--button--cancel ${
+                isEditMode
+                  ? 'MyProfile--fourthField--button--group--visible'
+                  : 'MyProfile--fourthField--button--group--hidden'
+              }`}
+              disabled={!isEditMode}
+            >
+              Annuler
+            </button>
+            <button
+              onClick={handleEditClick}
+              type="submit"
+              className={`MyProfile--fourthField--button--submit ${
+                isEditMode ? 'updatedMode' : 'submittedMode'
+              }`}
+            >
+              {isEditMode ? 'Valider' : 'Modifier mon profil'}
+            </button>
+          </div>
           <button
             type="submit"
             className="MyProfile--fourthField--button--delete"
@@ -196,13 +330,3 @@ function MyProfile() {
 }
 
 export default MyProfile;
-
-/**
- *     header : titre (prénom nom)
-div {
-    Bloc 1 : inputs (mobile > ajout photo)
-    Bloc 2 : technos (desktop > ajout photo)
-    Bloc 3 : Projets (mobile caroussel ?)
-    }
-    footer : bouton  
-  * */
