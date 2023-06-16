@@ -60,6 +60,16 @@ function MyProfile() {
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     const formData = new FormData(form);
+
+  // On parcourt les champs du formulaire pour voir ceux qui ont été modifiés
+  for (let i = 0; i < form.elements.length; i++) {
+    const element = form.elements[i];
+    
+    // Vérifier si le champ a été modifié par l'utilisateur
+    if (element.value !== '') {
+      // Ajouter le champ au FormData
+      formData.append(element.name, element.value);
+    }
     console.log('formData', formData);
     // dispatch(updateMember(formData));
   };
