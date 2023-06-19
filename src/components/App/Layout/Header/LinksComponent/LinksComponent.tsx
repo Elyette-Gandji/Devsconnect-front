@@ -28,17 +28,15 @@ function LinksComponent(props: BurgerI) {
   };
 
   return (
- 
-
-       <div
+    <ul className="Header--ul">
+      <div
         role="button"
         onKeyDown={handleKeyDown}
         tabIndex={0}
         onClick={handleClick}
         className="Header--ul--link"
       >
-        {' '}
-        Créer mon projet
+        <NavLink to="/create-my-project"> Créer mon projet</NavLink>
       </div>
       <div
         role="button"
