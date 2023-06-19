@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from '../../../../hook/redux';
 // Composants
 import HeaderLarge from './HeaderLarge/HeaderLarge';
 import HeaderSmall from './HeaderSmall/HeaderSmall';
+import FlashMessage from '../../../Form/FlashMessage/FlashMessage';
 
 // Actions du reducer
 import { resizeWindow } from '../../../../store/reducer/main';
@@ -14,6 +15,8 @@ import './style.scss';
 function Header() {
   // On récupère la state windowWidth du reducer main
   const windowWidth = useAppSelector((state) => state.main.windowWidth);
+  const isLogged = useAppSelector((state) => state.user.login.logged);
+  const flash = useAppSelector((state) => state.user.login.flash);
 
   // Dispatch
   const dispatch = useAppDispatch();
@@ -33,7 +36,22 @@ function Header() {
 
   // On retourne le composant HeaderLarge si la largeur de la fenêtre navigateur est supérieure à 768px
   // Sinon on retourne le composant HeaderSmall
-  return <div>{windowWidth > 768 ? <HeaderLarge /> : <HeaderSmall />}</div>;
+  return (
+    <div>
+      {isLogged && (
+        <FlashMessage type={flash.type} duration={flash.duration ?? 3000}>
+          {flash.children}
+        </FlashMessage>
+      )}
+      {flash && (
+        <FlashMessage type={flash.type} duration={flash.duration ?? 3000}>
+          {flash.children}
+        </FlashMessage>
+      )}
+      {}
+      {windowWidth > 768 ? <HeaderLarge /> : <HeaderSmall />}
+    </div>
+  );
 }
 
 export default Header;
