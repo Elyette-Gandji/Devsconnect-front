@@ -14,15 +14,11 @@
         &--thirdField {
             border: none;
         }
-        &--secondField {
-            &--technos {
-                &--technos {
-                    &--group {
-                        //! Techno selectionnées (a inserer ensuite)
-                        &--selected {
-                            background-color: rgb(91, 166, 91);
-                        }
-                    }
+        &--firstField {
+            &--inputTextarea {
+                & textarea {
+                    padding: 0 v.$font-xsmall;
+                    overflow: auto;
                 }
             }
         }
@@ -332,4 +328,9 @@
             }
         }
     }
+}
+
+//! Gestion du selected pour la modification des tags
+.selected {
+    background-color: rgb(91, 166, 91);
 }
