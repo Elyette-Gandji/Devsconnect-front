@@ -8,7 +8,7 @@ import MultilineTextFields from '../Form/MultiLineTextField/MultiLineTextFiled';
 import ControlledSwitch from '../Form/Switch/Switch';
 import ValidateButton from '../Form/Button/ValidateButton';
 
-function FormEditProject({ projectId }) {
+function ModifyProject({ projectId }) {
   const dispatch = useAppDispatch();
   const projects = useAppSelector((state) => state.projects.projects);
 
@@ -115,4 +115,4 @@ function FormEditProject({ projectId }) {
   );
 }
 
-export default FormEditProject;
+export default ModifyProject;

@@ -10,7 +10,6 @@ import ValidateButton from '../Form/Button/ValidateButton';
 
 function FormProject() {
   const dispatch = useAppDispatch();
-  const history = useHistory();
 
   const [formData, setFormData] = useState({
     title: '',

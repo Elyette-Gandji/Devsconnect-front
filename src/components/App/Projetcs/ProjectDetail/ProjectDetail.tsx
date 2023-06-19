@@ -14,6 +14,7 @@ function ProjectDetail() {
   const dispatch = useAppDispatch();
   const projectData = useAppSelector((state) => state.projects.project.data);
   const loading = useAppSelector((state) => state.projects.project.loading);
+  const isUserLoggedIn = useAppSelector((state) => state.user.login.logged);
 
   useEffect(() => {
     if (id) dispatch(fetchOneProject(Number(id)));
@@ -75,6 +76,12 @@ function ProjectDetail() {
           {/* ajouter les technos!!! */}
         </div>
       </div>
+
+      {isUserLoggedIn && (
+        <Link to={`/modify-project/${id}`} className="modify-btn">
+          Modifier le projet
+        </Link>
+      )}
 
       <button
         className="apply-btn"
