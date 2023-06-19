@@ -82,6 +82,22 @@ export const postOneProject = createAsyncThunk(
   }
 );
 
+export const putOneProject = createAsyncThunk(
+  'project/putOneProject',
+  async (projectData: ProjectI) => {
+    try {
+      const { data } = await axiosInstance.put(
+        `/api/projects/${projectData.id}`,
+        projectData
+      );
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  }
+);
+
 // ? Construction du reducer user avec builder qui utilise les actions pour modifier le state initial
 const projectsReducer = createReducer(initialState, (builder) => {
   // ? On retourne le state selon les cas de figure suivants :
