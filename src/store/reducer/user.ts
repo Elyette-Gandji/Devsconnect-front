@@ -80,6 +80,7 @@ export const signinUser = createAsyncThunk(
       // ! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
       const objData = Object.fromEntries(formData);
 
+      console.log('objData', objData);
       const { data } = await axiosInstance.post('/signin', objData);
       // ? On retourne le state
       console.log('data', data);

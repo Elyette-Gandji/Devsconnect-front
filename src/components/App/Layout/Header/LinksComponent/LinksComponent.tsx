@@ -28,9 +28,8 @@ function LinksComponent(props: BurgerI) {
   };
 
   return (
- 
-
-       <div
+    <ul className="Header--ul">
+      <div
         role="button"
         onKeyDown={handleKeyDown}
         tabIndex={0}

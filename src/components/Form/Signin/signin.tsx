@@ -15,6 +15,7 @@ import { fetchAllTags } from '../../../store/reducer/tag';
 
 // ? Composants
 import Input from '../Input';
+import Icon from '../../UI/Icon/Icon';
 // import FlashMessage from '../FlashMessage/FlashMessage';
 
 // ? Utils
@@ -120,6 +121,10 @@ function Signin() {
         setSelectedTags(updatedTags);
       } else {
         // Le tag n'est pas sélectionné, on l'ajoute
+        if (selectedTags.length === 5) {
+          // Si l'utilisateur a déjà sélectionné 5 tags, on ne fait rien
+          return;
+        }
         const updatedTags = [...selectedTags, selectedTag];
         setSelectedTags(updatedTags);
       }
@@ -149,6 +154,16 @@ function Signin() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+
+    // Créer un tableau pour les données de selectedTags
+    const selectedTagsData = selectedTags.map((tag) => tag.id);
+
+    // Convertir le tableau en chaîne JSON
+    const tagsJSON = JSON.stringify(selectedTagsData);
+
+    // Ajouter le tableau selectedTagsData à formData
+    formData.append('tags', tagsJSON);
+
     dispatch(signinUser(formData));
     dispatch(toggleModalSignin());
     dispatch(toggleModalLogin());
@@ -171,15 +186,18 @@ function Signin() {
         </div>
         <form onSubmit={handleSubmit} className="Signin--form">
           <fieldset className="Signin--field">
-            <Input name="Prénom" type="text" placeholder="Prénom" />
-            <Input name="Nom" type="text" placeholder="Nom" />
-            <Input name="Pseudo" type="text" placeholder="Pseudo" />
-            <Input name="Email" type="email" placeholder="Adresse Email" />
+            <Input name="firstname" type="text" placeholder="Prénom" />
+            <Input name="name" type="text" placeholder="Nom" />
+            <Input name="pseudo" type="text" placeholder="Pseudo" />
+            <Input name="email" type="email" placeholder="Adresse Email" />
             <Input
-              name="Mot de passe"
+              name="password"
               type="password"
               placeholder="Mot de passe"
+              icon={<Icon icon="eye-slash" />}
             />
+            {/* <Icon icon="eye-slash" /> */}
+
             <div className="Signin--openToWork">
               <p>Ouvert aux projets</p>
               <CustomSwitch
@@ -197,7 +215,7 @@ function Signin() {
           <fieldset className="Signin--field">
             <div className="Signin--technos">
               <h3>Mes technos</h3>
-              <p>(Plusieurs choix possibles)</p>
+              <p>(5 choix maximum)</p>
               <div className="Signin--techno">
                 {/* //? On map sur le tableau des technos récupérées depuis l'API */}
                 {allTagsFromApi.map((techno: TagI) => (

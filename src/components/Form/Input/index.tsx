@@ -1,5 +1,6 @@
 //* Librairies
 import { useId, useState } from 'react';
+import Icon from '../../UI/Icon/Icon';
 
 interface InputProps {
   //! Obligation d'avoir une propriété `name` sur l'input
