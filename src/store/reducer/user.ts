@@ -57,11 +57,16 @@ export const loginUser = createAsyncThunk(
       const objData = Object.fromEntries(formData);
 
       const { data } = await axiosInstance.post('/login', objData);
-      // ! A la connexion, j'ajoute le token à mon instance Axios
-      // axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.token}`;
 
+      // ! A la connexion, j'ajoute le token à mon instance Axios
+      axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.data.accessToken}`;
+
+      console.log('axios', axiosInstance.defaults.headers.common.Authorization);
+
+      console.log('data', data);
       // ! Pour des raisons de sécurité, on le supprime de `data`
-      // delete data.token;
+      delete data.data.accessToken;
+      console.log('data', data);
 
       // ? On retourne le state
       return data;
@@ -80,10 +85,8 @@ export const signinUser = createAsyncThunk(
       // ! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
       const objData = Object.fromEntries(formData);
 
-      console.log('objData', objData);
       const { data } = await axiosInstance.post('/signin', objData);
       // ? On retourne le state
-      console.log('data', data);
       return data;
     } catch (error) {
       // Gérez les erreurs potentielles ici

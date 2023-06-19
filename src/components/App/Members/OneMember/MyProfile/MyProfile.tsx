@@ -11,7 +11,10 @@ import DeleteModale from './DeleteModale/DeleteModale';
 // import 'react-multi-carousel/lib/styles.css';
 
 // Fonctions asynchrones
-import { updateMember } from '../../../../../store/reducer/members';
+import {
+  fetchOneMember,
+  updateMember,
+} from '../../../../../store/reducer/members';
 import { fetchAllTags } from '../../../../../store/reducer/tag';
 
 // Styles
@@ -39,7 +42,7 @@ function MyProfile() {
 
   //! On récupère les données du membre
   useEffect(() => {
-    if (userId) dispatch(fetchMyProfile(userId));
+    if (userId) dispatch(fetchOneMember(userId));
   }, [dispatch]);
 
   /** //! On récupère les tags
@@ -151,8 +154,7 @@ function MyProfile() {
     <>
       <div className="MyProfile">
         <h2 className="MyProfile--title">
-          {/* {member?.firstname} {member?.name} //! A décommenter quand back revenu */}
-          Jean paul
+          {member?.firstname} {member?.name}
         </h2>
         <form ref={formRef} onSubmit={handleSubmit}>
           <div className="MyProfile--content">
