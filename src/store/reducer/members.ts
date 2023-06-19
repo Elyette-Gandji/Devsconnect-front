@@ -65,6 +65,21 @@ export const fetchOneMember = createAsyncThunk(
   }
 );
 
+//* Update un membre
+export const updateMember = createAsyncThunk(
+  'user/updateMember',
+  async (formdata: FormData) => {
+    try {
+      const { data } = await axiosInstance.put(`/api/users/profil`, formdata);
+      // ? On retourne le state
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  }
+);
+
 // ? Construction du reducer user avec builder qui utilise les actions pour modifier le state initial
 const membersReducer = createReducer(initialState, (builder) => {
   // ? On retourne le state selon les cas de figure suivants :
@@ -87,8 +102,8 @@ const membersReducer = createReducer(initialState, (builder) => {
       state.list.loading = true; // Définir l'état de chargement sur true
     });
 
-  //* Cas de la connexion réussie de fetchOneMember
   builder
+    //* Cas de la connexion réussie de fetchOneMember
     .addCase(fetchOneMember.fulfilled, (state, action) => {
       // ? On modifie le state
       state.member.data = action.payload.data;
@@ -102,6 +117,24 @@ const membersReducer = createReducer(initialState, (builder) => {
     })
     //* Cas de la connexion en cours de fetchOneMember
     .addCase(fetchOneMember.pending, (state) => {
+      // ? On modifie le state
+      state.member.loading = true; // Définir l'état de chargement sur true
+    });
+  builder
+    //* Cas de la connexion réussie de updateMember
+    .addCase(updateMember.fulfilled, (state, action) => {
+      // ? On modifie le state
+      state.member.data = action.payload.data;
+      state.member.loading = false; // Définir l'état de chargement sur false
+    })
+    //* Cas de la connexion échouée de updateMember
+    .addCase(updateMember.rejected, (state) => {
+      // ? On modifie le state
+      state.member.data = null;
+      state.member.loading = false; // Définir l'état de chargement sur false
+    })
+    //* Cas de la connexion en cours de updateMember
+    .addCase(updateMember.pending, (state) => {
       // ? On modifie le state
       state.member.loading = true; // Définir l'état de chargement sur true
     });

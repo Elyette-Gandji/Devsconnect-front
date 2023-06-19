@@ -75,19 +75,22 @@ function OneMember() {
                 Technos maitrisées
               </h4>
               <div className="OneMember--firstField--technos--technos">
-                {member.tags.slice(0, 8).map((tag) => (
-                  <div
-                    className="OneMember--firstField--technos--technos--group"
-                    key={tag.id}
-                  >
-                    <img
-                      src={`/images/technos/${tag.name.toLowerCase()}.svg`}
-                      alt={tag.name}
-                      title={tag.name}
-                    />
-                    <p>{tag.name}</p>
-                  </div>
-                ))}
+                {/* Si le membre à des tags, et si les tags sont sous la forme d'un tableau */}
+                {member.tags &&
+                  Array.isArray(member.tags) &&
+                  member.tags.map((tag) => (
+                    <div
+                      className="OneMember--firstField--technos--technos--group"
+                      key={tag.id}
+                    >
+                      <img
+                        src={`/images/technos/${tag.name.toLowerCase()}.svg`}
+                        alt={tag.name}
+                        title={tag.name}
+                      />
+                      <p>{tag.name}</p>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
@@ -95,14 +98,16 @@ function OneMember() {
             <div className="OneMember--secondField--description">
               {member.description}
             </div>
-            <div className="OneMember--secondField--projects">
-              <h4 className="OneMember--secondField--projects--title">
-                Projets réalisés
-              </h4>
-              {member.projects.map((project) => (
-                <ProjectCard key={project.id} projectID={project} />
-              ))}
-            </div>
+            {member.projects && member.projects.length > 0 && (
+              <div className="OneMember--secondField--projects">
+                <h4 className="OneMember--secondField--projects--title">
+                  Projets réalisés
+                </h4>
+                {member.projects.map((project) => (
+                  <ProjectCard key={project.id} projectID={project} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

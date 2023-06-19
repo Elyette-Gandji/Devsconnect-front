@@ -158,7 +158,6 @@ function Signin() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    console.log('formData:', formData);
     dispatch(signinUser(formData));
     dispatch(toggleModalSignin());
     dispatch(toggleModalLogin());
@@ -181,11 +180,15 @@ function Signin() {
         </div>
         <form onSubmit={handleSubmit} className="Signin--form">
           <fieldset className="Signin--field">
-            <Input name="firstname" type="text" placeholder="Prénom" />
-            <Input name="name" type="text" placeholder="Nom" />
-            <Input name="pseudo" type="text" placeholder="Pseudo" />
-            <Input name="email" type="email" placeholder="Adresse Email" />
-            <Input name="password" type="password" placeholder="Mot de passe" />
+            <Input name="Prénom" type="text" placeholder="Prénom" />
+            <Input name="Nom" type="text" placeholder="Nom" />
+            <Input name="Pseudo" type="text" placeholder="Pseudo" />
+            <Input name="Email" type="email" placeholder="Adresse Email" />
+            <Input
+              name="Mot de passe"
+              type="password"
+              placeholder="Mot de passe"
+            />
             <div className="Signin--openToWork">
               <p>Ouvert aux projets</p>
               <CustomSwitch
@@ -229,7 +232,7 @@ function Signin() {
                       tabIndex={0}
                       // On ajoute la classe selected si la techno est sélectionnée
                       className={`Signin--inputCheckbox--img ${
-                        selectedTags.some((tag) => tag.id === techno.id) //! toString() pour le typage de selectedTechnos (string[])
+                        selectedTags.some((tag) => tag.id === techno.id)
                           ? 'selected'
                           : ''
                       }`}

@@ -8,9 +8,7 @@
     color: v.$color; // Couleur du titre pour small et large
 }
 //? Liens
-li {
-    list-style: none;
-
+.Header--ul--link {
     //? Style du navLink
     & a.active::after {
         content: '';
@@ -54,7 +52,7 @@ li {
             display: flex;
 
             //? Lien unique
-            & li {
+            & .Header--ul--link {
                 padding-left: 1rem;
             }
         }
@@ -75,7 +73,7 @@ li {
         //? Lien unique
         & ul {
             //? Lien unique
-            & li {
+            & .Header--ul--link {
                 padding-left: 4rem;
             }
         }
@@ -162,9 +160,10 @@ li {
     // Jusqu'à 768px (mobile)
     @media screen and (max-width: v.$mq-medium) {
         //? Lien unique
-        & ul > li {
+        & ul > .Header--ul--link {
             margin: 2rem 0;
             font-size: v.$font-medium;
+            width: fit-content;
         }
 
         //? Boutons login et subscribe
@@ -177,7 +176,7 @@ li {
     // Jusqu'à 500px (mobile)
     @media screen and (max-width: v.$mq-small) {
         //? Lien unique
-        & ul > li {
+        & ul > .Header--ul--link {
             margin: 1.5rem 0;
             font-size: v.$font-small;
         }
@@ -191,7 +190,7 @@ li {
     // Jusqu'à 300px (mobile)
     @media screen and (max-width: v.$mq-xsmall) {
         //? Lien unique
-        & ul > li {
+        & ul > .Header--ul--link {
             margin: 2rem 0;
             font-size: v.$font-xsmall;
         }

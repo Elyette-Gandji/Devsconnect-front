@@ -24,7 +24,7 @@ function FilterBar({
   const [searchParams, setSearchParams] = useSearchParams(); // Sert à récupérer les paramètres de l'url
 
   //! States local
-  const [selectValue, setSelectValue] = useState([]); // Sert à stocker les technos sélectionnées
+  const [selectValues, setSelectValues] = useState([]); // Sert à stocker les technos sélectionnées
   //! Params url
   const searchText = searchParams.get('search') || ''; // Sert à récupérer la valeur du paramètre search de l'url
 
@@ -35,9 +35,9 @@ function FilterBar({
   };
 
   const handleTechnoChange = (selectedTechnos) => {
-    setSelectValue(selectedTechnos);
+    setSelectValues(selectedTechnos);
     // Valeur de la techno sélectionnée récupéré depuis le composant <Select />
-    // On l'enregistre dans selectValue
+    // On l'enregistre dans selectValues
   };
 
   /* //! Fonction pour enregistrer la recherche dans l'url
@@ -51,7 +51,7 @@ function FilterBar({
   };
 
   /* //! UseEffect pour filtrer les membres
-  /  A chaque fois que `members`, `searchText` ou `setFilteredMembers` ou `selectValue` change, on fait une mise à jour des membres filtrés
+  /  A chaque fois que `members`, `searchText` ou `setFilteredMembers` ou `selectValues` change, on fait une mise à jour des membres filtrés
   /  On met à jour les membres filtrés du composant parent <Membres />
   */
   useEffect(() => {
@@ -74,10 +74,10 @@ function FilterBar({
 
       //* Filtre par techno
       const technoResult =
-        selectValue.length === 0 ||
+        selectValues.length === 0 ||
         (member.tags &&
           // every pour que les filtres technos soient cumulatifs
-          selectValue.every((techno) =>
+          selectValues.every((techno) =>
             member.tags.some(
               (tag) => tag.name.toLowerCase() === techno.value.toLowerCase()
             )
@@ -87,14 +87,17 @@ function FilterBar({
     });
     // On met à jour les membres filtrés du composant parent <Membres />
     setFilteredMembers(filteredResults);
-  }, [searchText, members, checked, selectValue, setFilteredMembers]);
+  }, [searchText, members, checked, selectValues, setFilteredMembers]);
   return (
     <div className="FilterBar">
       <h3 className="FilterBar--title">Filtrer les résultats</h3>
       <div className="FilterBar--container">
         <div className="FilterBar--firstField">
           <p className="FilterBar--firstField--text">Choix des technos :</p>
-          <SelectComponent handleTechnoChange={handleTechnoChange} />
+          <SelectComponent
+            handleTechnoChange={handleTechnoChange}
+            selectedValues={selectValues}
+          />
         </div>
         <div className="FilterBar--secondField">
           <input

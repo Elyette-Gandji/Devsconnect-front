@@ -59,6 +59,8 @@
         justify-content: space-between; // A chaque extrémité
 
         & input {
+            width: 45%;
+            height: 2.5rem;
             border-radius: 1rem;
             padding-left: 1rem;
         }
@@ -345,6 +347,9 @@
         //? Gestion des champs texte
         &--inputText {
             margin-top: v.$font-small;
+            & input {
+                width: 60%;
+            }
         }
         //? Open to work
         &--openToWork {
@@ -373,6 +378,7 @@
         &--field {
             width: 80%; // Largeur du champ
         }
+
         //? Case techno
         &--inputCheckbox {
             height: v.$font-medium + 2rem; // Hauteur de la case

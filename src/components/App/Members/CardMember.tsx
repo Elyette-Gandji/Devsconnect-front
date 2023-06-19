@@ -46,16 +46,14 @@ function CardMember({ member }: CardMemberI) {
           <p className="CardMember--card--body--text">{description}</p>
           <div className="CardMember--card--body--technos">
             {member.tags && member.tags.length > 0 ? (
-              member.tags
-                .slice(0, 5)
-                .map((tag) => (
-                  <img
-                    src={`/images/technos/${tag.name.toLowerCase()}.svg`}
-                    alt={tag.name}
-                    title={tag.name}
-                    key={tag.id}
-                  />
-                ))
+              member.tags.map((tag) => (
+                <img
+                  src={`/images/technos/${tag.name.toLowerCase()}.svg`}
+                  alt={tag.name}
+                  title={tag.name}
+                  key={tag.id}
+                />
+              ))
             ) : (
               <p>Aucune techno</p>
             )}

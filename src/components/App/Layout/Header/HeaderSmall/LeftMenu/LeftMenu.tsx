@@ -18,7 +18,7 @@ function LeftMenu(props: BurgerI) {
   return (
     // On ajoute la classe active si isOpen est à true => Gestion dans le CSS ensuite
     <div className={`LeftMenu ${isOpen ? 'active' : ''}`}>
-      <LinksComponent />
+      <LinksComponent setIsOpen={setIsOpen} />
       {/* On transmet les props de l'ouverture du burger dans la gestion des modales connexions inscription */}
 
       {isLogged ? (
