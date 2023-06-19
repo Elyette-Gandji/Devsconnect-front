@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useAppDispatch } from '../../../../hook/redux';
-import { postOneProject } from '../../../../store/reducer/projects';
+import { useState, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
+import { putOneProject } from '../../../../store/reducer/projects';
 import './style.scss';
 import InputTitle from '../Form/InputTitle/InputTitle';
 import SelectCheckMarks from '../Form/SelectCheckmark/SelectCheckMarks';
@@ -8,9 +8,9 @@ import MultilineTextFields from '../Form/MultiLineTextField/MultiLineTextFiled';
 import ControlledSwitch from '../Form/Switch/Switch';
 import ValidateButton from '../Form/Button/ValidateButton';
 
-function FormProject() {
+function FormEditProject({ projectId }) {
   const dispatch = useAppDispatch();
-  const history = useHistory();
+  const projects = useAppSelector((state) => state.projects.projects);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -19,31 +19,40 @@ function FormProject() {
     open: false,
   });
 
+  useEffect(() => {
+    // Recherche du projet correspondant à l'identifiant donné
+    const project = projects.find((project) => project.id === projectId);
+
+    if (project) {
+      setFormData({
+        title: project.title,
+        description: project.description,
+        technos: project.technos,
+        open: project.open,
+      });
+    }
+  }, [projects, projectId]);
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
     // Créer un objet contenant les données du formulaire
     const projectData = {
+      id: projectId,
       title: formData.title,
       description: formData.description,
-      availability: formData.open,
+      technos: formData.technos,
+      open: formData.open,
     };
 
-    // Dispatch l'action pour créer un nouveau projet
-    dispatch(postOneProject(projectData))
+    // Dispatch l'action pour mettre à jour le projet
+    dispatch(putOneProject(projectData))
       .then((response) => {
         // Gérer la réponse de l'API en cas de succès
-        console.log('Projet créé avec succès:', response.payload);
-
-        setFormData({
-          title: '',
-          description: '',
-          technos: [],
-          open: false,
-        });
+        console.log('Projet mis à jour avec succès:', response.payload);
       })
       .catch((error) => {
-        console.error('Erreur lors de la création du projet:', error);
+        console.error('Erreur lors de la mise à jour du projet:', error);
       });
   };
 
@@ -71,7 +80,7 @@ function FormProject() {
 
   return (
     <div>
-      <h1>Créer mon projet</h1>
+      <h1>Modifier mon projet</h1>
 
       <form onSubmit={handleFormSubmit}>
         <h2>Titre du projet</h2>
@@ -106,4 +115,4 @@ function FormProject() {
   );
 }
 
-export default FormProject;
+export default FormEditProject;
