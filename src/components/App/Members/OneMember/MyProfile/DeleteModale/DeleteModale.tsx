@@ -1,6 +1,8 @@
 // ? Librairie
 import { useRef, useEffect, FormEvent } from 'react';
-import { useAppSelector } from '../../../../../../hook/redux';
+import { useAppSelector, useAppDispatch } from '../../../../../../hook/redux';
+
+import { deleteMember } from '../../../../../../store/reducer/members';
 
 // import FlashMessage from '../FlashMessage/FlashMessage';
 
@@ -9,10 +11,13 @@ import './style.scss';
 
 // ? Fonction
 function DeleteModale({ isOpenDeleteModale, setIsOpenDeleteModale }) {
+  const id = useAppSelector((state) => state.user.login.id); // id du membre connecté
   const flash = useAppSelector((state) => state.user.login.message);
 
   //! Ref pour la modale
   const modalRef = useRef(null);
+
+  const dispatch = useAppDispatch();
 
   //! useEffect pour clic externe à la modale
   useEffect(() => {
@@ -55,7 +60,7 @@ function DeleteModale({ isOpenDeleteModale, setIsOpenDeleteModale }) {
     event.preventDefault();
     console.log('delete envoyé');
     setIsOpenDeleteModale(!isOpenDeleteModale);
-    // TODO : dispatch de la fonction de suppression du profil
+    dispatch(deleteMember(id));
   };
   return (
     <div className="DeleteModale">

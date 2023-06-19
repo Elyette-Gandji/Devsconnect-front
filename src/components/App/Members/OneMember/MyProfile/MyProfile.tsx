@@ -62,10 +62,11 @@ function MyProfile() {
 
   //! Fonction d'envoi du formulaire
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = formRef.current;
     const formData = new FormData();
 
-    form.rest(); // Vider le formulaire
+    form.reset(); // Vider le formulaire
 
     // On parcourt les champs du formulaire pour voir ceux qui ont été modifiés
     for (let i = 0; i < form.elements.length; i++) {
@@ -78,8 +79,7 @@ function MyProfile() {
         formData.append(element.name, element.value);
       }
     }
-    console.log('formData', formData);
-    // dispatch(updateMember(formData)); //todo A décommenter pour l'update
+    dispatch(updateMember(formData));
   };
 
   //! Fonction pour le bouton edit
@@ -89,9 +89,7 @@ function MyProfile() {
     setIsEditMode(!isEditMode);
 
     if (isEditMode) {
-      console.log('selectedTags', selectedTags); // On envoie les tags sélectionnés en remplacement
-      console.log('update envoyé');
-      handleSubmit(event.currentTarget);
+      formRef.current.submit();
     }
   };
 
@@ -267,7 +265,7 @@ function MyProfile() {
                         const className = isMatchingTag ? 'selected' : '';
                         return (
                           <div
-                            className={className}
+                            className={`MyProfile--content--secondField--technos--technos--group ${className}`}
                             role="button"
                             key={tag.id}
                             id={`tag-${tag.id}`} // Sert de référence pour la fonction handleImageClick ( permet d'ajouter ou de retirer la classe selected quand on ajoute/supprime le tag)

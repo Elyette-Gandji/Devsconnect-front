@@ -68,10 +68,27 @@ export const fetchOneMember = createAsyncThunk(
 //* Update un membre
 export const updateMember = createAsyncThunk(
   'user/updateMember',
-  async (formdata: FormData) => {
+  async (formData: FormData) => {
     try {
-      const { data } = await axiosInstance.put(`/api/users/profil`, formdata);
+      const { data } = await axiosInstance.put(`/api/users/profil`, formData);
       // ? On retourne le state
+      console.log('data', data);
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  }
+);
+
+//* Supprimer un membre
+export const deleteMember = createAsyncThunk(
+  'user/deleteMember',
+  async (id: string) => {
+    try {
+      const { data } = await axiosInstance.delete(`/api/users/profil/${id}`);
+      // ? On retourne le state
+      console.log('data', data);
       return data;
     } catch (error) {
       console.error('Error:', error);
@@ -125,6 +142,8 @@ const membersReducer = createReducer(initialState, (builder) => {
     .addCase(updateMember.fulfilled, (state, action) => {
       // ? On modifie le state
       state.member.data = action.payload.data;
+      console.log('state.member.data', state.member.data);
+      console.log('action.payload.data', action.payload.data);
       state.member.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion échouée de updateMember
@@ -136,6 +155,28 @@ const membersReducer = createReducer(initialState, (builder) => {
     //* Cas de la connexion en cours de updateMember
     .addCase(updateMember.pending, (state) => {
       // ? On modifie le state
+      state.member.loading = true; // Définir l'état de chargement sur true
+    });
+  builder
+    //* Cas de la connexion réussie de deleteMember
+    .addCase(deleteMember.fulfilled, (state, action) => {
+      // ? On modifie le state
+      console.log('action.payload.data', action.payload.data);
+      console.log('on a réussi');
+      state.member.data = null;
+      state.member.loading = false; // Définir l'état de chargement sur false
+    })
+    //* Cas de la connexion échouée de deleteMember
+    .addCase(deleteMember.rejected, (state, action) => {
+      // ? On modifie le state
+      console.log('on a raté');
+      state.member.data = action.payload.data;
+      state.member.loading = false; // Définir l'état de chargement sur false
+    })
+    //* Cas de la connexion en cours de deleteMember
+    .addCase(deleteMember.pending, (state) => {
+      // ? On modifie le state
+      console.log('on attend');
       state.member.loading = true; // Définir l'état de chargement sur true
     });
 });

@@ -18,7 +18,7 @@ function CardMember({ member }: CardMemberI) {
   //! variable pour verifier si la page est celle de l'utilisateur connecté
   const profilePath =
     // ? Si l'id du membre recherché (id) est égal à l'id de l'utilisateur connecté (userId), on redirige vers la page profil
-    id === userId ? `/profil` : `/users/${id}`;
+    id === userId ? `/users/profil/${userId}` : `/users/${id}`;
 
   // On récupère les données de member et key depuis Members.tsx {
   return (

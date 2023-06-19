@@ -23,7 +23,7 @@ const Router = createBrowserRouter(
         <Route path="/users" element={<Members />} />
         <Route path="/users/:id" element={<OneMember />} />
         <Route path="/create-my-project" element={<FormProject />} />
-        <Route path="/profil" element={<MyProfile />} />
+        <Route path="/users/profil/:id" element={<MyProfile />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/:id" element={<ProjectDetail />} />
         {/* Autres routes... */}

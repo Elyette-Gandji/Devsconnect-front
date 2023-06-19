@@ -12,6 +12,7 @@ import { logout } from '../../../../../store/reducer/user';
 function LogoutComponent(props: BurgerI) {
   // Props de la gestion du burger
   const { setIsOpen } = props;
+  const userId = useAppSelector((state) => state.user.login.id);
 
   // On récupère la state windowWidth du reducer main
   const windowWidth = useAppSelector((state) => state.main.windowWidth);
@@ -39,7 +40,10 @@ function LogoutComponent(props: BurgerI) {
 
   return (
     <div className="Header--connect">
-      <Link to="/profil" className="Header--connect--profil-link">
+      <Link
+        to={`/users/profil/${userId}`}
+        className="Header--connect--profil-link"
+      >
         <button
           onClick={handleClick}
           className="Header--connect--profil"
