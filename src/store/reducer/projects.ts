@@ -1,3 +1,4 @@
+
 // ? Librairies
 import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -10,7 +11,8 @@ import { ProjectI } from '../../@types/interface';
 interface ProjectState {
   status?: string;
   list: {
-    data: [];
+    data: ProjectI[];
+
     loading: boolean;
   };
   project: {
@@ -34,9 +36,9 @@ export const initialState: ProjectState = {
 };
 
 // ? Fonctions asynchrones
-//* Rechercher tous les membres
+//* Rechercher tous les projets
 export const fetchAllProjects = createAsyncThunk(
-  'user/fetchAllProjects',
+  'project/fetchAllProjects',
   async () => {
     try {
       const { data } = await axiosInstance.get('/api/projects');
@@ -44,15 +46,17 @@ export const fetchAllProjects = createAsyncThunk(
       return data;
     } catch (error) {
       // Gérez les erreurs potentielles ici
+
       console.error('Error:', error);
       throw error;
     }
   }
 );
 
-//* Rechercher un seul membre
+
+//* Rechercher un seul projet
 export const fetchOneProject = createAsyncThunk(
-  'user/fetchOneProject',
+  'project/fetchOneProject',
   async (id: string) => {
     try {
       const { data } = await axiosInstance.get(`/api/projects/${id}`);
