@@ -67,7 +67,7 @@ export const fetchOneProject = createAsyncThunk(
   }
 );
 
-//* Créer un nouveau projet
+//* Créer un nouveau projet !
 export const postOneProject = createAsyncThunk(
   'project/postOneProject',
   async (projectData: ProjectI) => {
