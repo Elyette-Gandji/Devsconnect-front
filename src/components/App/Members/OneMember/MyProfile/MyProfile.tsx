@@ -160,7 +160,7 @@ function MyProfile() {
               {' '}
               {/* //! Style de MyProfile */}
               <img
-                className="MyProfile--firstField--image"
+                className="MyProfile--content--firstField--image"
                 src="/images/profil/profil.svg"
                 alt="profil"
               />
@@ -199,15 +199,7 @@ function MyProfile() {
                 placeholder="*****"
                 disabled={!isEditMode}
               />
-              {/* <Input
-            name="Mot de passe"
-            type="submit"
-            value="Modifier le mot de passe"
-            onClick={handleDeleteModale}
-          /> */}
-              <div className="MyProfile--firstField--openToWork">
-                {' '}
-                {/* //! Style de Signin */}
+              <div className="MyProfile--content--firstField--openToWork">
                 <p>Ouvert aux projets</p>
                 <CustomSwitch
                   name="availability"
@@ -218,10 +210,10 @@ function MyProfile() {
               </div>
               <label
                 htmlFor="description"
-                className="MyProfile--firstField--inputTextarea"
+                className="MyProfile--content--firstField--inputTextarea"
               >
                 {' '}
-                {/* //! Style de Signin  */}A propos de moi
+                A propos de moi :
                 <textarea
                   name="description"
                   id="description"
@@ -234,13 +226,13 @@ function MyProfile() {
               <img
                 src="/images/profil/profil.svg"
                 alt="profil"
-                className="MyProfile--secondField--image"
+                className="MyProfile--content--secondField--image"
               />
-              <div className="MyProfile--secondField--technos">
-                <h4 className="MyProfile--secondField--technos--title">
-                  Technos maitrisées
+              <div className="MyProfile--content--secondField--technos">
+                <h4 className="MyProfile--content--secondField--technos--title">
+                  Technos
                 </h4>
-                <div className="MyProfile--secondField--technos--technos">
+                <div className="MyProfile--content--secondField--technos--technos">
                   {/* //! Style dans MyProfile */}
                   {/* Rendu conditionnel : 
               si on est en mode édition, on affiche tous les tags
@@ -253,7 +245,7 @@ function MyProfile() {
                     ? member?.tags &&
                       member.tags.map((tag) => (
                         <div
-                          className="MyProfile--secondField--technos--technos--group"
+                          className="MyProfile--content--secondField--technos--technos--group"
                           key={tag.id}
                         >
                           <img
@@ -271,12 +263,8 @@ function MyProfile() {
                             (selectedTag) => selectedTag.id === tag.id
                           ) !== undefined;
                         const className = isMatchingTag
-                          ? 'MyProfile--secondField--technos--technos--group selected'
-                          : 'MyProfile--secondField--technos--technos--group';
-
-                        {
-                          /* Dans le rendu JSX on lance la fonction handleImageClick */
-                        }
+                          ? 'MyProfile--content--secondField--technos--technos--group--selected'
+                          : 'MyProfile--content--secondField--technos--technos--group';
                         return (
                           <div
                             className={className}
@@ -305,7 +293,7 @@ function MyProfile() {
             <fieldset className="MyProfile--content--thirdField">
               <div className="MyProfile--thirdField--projects">
                 <h4 className="MyProfile--thirdField--projects--title">
-                  Projets réalisés
+                  Projets
                 </h4>
                 {member?.projects &&
                   member.projects.length > 0 &&

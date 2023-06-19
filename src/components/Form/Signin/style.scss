@@ -59,6 +59,8 @@
         justify-content: space-between; // A chaque extrémité
 
         & input {
+            width: 45%;
+            height: 2.5rem;
             border-radius: 1rem;
             padding-left: 1rem;
         }
