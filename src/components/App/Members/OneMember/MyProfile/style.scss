@@ -22,18 +22,6 @@
                 }
             }
         }
-        &--secondField {
-            &--technos {
-                &--technos {
-                    &--group {
-                        //! Techno selectionnées (a inserer ensuite)
-                        &--selected {
-                            background-color: rgb(91, 166, 91);
-                        }
-                    }
-                }
-            }
-        }
     }
     &--fourthField--button {
         border: none;
@@ -340,4 +328,9 @@
             }
         }
     }
+}
+
+//! Gestion du selected pour la modification des tags
+.selected {
+    background-color: rgb(91, 166, 91);
 }

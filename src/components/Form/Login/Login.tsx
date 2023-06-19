@@ -9,14 +9,15 @@ import { loginUser } from '../../../store/reducer/user';
 
 // Composants
 import Input from '../Input';
-// import FlashMessage from '../FlashMessage/FlashMessage';
+import FlashMessage from '../FlashMessage/FlashMessage';
 
 // Styles
 import './style.scss';
 
 // ? Fonction
 function Login() {
-  const flash = useAppSelector((state) => state.user.login.message);
+  const flash = useAppSelector((state) => state.user.login.flash);
+  const isLogged = useAppSelector((state) => state.user.login.logged);
 
   //! Ref pour la modale
   const modalRef = useRef(null);
@@ -72,47 +73,50 @@ function Login() {
   };
 
   return (
-    <div className="Login">
-      <div className="Login--container" ref={modalRef}>
-        {/* {flash && (
-          <FlashMessage type={flash.type} duration={flash.duration ?? 3000}>
-            {flash.children}
-          </FlashMessage>
-        )} */}
-        <div className="Login--container--head">
-          <h2 className="Login--title">Connexion</h2>
-          <div
-            className="Login--close"
-            role="button"
-            tabIndex={0}
-            onClick={handleLogin}
-            onKeyDown={handleLoginKeyDown}
-          >
-            X
+    <>
+      <div className="Login">
+        <div className="Login--container" ref={modalRef}>
+          <div className="Login--container--head">
+            <h2 className="Login--title">Connexion</h2>
+            <div
+              className="Login--close"
+              role="button"
+              tabIndex={0}
+              onClick={handleLogin}
+              onKeyDown={handleLoginKeyDown}
+            >
+              X
+            </div>
           </div>
+
+          <form className="Login--form" onSubmit={handleSubmit}>
+            <Input
+              name="email"
+              type="email"
+              placeholder="Adresse Email"
+              className="Login--inputText"
+            />
+            <Input
+              name="password"
+              type="password"
+              placeholder="Mot de passe"
+              className="Login--inputText"
+            />
+
+            <button type="submit" className="Login--form--submit">
+              Se connecter
+            </button>
+          </form>
+          <p>DevsConnect</p>
         </div>
-
-        <form className="Login--form" onSubmit={handleSubmit}>
-          <Input
-            name="email"
-            type="email"
-            placeholder="Adresse Email"
-            className="Login--inputText"
-          />
-          <Input
-            name="password"
-            type="password"
-            placeholder="Mot de passe"
-            className="Login--inputText"
-          />
-
-          <button type="submit" className="Login--form--submit">
-            Se connecter
-          </button>
-        </form>
-        <p>DevsConnect</p>
       </div>
-    </div>
+      {flash && isLogged ? (
+        <FlashMessage type={flash.type} duration={flash.duration ?? 3000}>
+          {flash.children}
+          console.log({flash})
+        </FlashMessage>
+      ) : null}
+    </>
   );
 }
 

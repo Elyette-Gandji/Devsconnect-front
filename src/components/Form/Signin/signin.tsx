@@ -16,12 +16,9 @@ import { fetchAllTags } from '../../../store/reducer/tag';
 // ? Composants
 import Input from '../Input';
 import Icon from '../../UI/Icon/Icon';
-// import FlashMessage from '../FlashMessage/FlashMessage';
+import FlashMessage from '../FlashMessage/FlashMessage';
 
-// ? Utils
-// import { technos } from '../../../utils/technosPath'; // Pour le choix des technos
-
-// Styles
+// ? Styles
 import './style.scss';
 
 // ? Typage
@@ -121,6 +118,7 @@ function Signin() {
         setSelectedTags(updatedTags);
       } else {
         // Le tag n'est pas sélectionné, on l'ajoute
+        // Dans la limite de 5 technos
         if (selectedTags.length === 5) {
           // Si l'utilisateur a déjà sélectionné 5 tags, on ne fait rien
           return;
@@ -170,112 +168,118 @@ function Signin() {
   };
 
   return (
-    <div className="Signin">
-      <div className="Signin--container" ref={modalRef}>
-        <div className="Signin--container--head">
-          <h2 className="Signin--title">Inscription</h2>
-          <div
-            className="Signin--close"
-            role="button"
-            tabIndex={0}
-            onClick={handleSignin}
-            onKeyDown={handleSigninKeyDown}
-          >
-            X
+    <>
+      <div className="Signin">
+        <div className="Signin--container" ref={modalRef}>
+          <div className="Signin--container--head">
+            <h2 className="Signin--title">Inscription</h2>
+            <div
+              className="Signin--close"
+              role="button"
+              tabIndex={0}
+              onClick={handleSignin}
+              onKeyDown={handleSigninKeyDown}
+            >
+              X
+            </div>
           </div>
-        </div>
-        <form onSubmit={handleSubmit} className="Signin--form">
-          <fieldset className="Signin--field">
-            <Input name="firstname" type="text" placeholder="Prénom" />
-            <Input name="name" type="text" placeholder="Nom" />
-            <Input name="pseudo" type="text" placeholder="Pseudo" />
-            <Input name="email" type="email" placeholder="Adresse Email" />
-            <Input
-              name="password"
-              type="password"
-              placeholder="Mot de passe"
-              icon={<Icon icon="eye-slash" />}
-            />
-            {/* <Icon icon="eye-slash" /> */}
-
-            <div className="Signin--openToWork">
-              <p>Ouvert aux projets</p>
-              <CustomSwitch
-                name="availability"
-                checked={checked}
-                onChange={handleSwitch}
+          <form onSubmit={handleSubmit} className="Signin--form">
+            <fieldset className="Signin--field">
+              <Input name="firstname" type="text" placeholder="Prénom" />
+              <Input name="name" type="text" placeholder="Nom" />
+              <Input name="pseudo" type="text" placeholder="Pseudo" />
+              <Input name="email" type="email" placeholder="Adresse Email" />
+              <Input
+                name="password"
+                type="password"
+                placeholder="Mot de passe"
               />
-            </div>
-            <label htmlFor="description" className="Signin--inputTextarea">
-              A propos de moi
-              <textarea name="description" id="description" />
-            </label>
-          </fieldset>
+              {/* <Icon icon="eye-slash" /> */}
 
-          <fieldset className="Signin--field">
-            <div className="Signin--technos">
-              <h3>Mes technos</h3>
-              <p>(5 choix maximum)</p>
-              <div className="Signin--techno">
-                {/* //? On map sur le tableau des technos récupérées depuis l'API */}
-                {allTagsFromApi.map((techno: TagI) => (
-                  <div className="Signin--inputCheckbox" key={techno.id}>
-                    {/* //? Pour chaque techno, on lui donne un id, un name et une value provenant de la table tag */}
-                    <input
-                      type="checkbox"
-                      id={techno.id}
-                      name={techno.name}
-                      value={techno.name}
-                    />
-                    {/* // On lui donne un label et htmlFor provenant de la table name */}
-                    <label htmlFor={techno.name}>{techno.name}</label>
-                    <div
-                      role="button"
-                      // Au clic, on appelle la fonction handleImageClick() et on lui passe l'id de la techno
-                      onClick={() => handleImageClick(techno.id)}
-                      // Fonction d’accessibilité pour le clavier. Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
-                      onKeyDown={(event) =>
-                        handleImageKeyDown(event, techno.id)
-                      }
-                      // On ajoute un tabIndex pour que l'élément soit focusable (accessibilité)
-                      tabIndex={0}
-                      // On ajoute la classe selected si la techno est sélectionnée
-                      className={`Signin--inputCheckbox--img ${
-                        selectedTags.some((tag) => tag.id === techno.id)
-                          ? 'selected'
-                          : ''
-                      }`}
-                    >
-                      <img
-                        src={`/images/technos/${techno.name.toLocaleLowerCase()}.svg`}
-                        title={techno.name.toLocaleLowerCase()}
-                        alt={techno.name.toLocaleLowerCase()}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="Signin--cgu">
-              <label>
-                J&apos;accepte les CGU
-                <input
-                  type="checkbox"
-                  required
-                  id="cgu"
-                  name="cgu"
-                  value="cgu"
-                  className="Signin--inputCheckbox--cgu"
+              <div className="Signin--openToWork">
+                <p>Ouvert aux projets</p>
+                <CustomSwitch
+                  name="availability"
+                  checked={checked}
+                  onChange={handleSwitch}
                 />
+              </div>
+              <label htmlFor="description" className="Signin--inputTextarea">
+                A propos de moi
+                <textarea name="description" id="description" />
               </label>
-            </div>
-            <button type="submit" className="Signin--form--submit">
-              S&apos;inscrire
-            </button>
-          </fieldset>
-        </form>
+            </fieldset>
+
+            <fieldset className="Signin--field">
+              <div className="Signin--technos">
+                <h3>Mes technos</h3>
+                <p>(5 choix maximum)</p>
+                <div className="Signin--techno">
+                  {/* //? On map sur le tableau des technos récupérées depuis l'API */}
+                  {allTagsFromApi.map((techno: TagI) => (
+                    <div className="Signin--inputCheckbox" key={techno.id}>
+                      {/* //? Pour chaque techno, on lui donne un id, un name et une value provenant de la table tag */}
+                      <input
+                        type="checkbox"
+                        id={techno.id}
+                        name={techno.name}
+                        value={techno.name}
+                      />
+                      {/* // On lui donne un label et htmlFor provenant de la table name */}
+                      <label htmlFor={techno.name}>{techno.name}</label>
+                      <div
+                        role="button"
+                        // Au clic, on appelle la fonction handleImageClick() et on lui passe l'id de la techno
+                        onClick={() => handleImageClick(techno.id)}
+                        // Fonction d’accessibilité pour le clavier. Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
+                        onKeyDown={(event) =>
+                          handleImageKeyDown(event, techno.id)
+                        }
+                        // On ajoute un tabIndex pour que l'élément soit focusable (accessibilité)
+                        tabIndex={0}
+                        // On ajoute la classe selected si la techno est sélectionnée
+                        className={`Signin--inputCheckbox--img ${
+                          selectedTags.some((tag) => tag.id === techno.id)
+                            ? 'selected'
+                            : ''
+                        }`}
+                      >
+                        <img
+                          src={`/images/technos/${techno.name.toLocaleLowerCase()}.svg`}
+                          title={techno.name.toLocaleLowerCase()}
+                          alt={techno.name.toLocaleLowerCase()}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="Signin--cgu">
+                <label>
+                  J&apos;accepte les CGU
+                  <input
+                    type="checkbox"
+                    required
+                    id="cgu"
+                    name="cgu"
+                    value="cgu"
+                    className="Signin--inputCheckbox--cgu"
+                  />
+                </label>
+              </div>
+              <button type="submit" className="Signin--form--submit">
+                S&apos;inscrire
+              </button>
+            </fieldset>
+          </form>
+        </div>
       </div>
-    </div>
+      {flash && (
+        <FlashMessage type={flash.type} duration={flash.duration ?? 3000}>
+          {flash.children}
+        </FlashMessage>
+      )}
+    </>
   );
 }
 

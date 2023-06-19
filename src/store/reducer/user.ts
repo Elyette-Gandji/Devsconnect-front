@@ -17,6 +17,7 @@ interface UserState {
     id: number | null;
     message: FlashI | null;
     status?: string | null;
+    children?: string | null;
   };
   login: {
     id: number | null;
@@ -24,6 +25,11 @@ interface UserState {
     pseudo: string | null;
     message: FlashI | null;
     status?: string | null;
+    flash: {
+      type: 'success' | 'error';
+      duration?: number;
+      children: string | null;
+    };
   };
 }
 
@@ -40,6 +46,11 @@ export const initialState: UserState = {
     pseudo: null,
     message: null,
     status: null,
+    flash: {
+      type: null,
+      duration: 0,
+      children: '',
+    },
   },
 };
 
@@ -61,12 +72,8 @@ export const loginUser = createAsyncThunk(
       // ! A la connexion, j'ajoute le token à mon instance Axios
       axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.data.accessToken}`;
 
-      console.log('axios', axiosInstance.defaults.headers.common.Authorization);
-
-      console.log('data', data);
       // ! Pour des raisons de sécurité, on le supprime de `data`
       delete data.data.accessToken;
-      console.log('data', data);
 
       // ? On retourne le state
       return data;
@@ -126,7 +133,7 @@ const userReducer = createReducer(initialState, (builder) => {
       state.login.logged = logged;
       state.login.pseudo = pseudo;
       state.login.id = userID;
-      state.login.message = {
+      state.login.flash = {
         type: 'success',
         children: `Bienvenue ${pseudo} !`,
       };
@@ -147,11 +154,10 @@ const userReducer = createReducer(initialState, (builder) => {
 
     //* Cas de l'inscription réussie
     .addCase(signinUser.fulfilled, (state, action) => {
-      const { status } = action.payload;
-      console.log('payload', action.payload);
+      // const { status } = action.payload;
       state.signin.message = {
         type: 'success',
-        children: status,
+        children: 'Vous êtes bien inscrit, merci de vous connecter maintenant',
       };
     })
 

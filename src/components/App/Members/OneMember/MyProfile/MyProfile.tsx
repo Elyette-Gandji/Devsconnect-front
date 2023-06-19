@@ -264,9 +264,7 @@ function MyProfile() {
                           member?.tags.find(
                             (selectedTag) => selectedTag.id === tag.id
                           ) !== undefined;
-                        const className = isMatchingTag
-                          ? 'MyProfile--content--secondField--technos--technos--group--selected'
-                          : 'MyProfile--content--secondField--technos--technos--group';
+                        const className = isMatchingTag ? 'selected' : '';
                         return (
                           <div
                             className={className}
