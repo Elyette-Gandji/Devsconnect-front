@@ -1,17 +1,11 @@
-// ? Librairies
 import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
-
-// ? fonctions maison pour l'instance Axios
 import axiosInstance from '../../utils/axios';
-
-// ? Typage
 import { ProjectI } from '../../@types/interface';
 
 interface ProjectState {
   status?: string;
   list: {
     data: ProjectI[];
-
     loading: boolean;
   };
   project: {
@@ -20,45 +14,35 @@ interface ProjectState {
   };
 }
 
-// ? Initialisation
 export const initialState: ProjectState = {
-  // Liste des projets
   list: {
     data: [],
-    loading: false, // Nouvelle propriété
+    loading: false,
   },
-  // Un seul projet
   project: {
     data: null,
-    loading: false, // Nouvelle propriété
+    loading: false,
   },
 };
 
-// ? Fonctions asynchrones
-//* Rechercher tous les projets
 export const fetchAllProjects = createAsyncThunk(
   'project/fetchAllProjects',
   async () => {
     try {
       const { data } = await axiosInstance.get('/api/projects');
-      // ? On retourne le state
       return data;
     } catch (error) {
-      // Gérez les erreurs potentielles ici
-
       console.error('Error:', error);
       throw error;
     }
   }
 );
 
-//* Rechercher un seul projet
 export const fetchOneProject = createAsyncThunk(
   'project/fetchOneProject',
   async (id: string) => {
     try {
       const { data } = await axiosInstance.get(`/api/projects/${id}`);
-      // ? On retourne le state
       return data;
     } catch (error) {
       console.error('Error:', error);
@@ -67,13 +51,11 @@ export const fetchOneProject = createAsyncThunk(
   }
 );
 
-//* Créer un nouveau projet !
 export const postOneProject = createAsyncThunk(
   'project/postOneProject',
   async (projectData: ProjectI) => {
     try {
       const { data } = await axiosInstance.post('/api/projects', projectData);
-      // ? On retourne le state
       return data;
     } catch (error) {
       console.error('Error:', error);
@@ -98,45 +80,55 @@ export const putOneProject = createAsyncThunk(
   }
 );
 
-// ? Construction du reducer user avec builder qui utilise les actions pour modifier le state initial
-const projectsReducer = createReducer(initialState, (builder) => {
-  // ? On retourne le state selon les cas de figure suivants :
-  builder
-    //* Cas de la connexion réussie de fetchAllProjects
-    .addCase(fetchAllProjects.fulfilled, (state, action) => {
-      // ? On modifie le state
-      state.list.data = action.payload.data;
-      state.list.loading = false; // Définir l'état de chargement sur false
-    })
-    //* Cas de la connexion échouée de fetchAllProjects
-    .addCase(fetchAllProjects.rejected, (state) => {
-      // ? On modifie le state
-      state.list.data = [];
-      state.list.loading = false; // Définir l'état de chargement sur false
-    })
-    //* Cas de la connexion en cours de fetchAllProjects
-    .addCase(fetchAllProjects.pending, (state) => {
-      // ? On modifie le state
-      state.list.loading = true; // Définir l'état de chargement sur true
-    });
+export const deleteOneProject = createAsyncThunk(
+  'project/deleteOneProject',
+  async (projectId: string) => {
+    try {
+      await axiosInstance.delete(`/api/projects/${projectId}`);
+      return projectId;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  }
+);
 
-  //* Cas de la connexion réussie de fetchOneProject
+const projectsReducer = createReducer(initialState, (builder) => {
   builder
+    .addCase(fetchAllProjects.fulfilled, (state, action) => {
+      state.list.data = action.payload.data;
+      state.list.loading = false;
+    })
+    .addCase(fetchAllProjects.rejected, (state) => {
+      state.list.data = [];
+      state.list.loading = false;
+    })
+    .addCase(fetchAllProjects.pending, (state) => {
+      state.list.loading = true;
+    })
     .addCase(fetchOneProject.fulfilled, (state, action) => {
-      // ? On modifie le state
       state.project.data = action.payload.data;
-      state.project.loading = false; // Définir l'état de chargement sur false
+      state.project.loading = false;
     })
-    //* Cas de la connexion échouée de fetchOneProject
     .addCase(fetchOneProject.rejected, (state) => {
-      // ? On modifie le state
       state.project.data = null;
-      state.project.loading = false; // Définir l'état de chargement sur false
+      state.project.loading = false;
     })
-    //* Cas de la connexion en cours de fetchOneProject
     .addCase(fetchOneProject.pending, (state) => {
-      // ? On modifie le state
-      state.project.loading = true; // Définir l'état de chargement sur true
+      state.project.loading = true;
+    })
+    .addCase(deleteOneProject.fulfilled, (state, action) => {
+      const projectId = action.payload;
+      state.list.data = state.list.data.filter(
+        (project) => project.id !== projectId
+      );
+    })
+    .addCase(deleteOneProject.rejected, (state) => {
+      state.project.data = null;
+      state.project.loading = false;
+    })
+    .addCase(deleteOneProject.pending, (state) => {
+      state.project.loading = false;
     });
 });
 

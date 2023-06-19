@@ -1,0 +1,30 @@
+.form-container {
+    padding-left: 3rem;
+    margin-left: 5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-top: 3rem;
+
+    @media (max-width: 768px) {
+        padding: 0;
+        margin: 2rem;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.form-title {
+    font-size: 2rem;
+    margin: 2rem 0 2rem 0;
+}
+
+.validate-button {
+    margin: 6rem;
+
+    @media (max-width: 768px) {
+        margin: 2rem;
+    }
+}

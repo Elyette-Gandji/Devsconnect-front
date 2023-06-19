@@ -69,37 +69,39 @@ function FormProject() {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h1>Créer mon projet</h1>
 
       <form onSubmit={handleFormSubmit}>
-        <h2>Titre du projet</h2>
+        <h2 className="form-title">Titre du projet</h2>
         <InputTitle
           name="title"
           value={formData.title}
           onChange={handleInputChange}
         />
 
-        <h2>Quelles sont les technos de votre projet</h2>
+        <h2 className="form-title">Quelles sont les technos de votre projet</h2>
         <SelectCheckMarks
           selectedTechnos={formData.technos}
           onTechnosChange={handleTechnosChange}
         />
 
-        <h2>Description du projet</h2>
+        <h2 className="form-title">Description du projet</h2>
         <MultilineTextFields
           name="description"
           value={formData.description}
           onChange={handleInputChange}
         />
 
-        <h2>Ouvert aux participants</h2>
+        <h2 className="form-title">Ouvert aux participants</h2>
         <ControlledSwitch
           checked={formData.open}
           onChange={handleSwitchChange}
         />
 
-        <ValidateButton onSubmit={handleFormSubmit} />
+        <div className="validate-button">
+          <ValidateButton onSubmit={handleFormSubmit} />
+        </div>
       </form>
     </div>
   );
