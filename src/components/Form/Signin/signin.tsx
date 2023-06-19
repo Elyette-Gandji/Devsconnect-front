@@ -96,16 +96,7 @@ function Signin() {
     !* On précise en 2eme paramètre du hook useEffect un tableau vide pour que l'action ne soit effectuée qu'une seule fois
     */
   useEffect(() => {
-    const fetchTags = async () => {
-      try {
-        // Appel à l'action fetchAllTags pour récupérer les tags depuis l'API
-        await dispatch(fetchAllTags());
-      } catch (error) {
-        console.error('Erreur lors de la récupération des tags:', error);
-      }
-    };
-
-    fetchTags();
+    dispatch(fetchAllTags());
   }, [dispatch]);
 
   /* //! Fonction pour la selection des technos (au clic sur une techno)
@@ -209,7 +200,7 @@ function Signin() {
               <p>(Plusieurs choix possibles)</p>
               <div className="Signin--techno">
                 {/* //? On map sur le tableau des technos récupérées depuis l'API */}
-                {allTagsFromApi.map((techno: TechnoMapI) => (
+                {allTagsFromApi.map((techno: TagI) => (
                   <div className="Signin--inputCheckbox" key={techno.id}>
                     {/* //? Pour chaque techno, on lui donne un id, un name et une value provenant de la table tag */}
                     <input

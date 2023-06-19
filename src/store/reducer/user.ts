@@ -64,12 +64,7 @@ export const loginUser = createAsyncThunk(
       // delete data.token;
 
       // ? On retourne le state
-      return data as {
-        logged: boolean;
-        pseudo: string;
-        id: number;
-        status: string;
-      };
+      return data;
     } catch (error) {
       // Gérez les erreurs potentielles ici
       console.error('Error during login:', error);
@@ -87,12 +82,8 @@ export const signinUser = createAsyncThunk(
 
       const { data } = await axiosInstance.post('/signin', objData);
       // ? On retourne le state
-      return data as {
-        status: string;
-        logged: boolean;
-        pseudo: string;
-        id: number;
-      };
+      console.log('data', data);
+      return data;
     } catch (error) {
       // Gérez les erreurs potentielles ici
       console.error('Error during signin:', error);
@@ -127,10 +118,10 @@ const userReducer = createReducer(initialState, (builder) => {
 
     //* Cas de la connexion réussie
     .addCase(loginUser.fulfilled, (state, action) => {
-      const { logged, pseudo, id } = action.payload;
+      const { logged, pseudo, userID } = action.payload.data;
       state.login.logged = logged;
       state.login.pseudo = pseudo;
-      state.login.id = id;
+      state.login.id = userID;
       state.login.message = {
         type: 'success',
         children: `Bienvenue ${pseudo} !`,
@@ -153,6 +144,7 @@ const userReducer = createReducer(initialState, (builder) => {
     //* Cas de l'inscription réussie
     .addCase(signinUser.fulfilled, (state, action) => {
       const { status } = action.payload;
+      console.log('payload', action.payload);
       state.signin.message = {
         type: 'success',
         children: status,
