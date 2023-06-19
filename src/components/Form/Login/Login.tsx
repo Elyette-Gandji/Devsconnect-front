@@ -1,40 +1,24 @@
-// ? Librairie
 import { useRef, useEffect, FormEvent } from 'react';
-// Permet modifier le state et de relancer le rendu de ce composant à chaque fois que le state de la modale change
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
-
-// Actions du reducer
 import { toggleModalLogin } from '../../../store/reducer/log';
 import { loginUser } from '../../../store/reducer/user';
-
-// Composants
 import Input from '../Input';
 import FlashMessage from '../FlashMessage/FlashMessage';
-
-// Styles
 import './style.scss';
 
-// ? Fonction
 function Login() {
+  const modalLogin = useAppSelector((state) => state.log.modalLogin);
   const flash = useAppSelector((state) => state.user.login.flash);
   const isLogged = useAppSelector((state) => state.user.login.logged);
-
-  //! Ref pour la modale
   const modalRef = useRef(null);
-
-  //! Dispatch
   const dispatch = useAppDispatch();
 
-  //! useEffect pour clic externe à la modale
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         modalRef.current &&
-        //* On précise que modalRef.current éun element html (Element)
-        //* On précise que event.target représente un noeud du DOM (Node)
         !(modalRef.current as Element).contains(event.target as Node)
       ) {
-        // Clic en dehors de la modale
         dispatch(toggleModalLogin());
       }
     };
@@ -46,76 +30,72 @@ function Login() {
     };
   }, [dispatch]);
 
-  //! Fonction pour fermer la modale avec la croix
   const handleLogin = () => {
-    // On dispatch l'action qui va gérer l'ouverture de la modale
     dispatch(toggleModalLogin());
   };
-  // * Une div n'est pas un element clickable
-  // * Fonction d’accessibilité pour le clavier.
-  // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
+
   const handleLoginKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'enter' || event.key === ' ') {
       handleLogin();
     }
   };
 
-  //! Fonction pour soumettre le formulaire
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // On récupère les données du formulaire
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    dispatch(toggleModalLogin()); // Dispatch de l'action qui va gérer la fermeture de la modale
-    dispatch(loginUser(formData)); // Dispatch de l'action de connexion réussie
+    dispatch(toggleModalLogin());
+    dispatch(loginUser(formData));
   };
 
   return (
     <>
-      <div className="Login">
-        <div className="Login--container" ref={modalRef}>
-          <div className="Login--container--head">
-            <h2 className="Login--title">Connexion</h2>
-            <div
-              className="Login--close"
-              role="button"
-              tabIndex={0}
-              onClick={handleLogin}
-              onKeyDown={handleLoginKeyDown}
-            >
-              X
+      {modalLogin && (
+        <div className="Login">
+          <div className="Login--container" ref={modalRef}>
+            <div className="Login--container--head">
+              <h2 className="Login--title">Connexion</h2>
+              <div
+                className="Login--close"
+                role="button"
+                tabIndex={0}
+                onClick={handleLogin}
+                onKeyDown={handleLoginKeyDown}
+              >
+                X
+              </div>
             </div>
+
+            <form className="Login--form" onSubmit={handleSubmit}>
+              <Input
+                name="email"
+                type="email"
+                placeholder="Adresse Email"
+                className="Login--inputText"
+              />
+              <Input
+                name="password"
+                type="password"
+                placeholder="Mot de passe"
+                className="Login--inputText"
+              />
+
+              <button type="submit" className="Login--form--submit">
+                Se connecter
+              </button>
+            </form>
+            <p>DevsConnect</p>
           </div>
-
-          <form className="Login--form" onSubmit={handleSubmit}>
-            <Input
-              name="email"
-              type="email"
-              placeholder="Adresse Email"
-              className="Login--inputText"
-            />
-            <Input
-              name="password"
-              type="password"
-              placeholder="Mot de passe"
-              className="Login--inputText"
-            />
-
-            <button type="submit" className="Login--form--submit">
-              Se connecter
-            </button>
-          </form>
-          <p>DevsConnect</p>
         </div>
-      </div>
-      {flash && isLogged ? (
+      )}
+
+      {flash && isLogged && (
         <FlashMessage type={flash.type} duration={flash.duration ?? 3000}>
           {flash.children}
           console.log({flash})
         </FlashMessage>
-      ) : null}
+      )}
     </>
   );
 }

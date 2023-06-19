@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
-import { putOneProject } from '../../../../store/reducer/projects';
+import {
+  putOneProject,
+  deleteOneProject, // Importez l'action de suppression de projet
+} from '../../../../store/reducer/projects';
 import './style.scss';
 import InputTitle from '../Form/InputTitle/InputTitle';
 import SelectCheckMarks from '../Form/SelectCheckmark/SelectCheckMarks';
@@ -78,6 +81,16 @@ function ModifyProject({ projectId }) {
     }));
   };
 
+  const handleDeleteProject = () => {
+    dispatch(deleteOneProject(projectId))
+      .then((response) => {
+        console.log('Projet supprimé avec succès:', response.payload);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la suppression du projet:', error);
+      });
+  };
+
   return (
     <div>
       <h1>Modifier mon projet</h1>
@@ -110,6 +123,8 @@ function ModifyProject({ projectId }) {
         />
 
         <ValidateButton onSubmit={handleFormSubmit} />
+
+        <button onClick={handleDeleteProject}>Supprimer le projet</button>
       </form>
     </div>
   );
