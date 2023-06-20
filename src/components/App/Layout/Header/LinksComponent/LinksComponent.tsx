@@ -1,15 +1,17 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../hook/redux';
 
 import { BurgerI } from '../../../../../@types/interface';
+import { toggleModalLogin } from '../../../../../store/reducer/log';
 
 function LinksComponent(props: BurgerI) {
   const { setIsOpen } = props;
 
   const windowWidth = useAppSelector((state) => state.main.windowWidth);
+  const isLoggedIn = useAppSelector((state) => state.user.login.logged);
 
-  // Dispatch
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleClick = () => {
     if (windowWidth > 768) {
@@ -18,12 +20,18 @@ function LinksComponent(props: BurgerI) {
     setIsOpen(false);
   };
 
-  // * Une div n'est pas un element clickable
-  // * Fonction d’accessibilité pour le clavier.
-  // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'enter' || event.key === ' ') {
+    if (event.key === 'Enter' || event.key === ' ') {
       handleClick();
+    }
+  };
+
+  const handleCreateProjectClick = () => {
+    if (isLoggedIn) {
+      navigate('/create-my-project');
+    } else {
+      dispatch(toggleModalLogin());
+      navigate('/');
     }
   };
 
@@ -33,11 +41,15 @@ function LinksComponent(props: BurgerI) {
         role="button"
         onKeyDown={handleKeyDown}
         tabIndex={0}
-        onClick={handleClick}
+        onClick={handleCreateProjectClick}
         className="Header--ul--link"
       >
-        {' '}
-        Créer mon projet
+        {isLoggedIn ? (
+          <Navigate to="/create-my-project" replace />
+        ) : (
+          <Navigate to="/" replace />
+        )}
+        <NavLink to="/create-my-project">Créer mon projet</NavLink>
       </div>
       <div
         role="button"

@@ -1,26 +1,24 @@
-// ? Librairie
 import { useRef, useEffect, FormEvent } from 'react';
+
 // Permet modifier le state et de relancer le rendu de ce composant à chaque fois que le state de la modale change
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
-// Actions du reducer
+import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 import { toggleModalLogin } from '../../../store/reducer/log';
 import { loginUser } from '../../../store/reducer/user';
-
-// Composants
 import Input from '../Input';
 
-// Styles
+import FlashMessage from '../FlashMessage/FlashMessage';
+
 import './style.scss';
 
-// ? Fonction
 function Login() {
-  const isLogged = useAppSelector((state) => state.user.login.logged);
-  //! Ref pour la modale
-  const modalRef = useRef(null);
 
-  //! Dispatch
+  const modalLogin = useAppSelector((state) => state.log.modalLogin);
+  const flash = useAppSelector((state) => state.user.login.flash);
+  const isLogged = useAppSelector((state) => state.user.login.logged);
+
+  const modalRef = useRef(null);
   const dispatch = useAppDispatch();
 
   //! useNavigate
@@ -38,11 +36,8 @@ function Login() {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         modalRef.current &&
-        //* On précise que modalRef.current éun element html (Element)
-        //* On précise que event.target représente un noeud du DOM (Node)
         !(modalRef.current as Element).contains(event.target as Node)
       ) {
-        // Clic en dehors de la modale
         dispatch(toggleModalLogin());
       }
     };
@@ -54,25 +49,18 @@ function Login() {
     };
   }, [dispatch]);
 
-  //! Fonction pour fermer la modale avec la croix
   const handleLogin = () => {
-    // On dispatch l'action qui va gérer l'ouverture de la modale
     dispatch(toggleModalLogin());
   };
-  // * Une div n'est pas un element clickable
-  // * Fonction d’accessibilité pour le clavier.
-  // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
+
   const handleLoginKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'enter' || event.key === ' ') {
       handleLogin();
     }
   };
 
-  //! Fonction pour soumettre le formulaire
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // On récupère les données du formulaire
     const form = event.currentTarget;
     const formData = new FormData(form);
 
@@ -117,6 +105,7 @@ function Login() {
         <p>DevsConnect</p>
       </div>
     </div>
+
   );
 }
 
