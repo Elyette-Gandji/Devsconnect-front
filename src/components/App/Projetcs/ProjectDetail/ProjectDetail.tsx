@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import './style.scss';
 
@@ -7,6 +8,7 @@ import { useAppSelector, useAppDispatch } from '../../../../hook/redux';
 
 import { fetchOneProject } from '../../../../store/reducer/projects';
 import ErrorPage from '../../../../routes/ErrorPage';
+import { fetchAllTags } from '../../../../store/reducer/tag';
 
 function ProjectDetail() {
   const { id } = useParams();
@@ -15,9 +17,11 @@ function ProjectDetail() {
   const projectData = useAppSelector((state) => state.projects.project.data);
   const loading = useAppSelector((state) => state.projects.project.loading);
   const isUserLoggedIn = useAppSelector((state) => state.user.login.logged);
+  const tags = useAppSelector((state) => state.tag.list.data);
 
   useEffect(() => {
     if (id) dispatch(fetchOneProject(Number(id)));
+    dispatch(fetchAllTags());
   }, [dispatch, id]);
 
   if (loading) {
@@ -73,7 +77,9 @@ function ProjectDetail() {
         <div className="project-technos-container">
           <h2 className="technos-title">Technos utilisées</h2>
           <div className="project-technos-img"></div>
-          {/* ajouter les technos!!! */}
+          {tags.map((tag: TagI) => (
+            <span key={tag.id}>{tag.name}</span>
+          ))}
         </div>
       </div>
 
