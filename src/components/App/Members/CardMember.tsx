@@ -17,6 +17,7 @@ function CardMember({ member }: CardMemberI) {
   // On récupère les données de member depuis Members.tsx
   const { id, firstname, name, availability, description } = member;
 
+  // ? Rendu JSX
   return (
     <div className="CardMember">
       <section className="CardMember--card">

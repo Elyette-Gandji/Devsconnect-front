@@ -16,7 +16,7 @@ import './style.scss';
 // ? Interface globale
 import { MemberI } from '../../../@types/interface';
 
-// ? Fonction principales
+// ? Fonction principale
 function Members() {
   // ? States
   // Store
