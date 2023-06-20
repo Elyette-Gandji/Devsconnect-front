@@ -122,13 +122,13 @@ const userReducer = createReducer(initialState, (builder) => {
 
     //* Cas de la connexion réussie
     .addCase(loginUser.fulfilled, (state, action) => {
-      const { logged, pseudo, userID, accessToken, refreshToken } =
+      const { logged, pseudo, userId, accessToken, refreshToken } =
         action.payload.data;
       state.login.logged = logged;
       state.login.pseudo = pseudo;
       state.login.accessToken = accessToken;
       state.login.refreshToken = refreshToken;
-      state.login.id = userID;
+      state.login.id = userId;
       state.login.flash = {
         type: 'success',
         children: `Bienvenue ${pseudo} !`,

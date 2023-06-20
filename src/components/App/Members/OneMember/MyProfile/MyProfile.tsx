@@ -95,6 +95,20 @@ function MyProfile() {
       formData.append('availability', checked);
     }
 
+    // //* Les tags
+    // Créer un tableau pour les données de selectedTags
+    if (selectedTags && selectedTags.length > 0) {
+      const selectedTagsData = selectedTags.map((tag) => tag.id);
+      // Convertir le tableau en chaîne JSON
+      const tagsJSON = JSON.stringify(selectedTagsData);
+
+      // Ajouter le tableau selectedTagsData à formData
+      formData.append('tags', tagsJSON);
+
+      // Ajouter le tableau selectedTagsData à objData
+      objData.tags = tagsJSON;
+    }
+
     // form.reset(); // Vider le formulaire
 
     console.log('obj', objData);
@@ -156,7 +170,7 @@ function MyProfile() {
         if (tagElement) tagElement.classList.remove('selected');
       } else {
         //! Le tag n'est pas sélectionné, on l'ajoute
-        const updatedTags = [...selectedTags, selectedTag];
+        const updatedTags = selectedTags ? [...selectedTags, selectedTag] : [];
         console.log(`On ajoute le tag ${selectedTag.name}`);
         setSelectedTags(updatedTags);
 
@@ -295,7 +309,7 @@ function MyProfile() {
                     : allTags &&
                       allTags.map((tag) => {
                         const isMatchingTag =
-                          member?.tags.find(
+                          member?.tags?.find(
                             (selectedTag) => selectedTag.id === tag.id
                           ) !== undefined;
                         const className = isMatchingTag ? 'selected' : '';
