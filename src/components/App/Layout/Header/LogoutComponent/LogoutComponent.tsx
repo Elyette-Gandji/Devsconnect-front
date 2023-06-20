@@ -1,5 +1,6 @@
 // Librairies
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../../../hook/redux';
 
 // Typage
@@ -17,12 +18,17 @@ function LogoutComponent(props: BurgerI) {
   // On récupère la state windowWidth du reducer main
   const windowWidth = useAppSelector((state) => state.main.windowWidth);
 
+  // Hook pour la navigation
+  const navigate = useNavigate();
+
+  // Hook pour le dispatch
   const dispatch = useAppDispatch();
 
   //* Déconnexion
   const handleLogout = () => {
     // On dispatch l'action `logout`
     dispatch(logout());
+    navigate('/');
     // Si windowWidth > 768, on ignore, sinon inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
     if (windowWidth > 768) {
       return;

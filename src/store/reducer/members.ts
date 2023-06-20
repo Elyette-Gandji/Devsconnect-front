@@ -71,13 +71,8 @@ export const updateMember = createAsyncThunk(
   'user/updateMember',
   async ({ id, formData }: { id: number | null; formData: FormData }) => {
     try {
-      const objData = Object.fromEntries(formData);
+      const { data } = await axiosInstance.put(`/api/users/${id}`, formData);
 
-      const { data } = await axiosInstance.put(`/api/users/${id}`, objData, {
-        // headers: {
-        //   Authorization: `Bearer ${selectAccessToken}`,
-        // },
-      });
       // ? On retourne le state
       console.log('data', data);
       return data;
@@ -167,22 +162,16 @@ const membersReducer = createReducer(initialState, (builder) => {
     //* Cas de la connexion réussie de deleteMember
     .addCase(deleteMember.fulfilled, (state, action) => {
       // ? On modifie le state
-      console.log('action.payload.data', action.payload.data);
-      console.log('on a réussi');
-      state.member.data = null;
       state.member.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion échouée de deleteMember
     .addCase(deleteMember.rejected, (state, action) => {
       // ? On modifie le state
-      console.log('on a raté');
-      state.member.data = action.payload.data;
       state.member.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion en cours de deleteMember
     .addCase(deleteMember.pending, (state) => {
       // ? On modifie le state
-      console.log('on attend');
       state.member.loading = true; // Définir l'état de chargement sur true
     });
 });

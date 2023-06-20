@@ -22,11 +22,11 @@ import './style.scss';
 // import { Key, ReactElement, JSXElementConstructor, ReactNode } from 'react';
 
 function MyProfile() {
+  const member = useAppSelector((state) => state.members.member.data); // On récupère les données du membre
+  const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
+
   // State pour le check de open to work
   const [checked, setChecked] = useState(false); // Valeur du switch
-
-  const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
-  const member = useAppSelector((state) => state.members.member.data); // On récupère les données du membre
 
   const allTags = useAppSelector((state) => state.tag.list.data); // On récupère les données du membre
   const [selectedTags, setSelectedTags] = useState([member?.tags]); // On récupère les tags du membre qu'on stocke pour la gestion de l'update
@@ -43,7 +43,7 @@ function MyProfile() {
   //! On récupère les données du membre
   useEffect(() => {
     if (userId) dispatch(fetchOneMember(userId));
-  }, [dispatch]);
+  }, [dispatch, isEditMode, userId]);
 
   /** //! On récupère les tags
    * * Qu'on stocke dans un state pour la gestion de l'update
@@ -72,14 +72,22 @@ function MyProfile() {
     for (let i = 0; i < form.elements.length; i++) {
       const element = form.elements[i];
 
-      // Vérifier si le champ a été modifié par l'utilisateur
+      // On vérifie si les champs input/textarea ont été modifié par l'utilisateur
       if (element.value !== '') {
-        // ? Dans le cas ou le champ est écrit plutôt qu'en placeholder => (element.value !== element.defaultValue)
         // Ajouter le champ au FormData
         formData.append(element.name, element.value);
       }
     }
-    dispatch(updateMember({ id: userId, formData }));
+
+    // On ajoute la valeur de `availability` (checked) si elle a été modifiée
+    if (checked !== member?.availability) {
+      formData.append('availability', checked);
+    }
+
+    // On valide le formulaire
+    const objData = Object.fromEntries(formData.entries());
+    console.log('obj', objData);
+    dispatch(updateMember({ id: userId, formData: { availability: checked } }));
   };
 
   //! Fonction pour le bouton edit
@@ -172,35 +180,35 @@ function MyProfile() {
                 alt="profil"
               />
               <Input
-                name="Prénom"
+                name="firstname"
                 type="text"
                 // value={isEditMode ? member?.firstname : ''}
                 placeholder={member?.firstname || ''}
                 disabled={!isEditMode}
               />
               <Input
-                name="Nom"
+                name="name"
                 type="text"
                 // value={isEditMode ? member?.name : ''}
                 placeholder={member?.name || ''}
                 disabled={!isEditMode}
               />
               <Input
-                name="Pseudo"
+                name="pseudo"
                 type="text"
                 // value={isEditMode ? member?.pseudo : ''}
                 placeholder={member?.pseudo || ''}
                 disabled={!isEditMode}
               />
               <Input
-                name="Email"
+                name="email"
                 type="email"
                 // value={isEditMode ? member?.email : ''}
                 placeholder={member?.email || ''}
                 disabled={!isEditMode}
               />
               <Input
-                name="Mot de passe"
+                name="password"
                 type="password"
                 // value={isEditMode ? member?.password : '*****'}
                 placeholder="*****"
@@ -210,7 +218,7 @@ function MyProfile() {
                 <p>Ouvert aux projets</p>
                 <CustomSwitch
                   name="availability"
-                  checked={member?.availability || !checked}
+                  checked={isEditMode ? checked : member?.availability}
                   onChange={handleSwitch}
                   disabled={!isEditMode}
                 />
