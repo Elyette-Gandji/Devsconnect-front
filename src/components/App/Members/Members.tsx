@@ -49,7 +49,7 @@ function Members() {
   return (
     <div className="Members">
       {/**
-       * //! Barre de recherche
+       * //! FilterBar.tsx
        * @param {Array} members - Liste des membres
        * @param {Function} setFilteredMembers - Fonction pour mettre à jour la liste des membres filtrés
        * On envoie au composant la liste des membres
@@ -64,6 +64,12 @@ function Members() {
       <div className="Members--containerCard">
         {/* On map sur la liste en retour de la barre de recherche pour les cartes members */}
         {filteredMembers.map((member: MemberI) => (
+          /** //! CardMember.tsx
+           * @param {Object} member - Données du membre
+           * @param {Number} key - Clé unique pour chaque membre
+           * On envoie au composant CardMember les données de chaque membre
+           * et une clé unique
+           */
           <CardMember key={member.id} member={member} />
         ))}
       </div>

@@ -16,7 +16,7 @@ function FilterBar({
   members,
   setFilteredMembers,
 }: {
-  members: MemberI;
+  members: MemberI[];
   setFilteredMembers: any;
 }) {
   //! States Redux
