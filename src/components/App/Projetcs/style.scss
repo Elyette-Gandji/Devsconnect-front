@@ -1,3 +1,6 @@
+@use '../../../styles/variables' as v;
+@use '../../../styles/mixins' as m; // @include pour utiliser
+
 img {
     width: 40px;
     height: 40px;
@@ -62,7 +65,7 @@ img {
 }
 
 .project-description::-webkit-scrollbar-thumb {
-    background: #7c7b79;
+    background: v.$color-return;
     border-radius: 15px;
 }
 
@@ -116,7 +119,7 @@ img {
     width: 100px;
     border-radius: 6px;
     border: none;
-    background-color: #7c7b79;
+    background-color: v.$color-return;
     color: white;
     padding: 0.5rem;
 }

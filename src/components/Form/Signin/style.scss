@@ -9,14 +9,14 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); // Effet de transparence
+    background-color: rgba(0, 0, 0, 0.6); // Effet de transparence
     z-index: 9999; // Au dessus de tout
 
     //? Entête et formulaire
     &--container {
         position: relative; // Pour positionner le bouton close en absolute
         height: 100vh; // Prend toute la hauteur de l'écran
-        background: rgba(v.$color-darkest, 0.8); // Effet de transparence
+        background: rgba(v.$color-darkest, 0.9); // Effet de transparence
     }
     //? Titre
     & h2 {

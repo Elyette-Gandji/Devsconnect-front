@@ -26,7 +26,7 @@ function MyProfile() {
   const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
 
   // State pour le check de open to work
-  const [checked, setChecked] = useState(false); // Valeur du switch
+  const [checked, setChecked] = useState(member?.availability); // Valeur du switch
 
   const allTags = useAppSelector((state) => state.tag.list.data); // On récupère les données du membre
   const [selectedTags, setSelectedTags] = useState([member?.tags]); // On récupère les tags du membre qu'on stocke pour la gestion de l'update
@@ -53,7 +53,7 @@ function MyProfile() {
   useEffect(() => {
     dispatch(fetchAllTags());
     setSelectedTags(member?.tags);
-  }, [dispatch, member?.tags]);
+  }, [dispatch, member?.tags, isEditMode]);
 
   //! Fonction pour le switch open to work
   const handleSwitch = () => {
@@ -63,7 +63,6 @@ function MyProfile() {
   //! Fonction d'envoi du formulaire
   const handleSubmit = (event) => {
     event.preventDefault();
-    const form = formRef.current;
     const formData = new FormData();
     const objData = Object.fromEntries(formData.entries());
 
@@ -109,9 +108,6 @@ function MyProfile() {
       objData.tags = tagsJSON;
     }
 
-    // form.reset(); // Vider le formulaire
-
-    console.log('obj', objData);
     dispatch(
       updateMember({
         id: userId,
@@ -162,7 +158,6 @@ function MyProfile() {
         const updatedTags = selectedTags.filter(
           (tag) => tag.id !== selectedTag.id
         );
-        console.log(`On retire le tag ${selectedTag.name}`);
         setSelectedTags(updatedTags);
 
         //* On retire la classe `selected` du tag
@@ -171,7 +166,6 @@ function MyProfile() {
       } else {
         //! Le tag n'est pas sélectionné, on l'ajoute
         const updatedTags = selectedTags ? [...selectedTags, selectedTag] : [];
-        console.log(`On ajoute le tag ${selectedTag.name}`);
         setSelectedTags(updatedTags);
 
         //* On ajoute la classe `selected` au tag

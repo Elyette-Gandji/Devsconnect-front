@@ -3,7 +3,6 @@ import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 
 // ? fonctions maison pour l'instance Axios
 import axiosInstance from '../../utils/axios';
-import selectAccessToken from '../selectors/accessToken';
 
 // ? Typage
 import { MemberI } from '../../@types/interface';
@@ -69,12 +68,14 @@ export const fetchOneMember = createAsyncThunk(
 //* Update un membre
 export const updateMember = createAsyncThunk(
   'user/updateMember',
-  async ({ id, formData }: { id: number | null; formData: FormData }) => {
+  async (
+    { id, formData }: { id: number | null; formData: FormData },
+    thunkAPI
+  ) => {
     try {
       const { data } = await axiosInstance.put(`/api/users/${id}`, formData);
 
       // ? On retourne le state
-      console.log('data', data);
       return data;
     } catch (error) {
       console.error('Error:', error);
@@ -143,19 +144,16 @@ const membersReducer = createReducer(initialState, (builder) => {
     //* Cas de la connexion réussie de updateMember
     .addCase(updateMember.fulfilled, (state) => {
       // ? On modifie le state
-      console.log('on a réussi');
       state.member.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion échouée de updateMember
     .addCase(updateMember.rejected, (state) => {
       // ? On modifie le state
-      console.log('on a échoué');
       state.member.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion en cours de updateMember
     .addCase(updateMember.pending, (state) => {
       // ? On modifie le state
-      console.log('on est en cours');
       state.member.loading = true; // Définir l'état de chargement sur true
     });
   builder
