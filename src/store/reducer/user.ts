@@ -23,6 +23,8 @@ interface UserState {
     id: number | null;
     logged: boolean;
     pseudo: string | null;
+    accessToken: string | null;
+    refreshToken: string | null;
     status?: string | null;
     flash: FlashI | null;
   };
@@ -39,6 +41,8 @@ export const initialState: UserState = {
     id: null,
     logged: false,
     pseudo: null,
+    accessToken: null,
+    refreshToken: null,
     status: null,
     flash: null,
   },
@@ -118,9 +122,12 @@ const userReducer = createReducer(initialState, (builder) => {
 
     //* Cas de la connexion réussie
     .addCase(loginUser.fulfilled, (state, action) => {
-      const { logged, pseudo, userID } = action.payload.data;
+      const { logged, pseudo, userID, accessToken, refreshToken } =
+        action.payload.data;
       state.login.logged = logged;
       state.login.pseudo = pseudo;
+      state.login.accessToken = accessToken;
+      state.login.refreshToken = refreshToken;
       state.login.id = userID;
       state.login.flash = {
         type: 'success',

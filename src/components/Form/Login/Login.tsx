@@ -1,6 +1,7 @@
 // ? Librairie
 import { useRef, useEffect, FormEvent } from 'react';
 // Permet modifier le state et de relancer le rendu de ce composant à chaque fois que le state de la modale change
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
 // Actions du reducer
@@ -21,6 +22,9 @@ function Login() {
 
   //! Dispatch
   const dispatch = useAppDispatch();
+
+  //! useNavigate
+  const navigate = useNavigate();
 
   //! Si connecté, on ferme la modale
   useEffect(() => {
@@ -73,6 +77,7 @@ function Login() {
     const formData = new FormData(form);
 
     dispatch(loginUser(formData)); // Dispatch de l'action de connexion réussie
+    navigate('/'); // Redirection vers la page d'accueil
   };
 
   return (

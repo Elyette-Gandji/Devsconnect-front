@@ -3,6 +3,7 @@ import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 
 // ? fonctions maison pour l'instance Axios
 import axiosInstance from '../../utils/axios';
+import selectAccessToken from '../selectors/accessToken';
 
 // ? Typage
 import { MemberI } from '../../@types/interface';
@@ -68,9 +69,15 @@ export const fetchOneMember = createAsyncThunk(
 //* Update un membre
 export const updateMember = createAsyncThunk(
   'user/updateMember',
-  async (formData: FormData) => {
+  async ({ id, formData }: { id: number | null; formData: FormData }) => {
     try {
-      const { data } = await axiosInstance.put(`/api/users/profil`, formData);
+      const objData = Object.fromEntries(formData);
+
+      const { data } = await axiosInstance.put(`/api/users/${id}`, objData, {
+        // headers: {
+        //   Authorization: `Bearer ${selectAccessToken}`,
+        // },
+      });
       // ? On retourne le state
       console.log('data', data);
       return data;
@@ -86,10 +93,10 @@ export const deleteMember = createAsyncThunk(
   'user/deleteMember',
   async (id: string) => {
     try {
-      const { data } = await axiosInstance.delete(`/api/users/profil/${id}`);
+      const { data } = await axiosInstance.delete(`/api/users/${id}`);
       // ? On retourne le state
       console.log('data', data);
-      return data;
+      return { data };
     } catch (error) {
       console.error('Error:', error);
       throw error;
@@ -139,22 +146,21 @@ const membersReducer = createReducer(initialState, (builder) => {
     });
   builder
     //* Cas de la connexion réussie de updateMember
-    .addCase(updateMember.fulfilled, (state, action) => {
+    .addCase(updateMember.fulfilled, (state) => {
       // ? On modifie le state
-      state.member.data = action.payload.data;
-      console.log('state.member.data', state.member.data);
-      console.log('action.payload.data', action.payload.data);
+      console.log('on a réussi');
       state.member.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion échouée de updateMember
     .addCase(updateMember.rejected, (state) => {
       // ? On modifie le state
-      state.member.data = null;
+      console.log('on a échoué');
       state.member.loading = false; // Définir l'état de chargement sur false
     })
     //* Cas de la connexion en cours de updateMember
     .addCase(updateMember.pending, (state) => {
       // ? On modifie le state
+      console.log('on est en cours');
       state.member.loading = true; // Définir l'état de chargement sur true
     });
   builder

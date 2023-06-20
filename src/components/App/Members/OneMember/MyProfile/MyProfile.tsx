@@ -79,7 +79,7 @@ function MyProfile() {
         formData.append(element.name, element.value);
       }
     }
-    dispatch(updateMember(formData));
+    dispatch(updateMember({ id: userId, formData }));
   };
 
   //! Fonction pour le bouton edit
@@ -89,8 +89,15 @@ function MyProfile() {
     setIsEditMode(!isEditMode);
 
     if (isEditMode) {
-      formRef.current.submit();
+      // formRef.current.submit();
+
+      handleSubmit(event);
     }
+  };
+
+  //! Fonction pour le bouton annuler
+  const handleCancelClick = (event) => {
+    setIsEditMode(!isEditMode);
   };
 
   /* //! Fonction pour le bouton delete
@@ -304,8 +311,8 @@ function MyProfile() {
           <fieldset className="MyProfile--fourthField--button">
             <div className="MyProfile--fourthField--button--group">
               <button
-                onClick={handleEditClick}
-                type="submit"
+                onClick={handleCancelClick}
+                type="button"
                 // className=`{MyProfile--fourthField--button--cancel isEditMode ? 'visible' : 'hidden'}`
                 className={`MyProfile--fourthField--button--cancel ${
                   isEditMode
@@ -318,7 +325,7 @@ function MyProfile() {
               </button>
               <button
                 onClick={handleEditClick}
-                type="submit"
+                type="button"
                 className={`MyProfile--fourthField--button--submit ${
                   isEditMode
                     ? 'MyProfile--fourthField--button--updatedMode'

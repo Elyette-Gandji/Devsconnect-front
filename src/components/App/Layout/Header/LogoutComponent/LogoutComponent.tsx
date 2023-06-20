@@ -40,10 +40,7 @@ function LogoutComponent(props: BurgerI) {
 
   return (
     <div className="Header--connect">
-      <Link
-        to={`/users/profil/${userId}`}
-        className="Header--connect--profil-link"
-      >
+      <Link to={`/users/${userId}`} className="Header--connect--profil-link">
         <button
           onClick={handleClick}
           className="Header--connect--profil"
