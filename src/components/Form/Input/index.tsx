@@ -38,7 +38,7 @@ function Input({ name, placeholder, ...props }: InputProps) {
         placeholder={placeholder}
         // autres infos
         {...props}
-        className=""
+        className="Form--input"
       />
     </div>
   );

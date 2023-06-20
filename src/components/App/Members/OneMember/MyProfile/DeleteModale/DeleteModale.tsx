@@ -1,6 +1,10 @@
 // ? Librairie
 import { useRef, useEffect, FormEvent } from 'react';
-import { useAppSelector } from '../../../../../../hook/redux';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../../../../../hook/redux';
+
+import { deleteMember } from '../../../../../../store/reducer/members';
+import { logout } from '../../../../../../store/reducer/user';
 
 // import FlashMessage from '../FlashMessage/FlashMessage';
 
@@ -9,10 +13,17 @@ import './style.scss';
 
 // ? Fonction
 function DeleteModale({ isOpenDeleteModale, setIsOpenDeleteModale }) {
+  const id = useAppSelector((state) => state.user.login.id); // id du membre connecté
   const flash = useAppSelector((state) => state.user.login.message);
 
   //! Ref pour la modale
   const modalRef = useRef(null);
+
+  //! Dispatch
+  const dispatch = useAppDispatch();
+
+  //! useHistory
+  const navigate = useNavigate(); // Permet d'acceder à l'historique de navigation, pour rediriger
 
   //! useEffect pour clic externe à la modale
   useEffect(() => {
@@ -55,7 +66,9 @@ function DeleteModale({ isOpenDeleteModale, setIsOpenDeleteModale }) {
     event.preventDefault();
     console.log('delete envoyé');
     setIsOpenDeleteModale(!isOpenDeleteModale);
-    // TODO : dispatch de la fonction de suppression du profil
+    dispatch(logout());
+    dispatch(deleteMember(id));
+    navigate('/');
   };
   return (
     <div className="DeleteModale">
@@ -78,12 +91,12 @@ function DeleteModale({ isOpenDeleteModale, setIsOpenDeleteModale }) {
           </div>
         </div>
 
-        <form className="DeleteModale--form" onSubmit={handleSubmit}>
+        <form className="DeleteModale--form">
           <h3>Voulez-vous vraiment supprimer votre compte ?</h3>
           <p>(Attention, cette action est irréversible.)</p>
           <div className="DeleteModale--form--submit">
             <button
-              type="submit"
+              type="button"
               onClick={handleDeleteModale}
               className="DeleteModale--form--submit--cancel"
             >
@@ -91,6 +104,7 @@ function DeleteModale({ isOpenDeleteModale, setIsOpenDeleteModale }) {
             </button>
             <button
               type="submit"
+              onClick={handleSubmit}
               className="DeleteModale--form--submit--confirm"
             >
               Supprimer mon compte

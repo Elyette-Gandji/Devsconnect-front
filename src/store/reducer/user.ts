@@ -23,13 +23,10 @@ interface UserState {
     id: number | null;
     logged: boolean;
     pseudo: string | null;
-    message: FlashI | null;
+    accessToken: string | null;
+    refreshToken: string | null;
     status?: string | null;
-    flash: {
-      type: 'success' | 'error';
-      duration?: number;
-      children: string | null;
-    };
+    flash: FlashI | null;
   };
 }
 
@@ -44,13 +41,10 @@ export const initialState: UserState = {
     id: null,
     logged: false,
     pseudo: null,
-    message: null,
+    accessToken: null,
+    refreshToken: null,
     status: null,
-    flash: {
-      type: null,
-      duration: 0,
-      children: '',
-    },
+    flash: null,
   },
 };
 
@@ -70,10 +64,10 @@ export const loginUser = createAsyncThunk(
       const { data } = await axiosInstance.post('/login', objData);
 
       // ! A la connexion, j'ajoute le token à mon instance Axios
-      axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.data.accessToken}`;
+      // axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.data.accessToken}`;
 
       // ! Pour des raisons de sécurité, on le supprime de `data`
-      delete data.data.accessToken;
+      // delete data.data.accessToken;
 
       // ? On retourne le state
       return data;
@@ -111,7 +105,6 @@ const userReducer = createReducer(initialState, (builder) => {
     .addCase(loginUser.pending, (state) => {
       state.login.logged = false;
       state.login.pseudo = null;
-      state.login.message = null;
       state.login.id = null;
     })
 
@@ -120,19 +113,22 @@ const userReducer = createReducer(initialState, (builder) => {
       state.login.logged = false;
       state.login.pseudo = null;
       state.login.id = null;
-      state.login.message = {
+      state.login.flash = {
         type: 'error',
-        children: action.error.code || 'UNKNOWN_ERROR',
+        children: action.error.message || 'UNKNOWN_ERROR',
         duration: 5000,
       };
     })
 
     //* Cas de la connexion réussie
     .addCase(loginUser.fulfilled, (state, action) => {
-      const { logged, pseudo, userID } = action.payload.data;
+      const { logged, pseudo, userId, accessToken, refreshToken } =
+        action.payload.data;
       state.login.logged = logged;
       state.login.pseudo = pseudo;
-      state.login.id = userID;
+      state.login.accessToken = accessToken;
+      state.login.refreshToken = refreshToken;
+      state.login.id = userId;
       state.login.flash = {
         type: 'success',
         children: `Bienvenue ${pseudo} !`,
@@ -165,6 +161,7 @@ const userReducer = createReducer(initialState, (builder) => {
     .addCase(logout, (state) => {
       state.login.logged = false;
       state.login.pseudo = null;
+      state.login.flash = null;
 
       //! à la déconnexion, on supprime le token
       // delete axiosInstance.defaults.headers.common.Authorization;

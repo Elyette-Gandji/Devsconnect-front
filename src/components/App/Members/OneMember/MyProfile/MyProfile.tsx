@@ -22,11 +22,11 @@ import './style.scss';
 // import { Key, ReactElement, JSXElementConstructor, ReactNode } from 'react';
 
 function MyProfile() {
-  // State pour le check de open to work
-  const [checked, setChecked] = useState(false); // Valeur du switch
-
-  const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
   const member = useAppSelector((state) => state.members.member.data); // On récupère les données du membre
+  const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
+
+  // State pour le check de open to work
+  const [checked, setChecked] = useState(member?.availability); // Valeur du switch
 
   const allTags = useAppSelector((state) => state.tag.list.data); // On récupère les données du membre
   const [selectedTags, setSelectedTags] = useState([member?.tags]); // On récupère les tags du membre qu'on stocke pour la gestion de l'update
@@ -43,7 +43,7 @@ function MyProfile() {
   //! On récupère les données du membre
   useEffect(() => {
     if (userId) dispatch(fetchOneMember(userId));
-  }, [dispatch]);
+  }, [dispatch, isEditMode, userId]);
 
   /** //! On récupère les tags
    * * Qu'on stocke dans un state pour la gestion de l'update
@@ -53,7 +53,7 @@ function MyProfile() {
   useEffect(() => {
     dispatch(fetchAllTags());
     setSelectedTags(member?.tags);
-  }, [dispatch, member?.tags]);
+  }, [dispatch, member?.tags, isEditMode]);
 
   //! Fonction pour le switch open to work
   const handleSwitch = () => {
@@ -62,24 +62,58 @@ function MyProfile() {
 
   //! Fonction d'envoi du formulaire
   const handleSubmit = (event) => {
-    const form = formRef.current;
+    event.preventDefault();
     const formData = new FormData();
+    const objData = Object.fromEntries(formData.entries());
 
-    form.rest(); // Vider le formulaire
+    //* Les inputs
+    const inputs = formRef.current.querySelectorAll('.Form--input');
+    inputs.forEach((input) => {
+      const { name, value } = input;
 
-    // On parcourt les champs du formulaire pour voir ceux qui ont été modifiés
-    for (let i = 0; i < form.elements.length; i++) {
-      const element = form.elements[i];
-
-      // Vérifier si le champ a été modifié par l'utilisateur
-      if (element.value !== '') {
-        // ? Dans le cas ou le champ est écrit plutôt qu'en placeholder => (element.value !== element.defaultValue)
-        // Ajouter le champ au FormData
-        formData.append(element.name, element.value);
+      // Vérifier si la valeur a été modifiée par l'utilisateur
+      if (value !== '' && value !== member?.[name]) {
+        formData.append(name, value);
+        objData[name] = value;
       }
+    });
+
+    //* Le textarea
+    const textarea = formRef.current.querySelector('textarea');
+    const textareaName = textarea.name;
+    const textareaValue = textarea.value;
+
+    // Vérifier si la valeur a été modifiée par l'utilisateur
+    if (textareaValue !== '' && textareaValue !== member?.[textareaName]) {
+      formData.append(textareaName, textareaValue);
+      objData[textareaName] = textareaValue;
     }
-    console.log('formData', formData);
-    // dispatch(updateMember(formData)); //todo A décommenter pour l'update
+
+    //* OpenToWork
+    if (checked !== member?.availability) {
+      formData.append('availability', checked);
+    }
+
+    // //* Les tags
+    // Créer un tableau pour les données de selectedTags
+    if (selectedTags && selectedTags.length > 0) {
+      const selectedTagsData = selectedTags.map((tag) => tag.id);
+      // Convertir le tableau en chaîne JSON
+      const tagsJSON = JSON.stringify(selectedTagsData);
+
+      // Ajouter le tableau selectedTagsData à formData
+      formData.append('tags', tagsJSON);
+
+      // Ajouter le tableau selectedTagsData à objData
+      objData.tags = tagsJSON;
+    }
+
+    dispatch(
+      updateMember({
+        id: userId,
+        formData: { availability: checked, ...objData },
+      })
+    );
   };
 
   //! Fonction pour le bouton edit
@@ -89,10 +123,15 @@ function MyProfile() {
     setIsEditMode(!isEditMode);
 
     if (isEditMode) {
-      console.log('selectedTags', selectedTags); // On envoie les tags sélectionnés en remplacement
-      console.log('update envoyé');
-      handleSubmit(event.currentTarget);
+      // formRef.current.submit();
+
+      handleSubmit(event);
     }
+  };
+
+  //! Fonction pour le bouton annuler
+  const handleCancelClick = (event) => {
+    setIsEditMode(!isEditMode);
   };
 
   /* //! Fonction pour le bouton delete
@@ -119,7 +158,6 @@ function MyProfile() {
         const updatedTags = selectedTags.filter(
           (tag) => tag.id !== selectedTag.id
         );
-        console.log(`On retire le tag ${selectedTag.name}`);
         setSelectedTags(updatedTags);
 
         //* On retire la classe `selected` du tag
@@ -127,8 +165,7 @@ function MyProfile() {
         if (tagElement) tagElement.classList.remove('selected');
       } else {
         //! Le tag n'est pas sélectionné, on l'ajoute
-        const updatedTags = [...selectedTags, selectedTag];
-        console.log(`On ajoute le tag ${selectedTag.name}`);
+        const updatedTags = selectedTags ? [...selectedTags, selectedTag] : [];
         setSelectedTags(updatedTags);
 
         //* On ajoute la classe `selected` au tag
@@ -167,45 +204,50 @@ function MyProfile() {
                 alt="profil"
               />
               <Input
-                name="Prénom"
+                name="firstname"
                 type="text"
                 // value={isEditMode ? member?.firstname : ''}
                 placeholder={member?.firstname || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
-                name="Nom"
+                name="name"
                 type="text"
                 // value={isEditMode ? member?.name : ''}
                 placeholder={member?.name || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
-                name="Pseudo"
+                name="pseudo"
                 type="text"
                 // value={isEditMode ? member?.pseudo : ''}
                 placeholder={member?.pseudo || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
-                name="Email"
+                name="email"
                 type="email"
                 // value={isEditMode ? member?.email : ''}
                 placeholder={member?.email || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
-                name="Mot de passe"
+                name="password"
                 type="password"
                 // value={isEditMode ? member?.password : '*****'}
                 placeholder="*****"
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <div className="MyProfile--content--firstField--openToWork">
                 <p>Ouvert aux projets</p>
                 <CustomSwitch
                   name="availability"
-                  checked={member?.availability || !checked}
+                  checked={isEditMode ? checked : member?.availability}
                   onChange={handleSwitch}
                   disabled={!isEditMode}
                 />
@@ -261,13 +303,13 @@ function MyProfile() {
                     : allTags &&
                       allTags.map((tag) => {
                         const isMatchingTag =
-                          member?.tags.find(
+                          member?.tags?.find(
                             (selectedTag) => selectedTag.id === tag.id
                           ) !== undefined;
                         const className = isMatchingTag ? 'selected' : '';
                         return (
                           <div
-                            className={className}
+                            className={`MyProfile--content--secondField--technos--technos--group ${className}`}
                             role="button"
                             key={tag.id}
                             id={`tag-${tag.id}`} // Sert de référence pour la fonction handleImageClick ( permet d'ajouter ou de retirer la classe selected quand on ajoute/supprime le tag)
@@ -306,8 +348,8 @@ function MyProfile() {
           <fieldset className="MyProfile--fourthField--button">
             <div className="MyProfile--fourthField--button--group">
               <button
-                onClick={handleEditClick}
-                type="submit"
+                onClick={handleCancelClick}
+                type="button"
                 // className=`{MyProfile--fourthField--button--cancel isEditMode ? 'visible' : 'hidden'}`
                 className={`MyProfile--fourthField--button--cancel ${
                   isEditMode
@@ -320,7 +362,7 @@ function MyProfile() {
               </button>
               <button
                 onClick={handleEditClick}
-                type="submit"
+                type="button"
                 className={`MyProfile--fourthField--button--submit ${
                   isEditMode
                     ? 'MyProfile--fourthField--button--updatedMode'

@@ -3,10 +3,19 @@
 //? Colors
 $color: #e6e6e6;
 // $color: #e177d7;
-$color-dark: color.scale($color, $lightness: -50%);
+$color-dark: color.scale($color, $lightness: -70%);
 $color-light: color.scale($color, $lightness: 70%);
 
+$color-button: #6558f7;
+// $color-button: #8f2491;
+
 $color-darkest: #333333;
+
+// Bouton retour
+$color-return: #7c7b79;
+
+// Links
+$color-link-active: #17988d;
 
 //? Fonts
 $font: 'Roboto', sans-serif;

@@ -1,6 +1,5 @@
 // Link pour rediriger vers la page du membre
 import { Link } from 'react-router-dom';
-import { useAppSelector } from '../../../hook/redux';
 
 // Typage
 import { MemberI } from '../../../@types/interface';
@@ -12,20 +11,14 @@ interface CardMemberI {
 }
 
 function CardMember({ member }: CardMemberI) {
-  const userId = useAppSelector((state) => state.user.login.id);
   const { id, firstname, name, availability, description } = member;
-
-  //! variable pour verifier si la page est celle de l'utilisateur connecté
-  const profilePath =
-    // ? Si l'id du membre recherché (id) est égal à l'id de l'utilisateur connecté (userId), on redirige vers la page profil
-    id === userId ? `/profil` : `/users/${id}`;
 
   // On récupère les données de member et key depuis Members.tsx {
   return (
     <div className="CardMember">
       <section className="CardMember--card">
         {/* //? On utilise Link sur le header uniquement} */}
-        <Link to={profilePath} key={id}>
+        <Link to={`/users/${id}`} key={id}>
           <div className="CardMember--card--header">
             <div className="CardMember--card--header--text">
               <h3>
