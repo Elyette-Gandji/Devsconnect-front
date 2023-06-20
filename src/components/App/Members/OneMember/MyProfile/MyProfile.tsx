@@ -65,29 +65,45 @@ function MyProfile() {
     event.preventDefault();
     const form = formRef.current;
     const formData = new FormData();
+    const objData = Object.fromEntries(formData.entries());
 
-    form.reset(); // Vider le formulaire
+    //* Les inputs
+    const inputs = formRef.current.querySelectorAll('.Form--input');
+    inputs.forEach((input) => {
+      const { name, value } = input;
 
-    // On parcourt les champs du formulaire pour voir ceux qui ont été modifiés
-    for (let i = 0; i < form.elements.length; i++) {
-      const element = form.elements[i];
-
-      // On vérifie si les champs input/textarea ont été modifié par l'utilisateur
-      if (element.value !== '') {
-        // Ajouter le champ au FormData
-        formData.append(element.name, element.value);
+      // Vérifier si la valeur a été modifiée par l'utilisateur
+      if (value !== '' && value !== member?.[name]) {
+        formData.append(name, value);
+        objData[name] = value;
       }
+    });
+
+    //* Le textarea
+    const textarea = formRef.current.querySelector('textarea');
+    const textareaName = textarea.name;
+    const textareaValue = textarea.value;
+
+    // Vérifier si la valeur a été modifiée par l'utilisateur
+    if (textareaValue !== '' && textareaValue !== member?.[textareaName]) {
+      formData.append(textareaName, textareaValue);
+      objData[textareaName] = textareaValue;
     }
 
-    // On ajoute la valeur de `availability` (checked) si elle a été modifiée
+    //* OpenToWork
     if (checked !== member?.availability) {
       formData.append('availability', checked);
     }
 
-    // On valide le formulaire
-    const objData = Object.fromEntries(formData.entries());
+    // form.reset(); // Vider le formulaire
+
     console.log('obj', objData);
-    dispatch(updateMember({ id: userId, formData: { availability: checked } }));
+    dispatch(
+      updateMember({
+        id: userId,
+        formData: { availability: checked, ...objData },
+      })
+    );
   };
 
   //! Fonction pour le bouton edit
@@ -185,6 +201,7 @@ function MyProfile() {
                 // value={isEditMode ? member?.firstname : ''}
                 placeholder={member?.firstname || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
                 name="name"
@@ -192,6 +209,7 @@ function MyProfile() {
                 // value={isEditMode ? member?.name : ''}
                 placeholder={member?.name || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
                 name="pseudo"
@@ -199,6 +217,7 @@ function MyProfile() {
                 // value={isEditMode ? member?.pseudo : ''}
                 placeholder={member?.pseudo || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
                 name="email"
@@ -206,6 +225,7 @@ function MyProfile() {
                 // value={isEditMode ? member?.email : ''}
                 placeholder={member?.email || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
                 name="password"
@@ -213,6 +233,7 @@ function MyProfile() {
                 // value={isEditMode ? member?.password : '*****'}
                 placeholder="*****"
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <div className="MyProfile--content--firstField--openToWork">
                 <p>Ouvert aux projets</p>
