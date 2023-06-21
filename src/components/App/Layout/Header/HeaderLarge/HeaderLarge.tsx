@@ -27,10 +27,7 @@ function HeaderLarge() {
         <div>
           <Title />
         </div>
-        <LinksComponent
-          isOpen={isOpen} // On transmet l'état de l'ouverture du burger en props au composant
-          setIsOpen={setIsOpen} // On transmet la fonction de modifications du state en props au composant
-        />
+        <LinksComponent />
         {/** //! Affichage des composants de connexion/inscription ou profil/déconnexion
          * @param {boolean} isLogged - State pour savoir si l'utilisateur est connecté
          * On affiche le composant de connexion/inscription si isLogged est false
