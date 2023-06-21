@@ -125,10 +125,7 @@ function FilterBar({
            * On passe en props la fonction pour gérer les technos sélectionnées et le tableau des technos sélectionnées
            * On récupère les technos sélectionnées dans le composant <Select />
            */}
-          <SelectComponent
-            handleTechnoChange={handleTechnoChange}
-            selectedTags={selectedTags}
-          />
+          <SelectComponent handleTechnoChange={handleTechnoChange} />
         </div>
         <div className="FilterBar--secondField">
           <input
