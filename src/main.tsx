@@ -1,20 +1,23 @@
+// ? Librairie
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
 
+// ? Composants
 import store from './store';
 import Router from './routes/router';
 
+// ? Styles
 import './styles/index.scss';
 
+// ? Fonction
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
+// ? Rendu
 root.render(
-  // <React.StrictMode>
   <Provider store={store}>
     <RouterProvider router={Router} />
   </Provider>
-  // {/* </React.StrictMode> */}
 );
