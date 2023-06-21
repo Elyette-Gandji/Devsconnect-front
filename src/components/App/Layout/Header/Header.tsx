@@ -22,8 +22,8 @@ function Header() {
   // Redux
   const windowWidth = useAppSelector((state) => state.main.windowWidth); // Largeur de la fenêtre navigateur
   const isLogged = useAppSelector((state) => state.user.login.logged); // Booléen pour savoir si l'utilisateur est connecté
-  const flash: FlashI | null = useAppSelector(
-    (state) => state.user.login.flash
+  const flash: FlashI | null | undefined = useAppSelector(
+    (state) => state.user.login.message
   ); // Todo : à déplacer quand les messages flash seront utilisés
 
   // ? Dispatch

@@ -8,16 +8,16 @@ import {
 //* message est utilisé pour afficher un message pop-up. On importe son typage.
 import { FlashI } from '../../@types/interface';
 
-// ? fonctions maison pour l'instance Axios
+// ? Instance Axios
 import axiosInstance from '../../utils/axios';
 
-// ? Typage
+// ? Typage local
 interface UserState {
   signin: {
     id: number | null;
+    children?: string | null;
     message: FlashI | null;
     status?: string | null;
-    children?: string | null;
   };
   login: {
     id: number | null;
@@ -26,12 +26,11 @@ interface UserState {
     accessToken: string | null;
     refreshToken: string | null;
     status?: string | null;
-    flash: FlashI | null;
-    message?: string | null;
+    message?: FlashI | null;
   };
 }
 
-// ? Initialisation
+// ? InitialState
 export const initialState: UserState = {
   signin: {
     id: null,
@@ -45,7 +44,6 @@ export const initialState: UserState = {
     accessToken: null,
     refreshToken: null,
     status: null,
-    flash: null,
     message: null,
   },
 };
@@ -60,7 +58,7 @@ export const loginUser = createAsyncThunk(
   'user/loginUser',
   async (formData: FormData) => {
     try {
-      // ! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
+      // Object.fromEntries() transforme une liste de paires clé-valeur en un objet
       const objData = Object.fromEntries(formData);
 
       const { data } = await axiosInstance.post('/login', objData);
@@ -85,7 +83,7 @@ export const signinUser = createAsyncThunk(
   'user/signinUser',
   async (formData: FormData) => {
     try {
-      // ! Object.fromEntries() transforme une liste de paires clé-valeur en un objet
+      // Object.fromEntries() transforme une liste de paires clé-valeur en un objet
       const objData = Object.fromEntries(formData);
 
       const { data } = await axiosInstance.post('/signin', objData);
@@ -99,15 +97,21 @@ export const signinUser = createAsyncThunk(
   }
 );
 
-// ? Construction du reducer user avec builder qui utilise les actions pour modifier le state initial
 const userReducer = createReducer(initialState, (builder) => {
-  // ? On retourne le state selon les cas de figure suivants :
   builder
-    //* Cas de la connexion en cours
-    .addCase(loginUser.pending, (state) => {
-      state.login.logged = false;
-      state.login.pseudo = null;
-      state.login.id = null;
+    //* Cas de la connexion réussie
+    .addCase(loginUser.fulfilled, (state, action) => {
+      const { logged, pseudo, userId, accessToken, refreshToken } =
+        action.payload.data; // On récupère les données de l'api, qu'on distribue dans le state
+      state.login.logged = logged;
+      state.login.pseudo = pseudo;
+      state.login.accessToken = accessToken;
+      state.login.refreshToken = refreshToken;
+      state.login.id = userId;
+      state.login.message = {
+        type: 'success',
+        children: `Bienvenue ${pseudo} !`,
+      };
     })
 
     //* Cas de la connexion échouée
@@ -115,30 +119,25 @@ const userReducer = createReducer(initialState, (builder) => {
       state.login.logged = false;
       state.login.pseudo = null;
       state.login.id = null;
-      state.login.flash = {
+      state.login.message = {
         type: 'error',
         children: action.error.message || 'UNKNOWN_ERROR',
         duration: 5000,
       };
     })
-
-    //* Cas de la connexion réussie
-    .addCase(loginUser.fulfilled, (state, action) => {
-      const { logged, pseudo, userId, accessToken, refreshToken } =
-        action.payload.data;
-      state.login.logged = logged;
-      state.login.pseudo = pseudo;
-      state.login.accessToken = accessToken;
-      state.login.refreshToken = refreshToken;
-      state.login.id = userId;
-      state.login.flash = {
-        type: 'success',
-        children: `Bienvenue ${pseudo} !`,
-      };
+    //* Cas de la connexion en cours
+    .addCase(loginUser.pending, (state) => {
+      state.login.logged = false;
+      state.login.pseudo = null;
+      state.login.id = null;
     })
-    //* Cas de l'inscription en cours
-    .addCase(signinUser.pending, (state) => {
-      state.signin.message = null;
+
+    //* Cas de l'inscription réussie
+    .addCase(signinUser.fulfilled, (state) => {
+      state.signin.message = {
+        type: 'success',
+        children: 'Vous êtes bien inscrit, merci de vous connecter maintenant',
+      };
     })
 
     //* Cas de l'inscription échouée
@@ -150,20 +149,11 @@ const userReducer = createReducer(initialState, (builder) => {
       };
     })
 
-    //* Cas de l'inscription réussie
-    .addCase(signinUser.fulfilled, (state, action) => {
-      // const { status } = action.payload;
-      state.signin.message = {
-        type: 'success',
-        children: 'Vous êtes bien inscrit, merci de vous connecter maintenant',
-      };
-    })
-
     //* Cas de la déconnexion
     .addCase(logout, (state) => {
       state.login.logged = false;
       state.login.pseudo = null;
-      state.login.flash = null;
+      state.login.message = null;
 
       //! à la déconnexion, on supprime le token
       // delete axiosInstance.defaults.headers.common.Authorization;
