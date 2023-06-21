@@ -4,8 +4,14 @@ import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 // ? fonctions maison pour l'instance Axios
 import axiosInstance from '../../utils/axios';
 
-// ? Typage
+// ? Typage global
 import { MemberI } from '../../@types/interface';
+
+// ? Typage local
+type UpdateMemberI = {
+  id: number | null;
+  formData: FormData & { availability: boolean | undefined };
+};
 
 interface MemberState {
   status?: string;
@@ -68,10 +74,7 @@ export const fetchOneMember = createAsyncThunk(
 //* Update un membre
 export const updateMember = createAsyncThunk(
   'user/updateMember',
-  async (
-    { id, formData }: { id: number | null; formData: FormData },
-    thunkAPI
-  ) => {
+  async ({ id, formData }: UpdateMemberI) => {
     try {
       const { data } = await axiosInstance.put(`/api/users/${id}`, formData);
 

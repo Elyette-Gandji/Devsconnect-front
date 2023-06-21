@@ -31,7 +31,6 @@ function ProfileCondition() {
   return <OneMember />; // Affiche OneMember si les IDs sont différents
 }
 
-
 const Router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
@@ -43,7 +42,7 @@ const Router = createBrowserRouter(
         {/* <Route path="/users/profil/:id" element={<MyProfile />} /> */}
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/:id" element={<ProjectDetail />} />
-        <Route path="/modify-project/:id" element={<ModifyProject />} />
+        {/* <Route path="/modify-project/:id" element={<ModifyProject />} /> */}
         {/* Autres routes... */}
       </Route>
     </Route>
