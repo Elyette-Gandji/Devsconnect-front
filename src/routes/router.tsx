@@ -41,8 +41,6 @@ function ProfileCondition() {
 const Router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
-      {' '}
-      {/* //? Route racine */}
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Home />} />
         <Route path="/users" element={<Members />} />
