@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 // ? Fonction principale
 function Title() {
+  // ? Rendu JSX
   return (
     /** //! Link
      * @param {string} to - Lien vers la page d'accueil
