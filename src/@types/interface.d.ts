@@ -5,8 +5,8 @@ export interface FlashI {
 }
 
 export interface BurgerI {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpen?: boolean;
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface MemberI {
