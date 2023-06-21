@@ -1,10 +1,12 @@
-// ? Librairies
-import { useState, useEffect } from 'react';
+// ? Composants externes
 import Select, { OnChangeValue, StylesConfig } from 'react-select'; // Composant Select de la librairie react-select
 import { CSSObject } from '@emotion/react'; // Pour typer les styles en ligne (inline styles)
+
+// ? Librairies
+import { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../../../hook/redux';
 
-// ? Actions
+// ? Fonctions externes
 import { resizeWindow } from '../../../../../store/reducer/main';
 
 // ? Datas
@@ -13,30 +15,33 @@ import { technos } from '../../../../../utils/technosPath';
 // ? Styles
 import './style.scss';
 
-// ? Typage
-//* Pour typer les options du select
-type TechnoI = {
-  label: string;
-  value: string;
-  path: string;
-};
-//* Pour typer le state css `isFocused`
+// ? Typage global
+import { TagSelectedI } from '../../../../../@types/interface';
+
+// ? Typage local
+// Pour typer le state css `isFocused`
 type StateI = {
   isFocused: boolean;
 };
 
-function SelectComponent({ handleTechnoChange }) {
-  //! States Redux
+// ? Fonction principale
+function SelectComponent({
+  // validation des props
+  handleTechnoChange,
+}: {
+  handleTechnoChange: (selected: TagSelectedI[]) => void;
+}) {
+  // ? States
+  // Redux
   const windowWidth = useAppSelector((state) => state.main.windowWidth); // On récupère la largeur de la fenêtre navigateur
-  //! States local
-  const [selectedTechnos, setSelectedTechnos] = useState<TechnoI[]>([]); // Servira à stocker les technos sélectionnées
+  // local
+  const [selectedTechnos, setSelectedTechnos] = useState<TagSelectedI[]>([]); // Servira à stocker les technos sélectionnées
 
-  //! Dispatch
+  // ? Dispatch
   const dispatch = useAppDispatch();
 
-  /* //* On utilise useEffect pour mettre à jour la state windowWidth
-  /  //* à chaque fois que la largeur de la fenêtre navigateur change
-  */
+  // ? useEffect
+  // On utilise useEffect pour mettre à jour la state windowWidth à chaque fois que la largeur de la fenêtre navigateur change
   useEffect(() => {
     const handleWindowResize = () => {
       // On met à jour et on fait un nouveau rendu avec la nouvelle largeur de la fenêtre navigateur
@@ -48,7 +53,8 @@ function SelectComponent({ handleTechnoChange }) {
     // On retourne une fonction de nettoyage pour supprimer l'écouteur d'évènement
     return () => window.removeEventListener('resize', handleWindowResize);
   }, [dispatch]);
-  /* On utilise ensuite la donnée windowWidth pour gérer le placeholder
+  /** //* Placeholder
+   * On utilise ensuite la donnée windowWidth pour gérer le placeholder
   /* Le texte affiché dans le select dépend de la largeur de la fenêtre navigateur
   */
   const placeHolderText =
@@ -56,32 +62,42 @@ function SelectComponent({ handleTechnoChange }) {
       ? 'Choisissez vos technos (limité à 5 maximum)'
       : 'Limité à 5 maximum';
 
-  /* //! Fonction pour le choix des technos
-  /  Fonction appelée à chaque fois que l'utilisateur sélectionne ou désélectionne une option
-  /  Elle met à jour la state selectedTechnos avec le tableau d'objets
-  */
-  const handleOptionChange = (selected: OnChangeValue<TechnoI, true>) => {
-    // On vérifie que selected est bien un tableau (Array.isArray(selected))
-    // Si c'est le cas, on met à jour la state selectedTechnos
+  // ? Fonctions
+  /** //* Fonction pour le choix des technos
+   * @param {Array} selected : tableau d'objets
+   * @param {handleTechnoChange} handleTechnoChange : fonction pour mettre à jour la state technos du parent
+   * @param {setSelectedTechnos} setSelectedTechnos : fonction pour mettre à jour la state selectedTechnos
+   * On utilise la fonction handleOptionChange pour mettre à jour la state selectedTechnos
+   * On vérifie que selected est bien un tableau (Array.isArray(selected))
+   * Si c'est le cas, on met à jour la state selectedTechnos et on envoie au parent le tableau de technos sélectionnées
+   */
+  const handleOptionChange = (selected: OnChangeValue<TagSelectedI, true>) => {
     if (selected && Array.isArray(selected)) {
       setSelectedTechnos(selected);
-      handleTechnoChange(selected); // On passe le tableau de technos sélectionnées au parent pour filtre
+      handleTechnoChange(selected);
     }
   };
 
-  //! Fonction pour désactiver les options si 5 technos sont sélectionnées
-  // Si le tableau de technos sélectionnées contient 5 éléments, on désactive les options
+  /** //* Fonction pour limiter à 5 technos
+   * @param {Array} selectedTechnos : tableau d'objets
+   * @returns {boolean} : true si le tableau contient 5 éléments, false sinon
+   * Si le tableau de technos sélectionnées contient 5 éléments, on désactive les options
+   */
   const isOptionDisabled = () => selectedTechnos.length >= 5;
 
-  /* //! Fonction pour personnaliser le rendu des options
-  / Fonction appelée pour chaque option et reçoit en paramètre un objet avec les propriétés label, value et icon
-  / Elle filtre le tableau de technos sélectionnées et si l'option est présente, elle n'affiche que le label et disparait de la liste déroulante.
-  / Sinon, elle affiche le label et l'icône (dans la liste déroulante).
-  */
-  const formatOptionLabel = ({ label, value, path }: TechnoI) => {
+  /** //* Fonction pour personnaliser le rendu des options
+   * @param {Object} option : objet avec les propriétés label, value et icon
+   * @returns {JSX.Element} : JSX.Element
+   * On utilise la fonction formatOptionLabel pour personnaliser le rendu des options
+   * Elle filtre le tableau de technos sélectionnées et si l'option est présente, elle n'affiche que le label et disparait de la liste déroulante.
+   * Sinon, elle affiche le label et l'icône (dans la liste déroulante).
+   */
+  const formatOptionLabel = ({ label, value, path }: TagSelectedI) => {
+    // Si l'option est présente dans le tableau de technos sélectionnées...
     if (selectedTechnos.some((option) => option.value === value)) {
-      return label; // Afficher uniquement le value sans l'icône
+      return label; // On affiche uniquement le value
     }
+    // Sinon, on affiche le label et l'icône
     return (
       <div className="Select--techno--flex">
         <img src={path} alt={value} className="Select--techno-svg" />
@@ -90,8 +106,8 @@ function SelectComponent({ handleTechnoChange }) {
     );
   };
 
-  // //! Style du select
-  const customStyles: StylesConfig<TechnoI, true> = {
+  // ? Style du select
+  const customStyles: StylesConfig<TagSelectedI, true> = {
     // CSSObject est un type de typescript pour typer les styles en ligne (inline styles)
     // On l'importe depuis react-select et on l'utilise comme type pour typer les styles
     //! container complet
@@ -171,10 +187,11 @@ function SelectComponent({ handleTechnoChange }) {
     }),
   };
 
+  // ? Rendu JSX
   return (
     <Select
       id="selectTechnos"
-      isMulti // Choix multiple
+      isMulti // Autorise la sélection multiple
       name="technos"
       options={technos} // Tableau des technos (importé de utils/technosOptions)
       className="FilterBar--select"

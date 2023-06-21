@@ -1,9 +1,12 @@
-// On importe depuis `react-router-dom`
+// ? Librairies
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
+
+// ? Composants
 import NotFound from '../components/NotFound/NotFound';
 
-// On crée notre fonction de gestion d'erreur
+// ? Fonction principale
 function ErrorPage() {
+  // useRouteError() est un hook qui permet de récupérer l'erreur de la route
   const error = useRouteError();
   console.log(error);
 
@@ -28,7 +31,7 @@ function ErrorPage() {
     return 'Unknown error';
   }
 
-  // Même procédure pour le status
+  //* Même procédure pour le status
   function getStatus(e: unknown): number | string {
     if (isRouteErrorResponse(e)) {
       return e.status;
@@ -42,8 +45,9 @@ function ErrorPage() {
     return 'Unknown error';
   }
 
-  // On retourne les props à un composant crée à part qui s'occupera du style et de l'integration dans notre appli
+  // ? Rendu JSX
   return (
+    // On retourne les props à un composant crée à part qui s'occupera du style et de l'integration dans notre appli
     <NotFound
       errorMessage={getErrorMessage(error)}
       errorStatut={getStatus(error)}

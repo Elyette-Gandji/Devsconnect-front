@@ -1,12 +1,12 @@
 export interface FlashI {
-  type: 'success' | 'error';
+  type: 'success' | 'error' | undefined;
   children: React.ReactNode;
   duration?: number;
 }
 
 export interface BurgerI {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpen?: boolean;
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface MemberI {
@@ -54,4 +54,7 @@ export interface TagI {
 export interface TagSelectedI {
   id: number | string;
   name: string;
+  value: string;
+  label: string;
+  path: string;
 }

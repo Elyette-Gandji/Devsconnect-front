@@ -1,57 +1,67 @@
-// Permet de lire les state du store et d'effectuer des actions sur le store
+// ? Librairies
 import { useAppSelector, useAppDispatch } from '../../../../../hook/redux';
 
-// Typage
-import { BurgerI } from '../../../../../@types/interface';
-// Actions du reducer
+// ? Fonctions externes
 import {
   toggleModalLogin,
   toggleModalSignin,
 } from '../../../../../store/reducer/log';
 
-// Fonction du composant
+// ? Typage global
+import { BurgerI } from '../../../../../@types/interface';
+
+// ? Fonction principale
 function LogComponent(props: BurgerI) {
-  // Props de la gestion du burger
-  const { setIsOpen } = props;
+  const { setIsOpen } = props; // Props de la gestion du burger
 
-  // On récupère la state windowWidth du reducer main
-  const windowWidth = useAppSelector((state) => state.main.windowWidth);
+  // ? State
+  // Redux
+  const windowWidth = useAppSelector((state) => state.main.windowWidth); // On récupère la state windowWidth du reducer main
 
-  // Dispatch
+  // ? useDispatch
   const dispatch = useAppDispatch();
 
-  // Fonctions
+  // ? Fonctions
+  /** //* Connexion
+   * @param {void} handleLogin - On ouvre la modale de connexion
+   * Au clic sur le bouton, on ouvre la modale de connexion
+   */
   const handleLogin = () => {
-    // On dispatch l'action qui va gérer l'ouverture de la modale
     dispatch(toggleModalLogin());
-    // Si windowWidth > 768, on ignore, sinon inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
+    // Si windowWidth > 768, on ignore
     if (windowWidth > 768) {
       return;
     }
+    // sinon on met la valeur de isOpen sur false pour fermer le burger en ouvrant la modale
     setIsOpen(false);
   };
 
+  /** //* Inscription
+   * @param {void} handleSignin - On ouvre la modale d'inscription
+   * Au clic sur le bouton, on ouvre la modale d'inscription
+   */
   const handleSignin = () => {
-    // On dispatch l'action qui va gérer l'ouverture de la modale
     dispatch(toggleModalSignin());
-    // Si windowWidth > 768, on ignore, sinon inverse la valeur de isOpen pour fermer le burger en ouvrant la modale
+    // Si windowWidth > 768, on ignore
     if (windowWidth > 768) {
       return;
     }
+    // sinon on met la valeur de isOpen sur false pour fermer le burger en ouvrant la modale
     setIsOpen(false);
   };
 
+  // ? Rendu JSX
   return (
     <div className="Header--connect">
       <button
-        onClick={handleLogin}
+        onClick={handleLogin} // Au clic sur le bouton, on ouvre la modale de connexion
         className="Header--connect--login"
         type="button"
       >
         Connexion
       </button>
       <button
-        onClick={handleSignin}
+        onClick={handleSignin} // Au clic sur le bouton, on ouvre la modale d'inscription
         className="Header--connect--subscribe"
         type="button"
       >

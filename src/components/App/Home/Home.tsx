@@ -1,7 +1,12 @@
-import './style.scss';
+// ? Images
 import logo from './home_logo.png';
 
+// ? Style
+import './style.scss';
+
+// ? Fonction principale
 function Home() {
+  // ? Rendu JSX
   return (
     <main className="Home">
       <img src={logo} alt="logo accueil" />

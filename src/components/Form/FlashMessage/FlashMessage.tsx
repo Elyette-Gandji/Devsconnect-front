@@ -1,7 +1,10 @@
+// ? Typage global
 import { FlashI } from '../../../@types/interface';
 
+// ? Style
 import './style.scss';
 
+// ? Fonction principale
 function FlashMessage({ type, duration, children }: FlashI) {
   return (
     <div

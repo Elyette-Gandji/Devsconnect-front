@@ -1,15 +1,17 @@
-// snippet store disponible pour création automatique
+// ? Librairie
 import { configureStore } from '@reduxjs/toolkit';
 
+// ? Reducer
 import mainReducer from './reducer/main';
 import userReducer from './reducer/user';
 import logReducer from './reducer/log';
 import membersReducer from './reducer/members';
 import tagReducer from './reducer/tag';
-
 import projectsReducer from './reducer/projects';
 
+// ? Fonction qui permet de créer le store
 const store = configureStore({
+  // Liste des reducers
   reducer: {
     main: mainReducer,
     user: userReducer,
