@@ -55,7 +55,6 @@ export const postOneProject = createAsyncThunk(
   'project/postOneProject',
   async (projectData: ProjectI) => {
     try {
-      console.log(projectData);
       const { data } = await axiosInstance.post('/api/projects', projectData);
       return data;
     } catch (error) {

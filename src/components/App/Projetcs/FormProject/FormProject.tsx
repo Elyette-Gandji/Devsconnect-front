@@ -1,56 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
-import InputTitle from '../Form/InputTitle/InputTitle';
-import MultilineTextFields from '../Form/MultiLineTextField/MultiLineTextFiled';
-import SelectCheckMarks from '../Form/SelectCheckmark/SelectCheckmarks';
-import ControlledSwitch from '../Form/Switch/Switch';
-import ValidateButton from '../Form/Button/ValidateButton';
+import { technos } from '../../../../utils/technosPath';
 import { postOneProject } from '../../../../store/reducer/projects';
+import { fetchOneMember } from '../../../../store/reducer/members';
+import './style.scss';
 
 function FormProject() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [technos, setTechnos] = useState([]);
-  const [availability, setAvailability] = useState(false);
-  const memberId = useAppSelector((state) => state.members.member.data?.id);
+  const [selectedTechnos, setSelectedTechnos] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+  const member = useAppSelector((state) => state.members.member.data);
+
   const dispatch = useAppDispatch();
+  const dropdownRef = useRef(null);
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
+  const handleSwitch = () => {
+    setIsChecked(!isChecked);
   };
 
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
-  };
-
-  const handleTechnosChange = (selectedTechnos) => {
-    setTechnos(selectedTechnos);
-  };
-
-  const handleAvailabilityChange = (event) => {
-    setAvailability(event.target.checked);
-  };
+  useEffect(() => {
+    if (member) {
+      dispatch(fetchOneMember(member.id.toString()));
+    }
+  }, [dispatch, member]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Vérifier que toutes les valeurs requises sont remplies
-    if (
-      !title ||
-      !description ||
-      technos.length === 0 ||
-      memberId === undefined
-    ) {
-      console.log('Veuillez remplir tous les champs requis');
-      return;
-    }
-
     const projectData = {
       title,
       description,
-      technos,
-      availability,
-      user_id: memberId,
+      selectedTechnos,
+      user_id: member?.id,
+      isChecked,
     };
 
     console.log('Project Data:', projectData);
@@ -58,20 +42,99 @@ function FormProject() {
     dispatch(postOneProject(projectData));
   };
 
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleTechnoSelect = (event) => {
+    const selectedTechno = event.target.value;
+    setSelectedTechnos((prevSelectedTechnos) => {
+      if (prevSelectedTechnos.includes(selectedTechno)) {
+        return prevSelectedTechnos.filter(
+          (techno) => techno !== selectedTechno
+        );
+      } else {
+        return [...prevSelectedTechnos, selectedTechno];
+      }
+    });
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+
   return (
-    <form>
-      <InputTitle value={title} onChange={handleTitleChange} />
-      <MultilineTextFields
-        value={description}
-        onChange={handleDescriptionChange}
-      />
-      <SelectCheckMarks value={technos} onChange={handleTechnosChange} />
-      <ControlledSwitch
-        checked={availability}
-        onChange={handleAvailabilityChange}
-      />
-      <ValidateButton onSubmit={handleSubmit} />
-    </form>
+    <div className="form-container">
+      <h2>Créer votre projet</h2>
+      <h3 className="form-title">Choisissez le titre du projet</h3>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Titre..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+
+        <h3 className="form-title">Choisissez les technologies</h3>
+        <div className="dropdown-container" ref={dropdownRef}>
+          <div className="dropdown-toggle" onClick={handleToggle}>
+            Tehchnologies
+          </div>
+          {isOpen && (
+            <div className="dropdown-options">
+              <ul>
+                {technos.map((techno) => (
+                  <li key={techno.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        value={techno.value}
+                        checked={selectedTechnos.includes(techno.value)}
+                        onChange={handleTechnoSelect}
+                      />
+                      {techno.label}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        <h3 className="form-title">Choisissez la description</h3>
+
+        <textarea
+          id="description"
+          value={description}
+          placeholder="Description..."
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <div>
+          <h3 className="form-title">Ouvert aux participants</h3>
+
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={handleSwitch}
+            />
+            <span className="slider"></span>
+          </label>
+        </div>
+
+        <button type="submit" className="validate-button">
+          Valider
+        </button>
+      </form>
+    </div>
   );
 }
 
