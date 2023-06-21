@@ -31,7 +31,7 @@ function LinksComponent(props: BurgerI) {
       navigate('/create-my-project');
     } else {
       dispatch(toggleModalLogin());
-      navigate('/');
+      navigate(window.location.pathname);
     }
   };
 
@@ -45,11 +45,10 @@ function LinksComponent(props: BurgerI) {
         className="Header--ul--link"
       >
         {isLoggedIn ? (
-          <Navigate to="/create-my-project" replace />
+          <NavLink to="/create-my-project">Créer mon projet</NavLink>
         ) : (
-          <Navigate to="/" replace />
+          <NavLink to="/">Créer mon projet</NavLink>
         )}
-        <NavLink to="/create-my-project">Créer mon projet</NavLink>
       </div>
       <div
         role="button"

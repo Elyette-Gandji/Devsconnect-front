@@ -32,6 +32,19 @@ function FormProject() {
   };
 
   const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // Vérifier que toutes les valeurs requises sont remplies
+    if (
+      !title ||
+      !description ||
+      technos.length === 0 ||
+      memberId === undefined
+    ) {
+      console.log('Veuillez remplir tous les champs requis');
+      return;
+    }
+
     const projectData = {
       title,
       description,
@@ -39,9 +52,10 @@ function FormProject() {
       availability,
       user_id: memberId,
     };
-    event.preventDefault();
-    dispatch(postOneProject({ projectData }));
-    console.log(projectData);
+
+    console.log('Project Data:', projectData);
+
+    dispatch(postOneProject(projectData));
   };
 
   return (

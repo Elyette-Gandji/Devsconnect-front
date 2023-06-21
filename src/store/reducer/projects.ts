@@ -55,6 +55,7 @@ export const postOneProject = createAsyncThunk(
   'project/postOneProject',
   async (projectData: ProjectI) => {
     try {
+      console.log(projectData);
       const { data } = await axiosInstance.post('/api/projects', projectData);
       return data;
     } catch (error) {
@@ -129,6 +130,17 @@ const projectsReducer = createReducer(initialState, (builder) => {
     })
     .addCase(deleteOneProject.pending, (state) => {
       state.project.loading = false;
+    })
+    .addCase(postOneProject.fulfilled, (state, action) => {
+      state.project.data = action.payload;
+      state.project.loading = false;
+    })
+    .addCase(postOneProject.rejected, (state) => {
+      state.project.data = null;
+      state.project.loading = false;
+    })
+    .addCase(postOneProject.pending, (state) => {
+      state.project.loading = true;
     });
 });
 
