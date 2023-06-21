@@ -34,7 +34,7 @@ function DeleteModale({
   const navigate = useNavigate(); // Permet d'acceder à l'historique de navigation, pour rediriger
 
   // ? useEffect
-  // Pour le clic externe à la modale
+  //* Pour le clic externe à la modale
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
