@@ -54,4 +54,7 @@ export interface TagI {
 export interface TagSelectedI {
   id: number | string;
   name: string;
+  value: string;
+  label: string;
+  path: string;
 }

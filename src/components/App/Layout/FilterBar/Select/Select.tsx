@@ -25,7 +25,13 @@ type StateI = {
   isFocused: boolean;
 };
 
-function SelectComponent({ handleTechnoChange }) {
+function SelectComponent({
+  handleTechnoChange,
+  selectedTags,
+}: {
+  handleTechnoChange: (selected: TechnoI[]) => void;
+  selectedTags: string[];
+}) {
   //! States Redux
   const windowWidth = useAppSelector((state) => state.main.windowWidth); // On récupère la largeur de la fenêtre navigateur
   //! States local
