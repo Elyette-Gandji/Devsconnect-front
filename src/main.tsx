@@ -10,7 +10,7 @@ import Router from './routes/router';
 // ? Styles
 import './styles/index.scss';
 
-// ? Fonction
+// ? Fonction root
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
