@@ -1,10 +1,13 @@
+// ? Style
 import './style.scss';
 
+// ? Interface locale
 interface NotFoundI {
   errorMessage: string;
   errorStatut: number | string;
 }
 
+// ? Fonction principale
 function NotFound({ errorMessage, errorStatut }: NotFoundI) {
   return (
     <div className="not-found">

@@ -86,7 +86,7 @@ function Login() {
    * On redirige ensuite vers la page d'accueil
    */
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault(); // On empêche le comportement par défaut du formulaire
     const form = event.currentTarget;
     const formData = new FormData(form);
 
