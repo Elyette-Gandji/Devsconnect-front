@@ -1,5 +1,5 @@
 export interface FlashI {
-  type: 'success' | 'error';
+  type: 'success' | 'error' | undefined;
   children: React.ReactNode;
   duration?: number;
 }

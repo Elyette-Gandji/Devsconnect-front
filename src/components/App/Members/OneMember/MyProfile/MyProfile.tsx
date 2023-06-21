@@ -62,6 +62,7 @@ function MyProfile() {
 
   // ? Fonctions
   /** //* Switch open to work
+   * @param {boolean} checked - valeur du switch
    * Au clic, on inverse la valeur du switch
    */
   const handleSwitch = () => {
@@ -69,6 +70,7 @@ function MyProfile() {
   };
 
   /** //* Fonction pour le bouton annuler
+   * @param {boolean} isEditMode - valeur du state isEditMode
    * Au clic, on inverse la valeur du state isEditMode
    */
   const handleCancelClick = () => {
@@ -76,6 +78,7 @@ function MyProfile() {
   };
 
   /** //* Fonction pour le bouton delete
+   * @param {boolean} isOpenDeleteModale - valeur du state isOpenDeleteModale
    * Au clic, on inverse la valeur du state isOpenDeleteModale
    * qui affiche ou non la modale de suppression
    */
