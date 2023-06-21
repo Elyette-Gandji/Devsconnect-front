@@ -27,6 +27,7 @@ interface UserState {
     refreshToken: string | null;
     status?: string | null;
     flash: FlashI | null;
+    message?: string | null;
   };
 }
 
@@ -45,6 +46,7 @@ export const initialState: UserState = {
     refreshToken: null,
     status: null,
     flash: null,
+    message: null,
   },
 };
 

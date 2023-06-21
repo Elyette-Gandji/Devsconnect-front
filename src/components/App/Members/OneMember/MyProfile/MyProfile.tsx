@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hook/redux';
 
-// ? Fonctions asynchrones
+// ? Fonctions externes
 import { fetchAllTags } from '../../../../../store/reducer/tag';
 import {
   fetchOneMember,
