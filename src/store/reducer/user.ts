@@ -129,14 +129,16 @@ const userReducer = createReducer(initialState, (builder) => {
 
     //* Cas de la connexion réussie
     .addCase(loginUser.fulfilled, (state, action) => {
-      const { logged, pseudo, userID } = action.payload.data;
+      const { logged, pseudo, userId } = action.payload.data;
       state.login.logged = logged;
       state.login.pseudo = pseudo;
-      state.login.id = userID;
+      state.login.id = userId;
       state.login.flash = {
         type: 'success',
         children: `Bienvenue ${pseudo} !`,
       };
+      console.log(userId);
+      console.log(action.payload.data);
     })
     //* Cas de l'inscription en cours
     .addCase(signinUser.pending, (state) => {

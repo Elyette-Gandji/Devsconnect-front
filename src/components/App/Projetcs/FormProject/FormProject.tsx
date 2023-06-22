@@ -3,28 +3,28 @@ import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
 import { technos } from '../../../../utils/technosPath';
 import { postOneProject } from '../../../../store/reducer/projects';
 import { fetchOneMember } from '../../../../store/reducer/members';
+
 import './style.scss';
 
 function FormProject() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedTechnos, setSelectedTechnos] = useState([]);
+  // [selectedTechnos, setSelectedTechnos] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-  const member = useAppSelector((state) => state.members.member.data);
+  const [availabilty, setAvailabilty] = useState(false);
+  const user_id = useAppSelector((state) => state.user.login.id);
 
   const dispatch = useAppDispatch();
   const dropdownRef = useRef(null);
-
-  const handleSwitch = () => {
-    setIsChecked(!isChecked);
-  };
+  console.log(user_id);
 
   useEffect(() => {
-    if (member) {
-      dispatch(fetchOneMember(member.id.toString()));
-    }
-  }, [dispatch, member]);
+    dispatch(fetchOneMember());
+  }, [dispatch]);
+
+  const handleSwitch = () => {
+    setAvailabilty(!availabilty);
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -32,9 +32,9 @@ function FormProject() {
     const projectData = {
       title,
       description,
-      selectedTechnos,
-      user_id: member?.id,
-      isChecked,
+      //selectedTechnos,
+      availabilty,
+      user_id: user_id,
     };
 
     console.log('Project Data:', projectData);
@@ -46,7 +46,7 @@ function FormProject() {
     setIsOpen(!isOpen);
   };
 
-  const handleTechnoSelect = (event) => {
+  /* const handleTechnoSelect = (event) => {
     const selectedTechno = event.target.value;
     setSelectedTechnos((prevSelectedTechnos) => {
       if (prevSelectedTechnos.includes(selectedTechno)) {
@@ -57,7 +57,7 @@ function FormProject() {
         return [...prevSelectedTechnos, selectedTechno];
       }
     });
-  };
+  }; */
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -72,6 +72,8 @@ function FormProject() {
     };
   }, []);
 
+  console.log(user_id);
+
   return (
     <div className="form-container">
       <h2>Créer votre projet</h2>
@@ -85,7 +87,7 @@ function FormProject() {
         />
 
         <h3 className="form-title">Choisissez les technologies</h3>
-        <div className="dropdown-container" ref={dropdownRef}>
+        {/* <div className="dropdown-container" ref={dropdownRef}>
           <div className="dropdown-toggle" onClick={handleToggle}>
             Tehchnologies
           </div>
@@ -108,7 +110,7 @@ function FormProject() {
               </ul>
             </div>
           )}
-        </div>
+        </div> */}
         <h3 className="form-title">Choisissez la description</h3>
 
         <textarea
@@ -123,7 +125,7 @@ function FormProject() {
           <label className="switch">
             <input
               type="checkbox"
-              checked={isChecked}
+              checked={availabilty}
               onChange={handleSwitch}
             />
             <span className="slider"></span>

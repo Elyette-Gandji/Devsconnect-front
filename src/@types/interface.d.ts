@@ -34,7 +34,7 @@ export interface ProjectI {
   description: string;
   availability: boolean;
   user: MemberI[];
-  tags: TagI[];
+  //tags: TagI[];
   createdAt: Date;
   updatedAt: Date;
 }
