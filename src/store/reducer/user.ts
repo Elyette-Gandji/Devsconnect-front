@@ -52,6 +52,9 @@ export const initialState: UserState = {
 //* Déconnexion
 export const logout = createAction('user/logout');
 
+//* Réinitialisation du message
+export const resetMessage = createAction('user/resetMessage');
+
 // ? Fonctions asynchrones
 //* Authentification
 export const loginUser = createAsyncThunk(
@@ -111,6 +114,7 @@ const userReducer = createReducer(initialState, (builder) => {
       state.login.message = {
         type: 'success',
         children: `Bienvenue ${pseudo} !`,
+        duration: 5000,
       };
     })
 
@@ -121,7 +125,7 @@ const userReducer = createReducer(initialState, (builder) => {
       state.login.id = null;
       state.login.message = {
         type: 'error',
-        children: action.error.message || 'UNKNOWN_ERROR',
+        children: 'Pseudo ou mot de passe incorrect',
         duration: 5000,
       };
     })
@@ -158,6 +162,12 @@ const userReducer = createReducer(initialState, (builder) => {
       //! à la déconnexion, on supprime le token
       // delete axiosInstance.defaults.headers.common.Authorization;
     });
+
+  //* Cas de la réinitialisation du message
+  builder.addCase(resetMessage, (state) => {
+    state.login.message = null;
+    state.signin.message = null;
+  });
 });
 
 export default userReducer;
