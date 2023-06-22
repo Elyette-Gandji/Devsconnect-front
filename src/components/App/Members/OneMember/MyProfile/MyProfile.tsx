@@ -162,12 +162,11 @@ function MyProfile() {
 
     // ? Gestion des inputs
     const inputs = formRef.current
-      ? formRef.current.querySelectorAll('.Form--input') // On cible tous les inputs du formulaire
+      ? formRef.current.querySelectorAll('.MyProfile--input') // On cible tous les inputs du formulaire
       : null;
     inputs?.forEach((input) => {
       // Pour chaque input
       const { name, value } = input as HTMLInputElement; // On récupère le name et la value en destructuring
-
       // Vérifiez si `name` est une clé valide de `MemberI`
       if (member && name in member) {
         const memberValue = member[name as keyof MemberI]; // Obtenez la valeur actuelle de `name` dans `objData`
@@ -175,6 +174,14 @@ function MyProfile() {
         // Si la valeur est différente d'une string vide et de la valeur initiale, on l'ajoute à formData et à objData
         if (value !== '' && value !== memberValue) {
           formData.append(name, value);
+          console.log('formData', formData);
+          objData[name] = value;
+        }
+      } else if (name === 'password') {
+        // Pour le champ de mot de passe
+        if (value !== '') {
+          formData.append(name, value);
+          console.log('formData', formData);
           objData[name] = value;
         }
       }
@@ -211,16 +218,15 @@ function MyProfile() {
     if (selectedTags && selectedTags.length > 0) {
       // On vérifie que selectedTags existe et qu'il contient au moins un tag
       const selectedTagsData = selectedTags.map((tag) => tag.id); // On crée un tableau avec les id des tags sélectionnés
+      // const tagsJSON = JSON.stringify(selectedTagsData); // On convertie le tableau en chaîne JSON
 
-      const tagsJSON = JSON.stringify(selectedTagsData); // On convertie le tableau en chaîne JSON
-
-      formData.append('tags', tagsJSON); // On ajoute le tableau selectedTagsData à formData
-
-      objData.tags = tagsJSON; // On ajoute le tableau selectedTagsData à objData
+      formData.append('tags', selectedTagsData); // On ajoute le tableau selectedTagsData à formData
+      objData.tags = selectedTagsData; // On ajoute le tableau selectedTagsData à objData
     }
 
     // ? Soumission du formulaire
 
+    console.log('objData', objData, formData);
     dispatch(
       // On dispatch l'action updateMember avec l'id du membre et les données du formulaire
       updateMember({
