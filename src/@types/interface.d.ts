@@ -34,6 +34,8 @@ export interface ProjectI {
   description: string;
   availability: boolean;
   user: MemberI[];
+  user_id: number;
+  user_pseudo: string;
   //tags: TagI[];
   createdAt: Date;
   updatedAt: Date;

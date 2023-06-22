@@ -9,7 +9,7 @@ import { useAppSelector, useAppDispatch } from '../../../../hook/redux';
 import { fetchOneProject } from '../../../../store/reducer/projects';
 import ErrorPage from '../../../../routes/ErrorPage';
 import { fetchAllTags } from '../../../../store/reducer/tag';
-
+import { fetchOneMember } from '../../../../store/reducer/members';
 function ProjectDetail() {
   const { id } = useParams();
 
@@ -23,7 +23,9 @@ function ProjectDetail() {
     if (id) dispatch(fetchOneProject(Number(id)));
     dispatch(fetchAllTags());
   }, [dispatch, id]);
-
+  console.log(projectData);
+  const pseudo = projectData?.user_pseudo;
+  console.log(pseudo);
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -56,7 +58,7 @@ function ProjectDetail() {
 
       <div className="card-header">
         <h1 className="card-project-title">{projectData.title}</h1>
-        <h2>Créateur du projet</h2>
+        <h2>Créateur du projet :{pseudo}</h2>
 
         <div className={classname}>
           <p className="project-status">

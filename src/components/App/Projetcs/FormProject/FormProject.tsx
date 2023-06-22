@@ -11,7 +11,7 @@ function FormProject() {
   const [description, setDescription] = useState('');
   // [selectedTechnos, setSelectedTechnos] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [availabilty, setAvailabilty] = useState(false);
+  const [availability, setAvailability] = useState(false);
   const user_id = useAppSelector((state) => state.user.login.id);
 
   const dispatch = useAppDispatch();
@@ -23,7 +23,7 @@ function FormProject() {
   }, [dispatch]);
 
   const handleSwitch = () => {
-    setAvailabilty(!availabilty);
+    setAvailability(!availability);
   };
 
   const handleSubmit = (event) => {
@@ -33,7 +33,7 @@ function FormProject() {
       title,
       description,
       //selectedTechnos,
-      availabilty,
+      availability,
       user_id: user_id,
     };
 
@@ -125,7 +125,7 @@ function FormProject() {
           <label className="switch">
             <input
               type="checkbox"
-              checked={availabilty}
+              checked={availability}
               onChange={handleSwitch}
             />
             <span className="slider"></span>
