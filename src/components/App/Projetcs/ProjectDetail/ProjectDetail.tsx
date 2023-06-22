@@ -25,6 +25,7 @@ function ProjectDetail() {
   }, [dispatch, id]);
   console.log(projectData);
   const pseudo = projectData?.user_pseudo;
+  const otherUsers = projectData?.users;
   console.log(pseudo);
   if (loading) {
     return <p>Loading...</p>;
@@ -73,6 +74,11 @@ function ProjectDetail() {
           <p className="card-project-description">{projectData.description}</p>
           <div>
             <h1>Participants</h1>
+            <ul>
+              {otherUsers.map((user) => (
+                <li key={user.user_id}>{user.pseudo}</li>
+              ))}
+            </ul>
           </div>
         </div>
 
