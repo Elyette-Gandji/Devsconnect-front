@@ -1,131 +1,131 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
-import {
-  putOneProject,
-  deleteOneProject, // Importez l'action de suppression de projet
-} from '../../../../store/reducer/projects';
+import { technos } from '../../../../utils/technosPath';
+import { putOneProject } from '../../../../store/reducer/projects';
+import { fetchOneMember } from '../../../../store/reducer/members';
+import DeleteProject from './DeleteProject';
+
 import './style.scss';
-import InputTitle from '../Form/InputTitle/InputTitle';
-import SelectCheckMarks from '../Form/SelectCheckmark/SelectCheckMarks';
-import MultilineTextFields from '../Form/MultiLineTextField/MultiLineTextFiled';
-import ControlledSwitch from '../Form/Switch/Switch';
-import ValidateButton from '../Form/Button/ValidateButton';
 
 function ModifyProject({ projectId }) {
-  const dispatch = useAppDispatch();
-  const projects = useAppSelector((state) => state.projects.projects);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [availability, setAvailability] = useState(false);
+  const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(false);
+  const user_id = useAppSelector((state) => state.user.login.id);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    technos: [],
-    open: false,
-  });
+  const dispatch = useAppDispatch();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
-    // Recherche du projet correspondant à l'identifiant donné
-    const project = projects.find((project) => project.id === projectId);
+    dispatch(fetchOneMember());
+    fetchProjectDetails(projectId);
+  }, [dispatch, projectId]);
 
-    if (project) {
-      setFormData({
-        title: project.title,
-        description: project.description,
-        technos: project.technos,
-        open: project.open,
-      });
+  const fetchProjectDetails = async (projectId) => {
+    try {
+      const project = await fetchProject(projectId);
+      setTitle(project.title);
+      setDescription(project.description);
+      setAvailability(project.availability);
+    } catch (error) {
+      console.error('Failed to fetch project details:', error);
     }
-  }, [projects, projectId]);
+  };
 
-  const handleFormSubmit = (event) => {
+  const handleSwitch = () => {
+    setAvailability(!availability);
+  };
+
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Créer un objet contenant les données du formulaire
     const projectData = {
-      id: projectId,
-      title: formData.title,
-      description: formData.description,
-      technos: formData.technos,
-      open: formData.open,
+      title,
+      description,
+      availability,
+      user_id: user_id,
     };
 
-    // Dispatch l'action pour mettre à jour le projet
-    dispatch(putOneProject(projectData))
-      .then((response) => {
-        // Gérer la réponse de l'API en cas de succès
-        console.log('Projet mis à jour avec succès:', response.payload);
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la mise à jour du projet:', error);
-      });
+    console.log('Project Data:', projectData);
+
+    dispatch(putOneProject({ projectId, projectData }));
   };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
   };
 
-  const handleTechnosChange = (selectedTechnos) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      technos: selectedTechnos,
-    }));
-  };
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
 
-  const handleSwitchChange = (event) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      open: event.target.checked,
-    }));
-  };
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
 
-  const handleDeleteProject = () => {
-    dispatch(deleteOneProject(projectId))
-      .then((response) => {
-        console.log('Projet supprimé avec succès:', response.payload);
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la suppression du projet:', error);
-      });
+  const handleDeleteModale = () => {
+    setIsOpenDeleteModale(!isOpenDeleteModale);
   };
 
   return (
-    <div>
-      <h1>Modifier mon projet</h1>
-
-      <form onSubmit={handleFormSubmit}>
-        <h2>Titre du projet</h2>
-        <InputTitle
-          name="title"
-          value={formData.title}
-          onChange={handleInputChange}
+    <div className="form-container">
+      <h2>Modifier votre projet</h2>
+      <h3 className="form-title">Choisissez le titre du projet</h3>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Titre..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
 
-        <h2>Quelles sont les technos de votre projet</h2>
-        <SelectCheckMarks
-          selectedTechnos={formData.technos}
-          onTechnosChange={handleTechnosChange}
+        <h3 className="form-title">Choisissez les technologies</h3>
+        <h3 className="form-title">Choisissez la description</h3>
+
+        <textarea
+          id="description"
+          value={description}
+          placeholder="Description..."
+          onChange={(e) => setDescription(e.target.value)}
         />
+        <div>
+          <h3 className="form-title">Ouvert aux participants</h3>
 
-        <h2>Description du projet</h2>
-        <MultilineTextFields
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-        />
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={availability}
+              onChange={handleSwitch}
+            />
+            <span className="slider"></span>
+          </label>
+        </div>
 
-        <h2>Ouvert aux participants</h2>
-        <ControlledSwitch
-          checked={formData.open}
-          onChange={handleSwitchChange}
-        />
-
-        <ValidateButton onSubmit={handleFormSubmit} />
-
-        <button onClick={handleDeleteProject}>Supprimer le projet</button>
+        <button type="submit" className="validate-button">
+          Valider
+        </button>
       </form>
+      <button
+        type="button"
+        className="MyProfile--fourthField--button--delete"
+        onClick={handleDeleteModale}
+      >
+        Supprimer le projet
+      </button>
+
+      {isOpenDeleteModale && (
+        <DeleteProject
+          isOpenDeleteModale={isOpenDeleteModale}
+          setIsOpenDeleteModale={setIsOpenDeleteModale}
+        />
+      )}
     </div>
   );
 }

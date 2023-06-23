@@ -1,7 +1,7 @@
-import './style.scss';
 import { Link } from 'react-router-dom';
+import './style.scss';
 
-import { ProjectI } from '../../../@types/interface';
+import { ProjectI, TagI } from '../../../@types/interface';
 
 interface CardProjectI {
   project: ProjectI;
@@ -9,6 +9,7 @@ interface CardProjectI {
 
 function Project({ project }: CardProjectI) {
   const { id, title, description, availability } = project;
+
   const classname = availability ? 'project-open' : 'project-close';
 
   return (
@@ -19,7 +20,20 @@ function Project({ project }: CardProjectI) {
         </div>
 
         <div className="project-technos">
-          <div className="project-technos-containers">{project.technos}</div>
+          <div className="project-technos-img">
+            {project.tags && project.tags.length > 0 ? (
+              project.tags.map((tag) => (
+                <img
+                  src={`/images/technos/${tag.name.toLowerCase()}.svg`}
+                  alt={tag.name}
+                  title={tag.name}
+                  key={tag.id}
+                />
+              ))
+            ) : (
+              <p>Aucune techno</p>
+            )}
+          </div>
         </div>
       </div>
       <div className="project-description">
