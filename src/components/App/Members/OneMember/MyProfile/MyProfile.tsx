@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hook/redux';
 
 // ? Fonctions externes
+import { resetMessage } from '../../../../../store/reducer/main';
+import validatePassword from '../../../../../utils/validatePassword';
 import { fetchAllTags } from '../../../../../store/reducer/tag';
 import {
   fetchOneMember,
@@ -30,6 +32,7 @@ function MyProfile() {
   ); // On récupère les données du membre
   const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
   const allTags: TagI[] = useAppSelector((state) => state.tag.list.data); // On récupère les tags
+  const flash = useAppSelector((state) => state.main.flash); // On récupère le message de la requête
 
   // Local
   const [checked, setChecked] = useState(member?.availability); // Valeur du switch
@@ -162,12 +165,11 @@ function MyProfile() {
 
     // ? Gestion des inputs
     const inputs = formRef.current
-      ? formRef.current.querySelectorAll('.Form--input') // On cible tous les inputs du formulaire
+      ? formRef.current.querySelectorAll('.MyProfile--input') // On cible tous les inputs du formulaire
       : null;
     inputs?.forEach((input) => {
       // Pour chaque input
       const { name, value } = input as HTMLInputElement; // On récupère le name et la value en destructuring
-
       // Vérifiez si `name` est une clé valide de `MemberI`
       if (member && name in member) {
         const memberValue = member[name as keyof MemberI]; // Obtenez la valeur actuelle de `name` dans `objData`
@@ -179,6 +181,35 @@ function MyProfile() {
         }
       }
     });
+
+    // ? Gestion du password
+    const passwordElement = document.querySelector(
+      '#password'
+    ) as HTMLInputElement;
+    const password = passwordElement.value;
+    const errorMessage = validatePassword(password);
+
+    // if (errorMessage) {
+    //   console.log('erreur');
+    //   dispatch(resetMessage()); // On reset le message flash
+    //   dispatch(
+    //     flashMessage({ type: 'error', children: errorMessage, duration: 5000 })
+    //   );
+    //   // Afficher le message d'erreur ou effectuer d'autres actions nécessaires
+    // } else if (password !== '') {
+    //   // Le mot de passe est valide, ajouter le champ au formData et à objData
+    //   dispatch(resetMessage()); // On reset le message flash
+    //   dispatch(
+    //     flashMessage({
+    //       type: 'success',
+    //       children: 'Votre mot de passe a bien été modifié',
+    //       duration: 5000,
+    //     })
+    //   );
+
+    formData.append('password', password);
+    objData.password = password;
+    // }
 
     // ? Gestion du textarea
     const textarea = formRef.current
@@ -211,12 +242,10 @@ function MyProfile() {
     if (selectedTags && selectedTags.length > 0) {
       // On vérifie que selectedTags existe et qu'il contient au moins un tag
       const selectedTagsData = selectedTags.map((tag) => tag.id); // On crée un tableau avec les id des tags sélectionnés
+      // const tagsJSON = JSON.stringify(selectedTagsData); // On convertie le tableau en chaîne JSON
 
-      const tagsJSON = JSON.stringify(selectedTagsData); // On convertie le tableau en chaîne JSON
-
-      formData.append('tags', tagsJSON); // On ajoute le tableau selectedTagsData à formData
-
-      objData.tags = tagsJSON; // On ajoute le tableau selectedTagsData à objData
+      formData.append('tags', selectedTagsData); // On ajoute le tableau selectedTagsData à formData
+      objData.tags = selectedTagsData; // On ajoute le tableau selectedTagsData à objData
     }
 
     // ? Soumission du formulaire
@@ -292,6 +321,7 @@ function MyProfile() {
                 className="MyProfile--input"
               />
               <Input
+                id="password"
                 name="password"
                 type="password"
                 placeholder="*****"

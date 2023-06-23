@@ -45,13 +45,6 @@ function Header() {
 
   return (
     <div>
-      {/* //* Message flash */}
-      {isLogged && (
-        <FlashMessage type={flash?.type} duration={flash?.duration ?? 3000}>
-          {flash?.children}
-        </FlashMessage>
-      )}
-      {}
       {/* On retourne le composant HeaderLarge si la largeur de la fenêtre navigateur est supérieure à 768px */}
       {/* Sinon on retourne le composant HeaderSmall */}
       {windowWidth > 768 ? <HeaderLarge /> : <HeaderSmall />}

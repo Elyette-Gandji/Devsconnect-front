@@ -4,18 +4,16 @@ import './style.scss';
 // ? Interface locale
 interface NotFoundI {
   errorMessage: string;
-  errorStatut: number | string;
+  errorStatus: number | string;
 }
 
 // ? Fonction principale
-function NotFound({ errorMessage, errorStatut }: NotFoundI) {
+function NotFound({ errorMessage, errorStatus }: NotFoundI) {
   return (
     <div className="not-found">
-      <h1>{errorStatut}</h1>
+      <h1>{errorStatus}</h1>
       <p>Désolé, une erreur inattendue est survenue.</p>
-      <p>
-        <i>{errorMessage}</i>
-      </p>
+      <p>{errorMessage}</p>
     </div>
   );
 }

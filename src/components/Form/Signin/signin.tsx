@@ -7,8 +7,10 @@ import {
   toggleModalLogin,
   toggleModalSignin,
 } from '../../../store/reducer/log';
-import { signinUser } from '../../../store/reducer/user';
+import signinUser from '../../../store/actions/signin';
 import { fetchAllTags } from '../../../store/reducer/tag';
+import { resetMessage, updateFlash } from '../../../store/reducer/main';
+import validatePassword from '../../../utils/validatePassword';
 
 // ? Composants externes
 import CustomSwitch from '../../../utils/customSwitchUI';
@@ -25,13 +27,12 @@ import { TagSelectedI } from '../../../@types/interface';
 // ? Fonction principale
 function Signin() {
   // ? State
-  // Redux
   const allTagsFromApi: TagSelectedI[] = useAppSelector(
     (state) => state.tag.list.data
   ); // Tableau des tags récupérés depuis l'API
   // Local
   const [selectedTags, setSelectedTags] = useState<TagSelectedI[]>([]); // Tableau des tags sélectionnés par l'utilisateur
-  const [checked, setChecked] = useState(false); // State pour le check de open to work
+  const [checked, setChecked] = useState(true); // State pour le check de open to work
 
   // ? useRef
   const modalRef = useRef(null); // Référence pour la modale
@@ -169,18 +170,78 @@ function Signin() {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
+    const firstname = formData.get('firstname');
+    const name = formData.get('name');
+    const pseudo = formData.get('pseudo');
+    const email = formData.get('email');
+    const password = formData.get('password');
+    const cgu = formData.get('cgu');
+
+    dispatch(resetMessage()); // On reset le message flash
+    if (firstname === '') {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez renseigner votre prénom',
+          duration: 4000,
+        })
+      );
+    } else if (name === '') {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez renseigner votre nom',
+          duration: 4000,
+        })
+      );
+    } else if (pseudo === '') {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez renseigner un pseudo',
+          duration: 4000,
+        })
+      );
+    } else if (email === '' || !email?.includes('@')) {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez renseigner un email valide',
+          duration: 4000,
+        })
+      );
+    } else if (password === '') {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez renseigner un mot de passe',
+          duration: 4000,
+        })
+      );
+    } else if (password !== '') {
+      const validationResult = validatePassword(password); // On vérifie que le mot de passe est valide
+      if (validationResult !== '') {
+        dispatch(
+          updateFlash({
+            type: 'error',
+            children: validationResult,
+            duration: 4000,
+          })
+        );
+      }
+    }
+
     // Créer un tableau pour les données de selectedTags
     const selectedTagsData = selectedTags.map((tag) => tag.id);
-
     // Convertir le tableau en chaîne JSON
     const tagsJSON = JSON.stringify(selectedTagsData);
-
     // Ajouter le tableau selectedTagsData à formData
+    formData.delete('cgu');
     formData.append('tags', tagsJSON);
-
+    formData.append('availability', String(checked));
     dispatch(signinUser(formData)); // On envoie les données du formulaire à l'API
     dispatch(toggleModalSignin()); // On ferme la modale
-    dispatch(toggleModalLogin()); // On ouvre la modale de connexion
+    // dispatch(toggleModalLogin()); // On ouvre la modale de connexion
   };
 
   // ? Rendu JSX

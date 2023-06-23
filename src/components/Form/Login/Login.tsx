@@ -5,7 +5,8 @@ import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
 // ? Fonctions externes
 import { toggleModalLogin } from '../../../store/reducer/log';
-import { loginUser } from '../../../store/reducer/user';
+import loginUser from '../../../store/actions/login';
+import { resetMessage } from '../../../store/reducer/main';
 
 // ? Composants
 import Input from '../Input';
@@ -90,6 +91,7 @@ function Login() {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
+    dispatch(resetMessage()); // On reset le message flash
     dispatch(loginUser(formData)); // Dispatch de l'action de connexion
     navigate('/'); // Redirection vers la page d'accueil
   };
