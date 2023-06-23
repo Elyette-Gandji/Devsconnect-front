@@ -1,7 +1,6 @@
 export interface FlashI {
   type: 'success' | 'error' | undefined;
   children: React.ReactNode;
-  duration?: number;
 }
 
 export interface BurgerI {

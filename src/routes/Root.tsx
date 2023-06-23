@@ -1,11 +1,16 @@
 // ? Librairies
+import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useAppSelector } from '../hook/redux';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+import { useAppSelector, useAppDispatch } from '../hook/redux';
 
 // ? Composants
 import Header from '../components/App/Layout/Header/Header';
 import Footer from '../components/App/Layout/Footer/Footer';
-import FlashMessage from '../components/Form/FlashMessage/FlashMessage';
+
+// ? Fonctions externes
+import { resetMessage } from '../store/reducer/main';
 
 // ? Typage global
 import { FlashI } from '../@types/interface';
@@ -17,15 +22,35 @@ function Root() {
   const flash: FlashI | null | undefined = useAppSelector(
     (state) => state.main.flash
   );
+
+  // ? Dispatch
+  const dispatch = useAppDispatch();
+
+  // ? useEffect
+  /** //*Timer pour le message flash
+   * @param {number} duration - Durée du timer
+   * @param {resetMessage} dispatch - Dispatch de la fonction resetMessage
+   * Fonction qui permet de reset le message flash après un certain temps
+   * Se relance à chaque fois que le message flash change
+   */
+  useEffect(() => {
+    if (flash) {
+      const timeoutId = setTimeout(() => {
+        dispatch(resetMessage());
+      }, 5000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [dispatch, flash]);
+
   return (
     <>
-      {/** //* Message flash
-       * On positionne le message flash ici pour qu'il soit accessible partout
-       */}
       {flash && (
-        <FlashMessage type={flash?.type} duration={flash?.duration ?? 3000}>
-          {flash?.children}
-        </FlashMessage>
+        <Stack sx={{ width: '50%' }} spacing={2}>
+          <Alert severity={flash?.type} sx={{ width: '100%' }}>
+            {flash?.children}
+          </Alert>
+        </Stack>
       )}
 
       <div className="devsConnect">

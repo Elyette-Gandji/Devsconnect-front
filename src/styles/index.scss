@@ -48,3 +48,119 @@ body {
     font-size: 2rem;
     text-align: center;
 }
+
+// ! Message flash
+// Container
+.MuiAlert-root {
+    z-index: 99999;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    &.MuiAlert-standardError,
+    &.MuiAlert-standardSuccess {
+        display: flex;
+        justify-content: center;
+        width: 50%;
+    }
+    &.MuiAlert-standardError {
+        background-color: rgb(120, 63, 63);
+    }
+
+    &.MuiAlert-standardSuccess {
+        background-color: rgb(63, 163, 88);
+    }
+
+    // Icône
+    .MuiAlert-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        & svg {
+            color: #fefefe;
+        }
+    }
+
+    // Message texte
+    .MuiAlert-message {
+        color: #fefefe;
+        font-weight: 700;
+    }
+
+    @media screen and (min-width: v.$mq-large) {
+        top: 8rem;
+        &.MuiAlert-standardError,
+        &.MuiAlert-standardSuccess {
+            width: 50%;
+        }
+        // Icône
+        .MuiAlert-icon {
+            & svg {
+                width: 3rem;
+                height: 3rem;
+            }
+        }
+        // Message texte
+        .MuiAlert-message {
+            font-size: 1.6rem;
+        }
+    }
+    @media screen and (max-width: v.$mq-large) {
+        top: 6.5rem;
+        &.MuiAlert-standardError,
+        &.MuiAlert-standardSuccess {
+            width: 50%;
+        }
+        // Icône
+        .MuiAlert-icon {
+            & svg {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+        }
+        // Message texte
+        .MuiAlert-message {
+            font-size: 1.4rem;
+        }
+    }
+    @media screen and (max-width: v.$mq-medium) {
+        top: v.$height-header-medium;
+        &.MuiAlert-standardError,
+        &.MuiAlert-standardSuccess {
+            width: 60%;
+        }
+        // Icône
+        .MuiAlert-icon {
+            & svg {
+                width: 2rem;
+                height: 2rem;
+            }
+        }
+        // Message texte
+        .MuiAlert-message {
+            font-size: 1.3rem;
+        }
+    }
+    // Jusqu'à 500px (mobile)
+    @media screen and (max-width: v.$mq-small) {
+        top: v.$height-header-small;
+        &.MuiAlert-standardError,
+        &.MuiAlert-standardSuccess {
+            width: 100%;
+        }
+    }
+    // Jusqu'à 320px (mobile)
+    @media screen and (max-width: v.$mq-xsmall) {
+        top: v.$height-header-xsmall;
+        // Icône
+        .MuiAlert-icon {
+            & svg {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+        }
+        // Message texte
+        .MuiAlert-message {
+            font-size: 1rem;
+        }
+    }
+}

@@ -33,6 +33,7 @@ function Signin() {
   // Local
   const [selectedTags, setSelectedTags] = useState<TagSelectedI[]>([]); // Tableau des tags sélectionnés par l'utilisateur
   const [checked, setChecked] = useState(true); // State pour le check de open to work
+  const [cgu, setCgu] = useState(false); // State pour la case à cocher CGU
 
   // ? useRef
   const modalRef = useRef(null); // Référence pour la modale
@@ -101,6 +102,15 @@ function Signin() {
    */
   const handleSwitch = () => {
     setChecked(!checked);
+  };
+
+  /** //* Fonction pour la case à cocher CGU
+   * @param {setCgu} setCgu - State pour la case à cocher CGU
+   * Au clic, on inverse la valeur du state
+   */
+  const handleCguChange = (event) => {
+    setCgu(event.target.checked);
+    console.log('État de la case à cocher CGU :', event.target.checked);
   };
 
   /** //* Fonction pour la selection des technos (au clic sur une techno)
@@ -175,49 +185,59 @@ function Signin() {
     const pseudo = formData.get('pseudo');
     const email = formData.get('email');
     const password = formData.get('password');
-    const cgu = formData.get('cgu');
+    console.log(cgu);
+
+    let isFormValid = true; // Variable pour suivre l'état des conditions
 
     dispatch(resetMessage()); // On reset le message flash
-    if (firstname === '') {
+    if (cgu === false) {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: "Veuillez accepter les conditions générales d'utilisation",
+        })
+      );
+      isFormValid = false;
+    } else if (firstname === '') {
       dispatch(
         updateFlash({
           type: 'error',
           children: 'Veuillez renseigner votre prénom',
-          duration: 4000,
         })
       );
+      isFormValid = false;
     } else if (name === '') {
       dispatch(
         updateFlash({
           type: 'error',
           children: 'Veuillez renseigner votre nom',
-          duration: 4000,
         })
       );
+      isFormValid = false;
     } else if (pseudo === '') {
       dispatch(
         updateFlash({
           type: 'error',
           children: 'Veuillez renseigner un pseudo',
-          duration: 4000,
         })
       );
+      isFormValid = false;
     } else if (email === '' || !email?.includes('@')) {
       dispatch(
         updateFlash({
           type: 'error',
           children: 'Veuillez renseigner un email valide',
-          duration: 4000,
         })
       );
+      isFormValid = false;
     } else if (password === '') {
       dispatch(
         updateFlash({
           type: 'error',
           children: 'Veuillez renseigner un mot de passe',
-          duration: 4000,
         })
       );
+      isFormValid = false;
     } else if (password !== '') {
       const validationResult = validatePassword(password); // On vérifie que le mot de passe est valide
       if (validationResult !== '') {
@@ -225,23 +245,25 @@ function Signin() {
           updateFlash({
             type: 'error',
             children: validationResult,
-            duration: 4000,
           })
         );
+        isFormValid = false;
       }
     }
 
-    // Créer un tableau pour les données de selectedTags
-    const selectedTagsData = selectedTags.map((tag) => tag.id);
-    // Convertir le tableau en chaîne JSON
-    const tagsJSON = JSON.stringify(selectedTagsData);
-    // Ajouter le tableau selectedTagsData à formData
-    formData.delete('cgu');
-    formData.append('tags', tagsJSON);
-    formData.append('availability', String(checked));
-    dispatch(signinUser(formData)); // On envoie les données du formulaire à l'API
-    dispatch(toggleModalSignin()); // On ferme la modale
-    // dispatch(toggleModalLogin()); // On ouvre la modale de connexion
+    if (isFormValid) {
+      // Créer un tableau pour les données de selectedTags
+      const selectedTagsData = selectedTags.map((tag) => tag.id);
+      // Convertir le tableau en chaîne JSON
+      const tagsJSON = JSON.stringify(selectedTagsData);
+      // Ajouter le tableau selectedTagsData à formData
+      formData.delete('cgu');
+      formData.append('tags', tagsJSON);
+      formData.append('availability', String(checked));
+      dispatch(signinUser(formData)); // On envoie les données du formulaire à l'API
+      dispatch(toggleModalSignin()); // On ferme la modale
+      dispatch(toggleModalLogin()); // On ouvre la modale de connexion
+    }
   };
 
   // ? Rendu JSX
@@ -335,10 +357,11 @@ function Signin() {
                 J&apos;accepte les CGU
                 <input
                   type="checkbox"
-                  required
+                  // // required
+                  onChange={handleCguChange}
+                  checked={cgu}
                   id="cgu"
                   name="cgu"
-                  value="cgu"
                   className="Signin--inputCheckbox--cgu"
                 />
               </label>

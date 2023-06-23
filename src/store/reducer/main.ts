@@ -46,7 +46,6 @@ const mainReducer = createReducer(initialState, (builder) => {
     })
     //* Cas de la mise à jour du message
     .addCase(updateFlash, (state, action) => {
-      console.log(action.payload);
       state.flash = action.payload;
     })
     //* Cas de la connexion réussie
@@ -58,7 +57,6 @@ const mainReducer = createReducer(initialState, (builder) => {
       state.flash = {
         type: 'success',
         children: `Bienvenue ${pseudo} !`,
-        duration: 5000,
       };
     })
     //* Cas de la connexion échouée
@@ -66,7 +64,6 @@ const mainReducer = createReducer(initialState, (builder) => {
       state.flash = {
         type: 'error',
         children: 'Pseudo ou mot de passe incorrect',
-        duration: 5000,
       };
     })
 
@@ -79,7 +76,7 @@ const mainReducer = createReducer(initialState, (builder) => {
     .addCase(signinUser.fulfilled, (state) => {
       state.flash = {
         type: 'success',
-        children: 'Vous êtes bien inscrit, merci de vous connecter maintenant',
+        children: 'Vous êtes bien inscrit, vous pouvez vous connecter !',
       };
     });
 
