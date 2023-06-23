@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../../../../hook/redux';
 
 // ? Fonctions externes
-import { deleteMember } from '../../../../../../store/reducer/members';
+import deleteMember from '../../../../../../store/actions/deleteMember';
 import logout from '../../../../../../store/actions/logout';
 
 // ? Composants

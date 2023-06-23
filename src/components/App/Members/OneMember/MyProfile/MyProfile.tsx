@@ -6,10 +6,8 @@ import { useAppDispatch, useAppSelector } from '../../../../../hook/redux';
 import { resetMessage } from '../../../../../store/reducer/main';
 import validatePassword from '../../../../../utils/validatePassword';
 import { fetchAllTags } from '../../../../../store/reducer/tag';
-import {
-  fetchOneMember,
-  updateMember,
-} from '../../../../../store/reducer/members';
+import { fetchOneMember } from '../../../../../store/reducer/members';
+import updateMember from '../../../../../store/actions/updateMember';
 
 // ? Composants
 import CustomSwitch from '../../../../../utils/customSwitchUI';

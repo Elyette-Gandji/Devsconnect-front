@@ -5,6 +5,8 @@ import { createAction, createReducer } from '@reduxjs/toolkit';
 import loginUser from '../actions/login';
 import signinUser from '../actions/signin';
 import logout from '../actions/logout';
+import updateMember from '../actions/updateMember';
+import deleteMember from '../actions/deleteMember';
 
 // ? Typage global
 import { FlashI } from '../../@types/interface';
@@ -69,7 +71,10 @@ const mainReducer = createReducer(initialState, (builder) => {
 
     //* Cas de la déconnexion
     .addCase(logout, (state) => {
-      state.flash = null;
+      state.flash = {
+        type: 'success',
+        children: 'Au revoir !',
+      };
     })
 
     //* Cas de l'inscription réussie
@@ -84,10 +89,42 @@ const mainReducer = createReducer(initialState, (builder) => {
   // .addCase(signinUser.rejected, (state, action) => {
   //   state.flash = {
   //     type: 'error',
-  //     children: action.error.message || 'llUNKNOWN_ERROR',
+  // children: action.error.message || 'llUNKNOWN_ERROR',
   //     duration: 5000,
   //   };
   // });
+
+  //* Cas de la mise à jour du membre réussie
+  builder.addCase(updateMember.fulfilled, (state, action) => {
+    state.flash = {
+      type: 'success',
+      children: 'Les changements ont bien été pris en compte !',
+    };
+  });
+
+  //* Cas de la mise à jour du membre échouée
+  // builder.addCase(updateMember.rejected, (state, action) => {
+  //   state.flash = {
+  //     type: 'error',
+  //     children: 'Une erreur est survenue, veuillez réessayer plus tard !'
+  //   };
+  // });
+
+  //* Cas de la suppression du membre réussie
+  builder.addCase(deleteMember.fulfilled, (state) => {
+    state.flash = {
+      type: 'success',
+      children: 'Le compte a bien été supprimé !',
+    };
+  });
+
+  //* Cas de la suppression du membre échouée
+  builder.addCase(deleteMember.rejected, (state) => {
+    state.flash = {
+      type: 'error',
+      children: 'Une erreur est survenue, veuillez réessayer plus tard !',
+    };
+  });
 });
 
 export default mainReducer;

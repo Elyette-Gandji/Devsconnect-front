@@ -1,17 +1,15 @@
 // ? Librairies
 import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 
+// ? Fonctions externes
+import updateMember from '../actions/updateMember';
+import deleteMember from '../actions/deleteMember';
+
 // ? Instance Axios
 import axiosInstance from '../../utils/axios';
 
 // ? Typage global
 import { MemberI } from '../../@types/interface';
-
-// ? Typage local
-type UpdateMemberI = {
-  id: number | null;
-  formData: FormData & { availability: boolean | undefined };
-};
 
 interface MemberState {
   status?: string;
@@ -65,37 +63,6 @@ export const fetchOneMember = createAsyncThunk(
       const { data } = await axiosInstance.get(`/api/users/${id}`);
       // ? On retourne le state
       return data;
-    } catch (error) {
-      console.error('Error:', error);
-      throw error;
-    }
-  }
-);
-
-//* Update un membre
-export const updateMember = createAsyncThunk(
-  'user/updateMember',
-  async ({ id, formData }: UpdateMemberI) => {
-    try {
-      const { data } = await axiosInstance.put(`/api/users/${id}`, formData);
-      // ? On retourne le state
-      return data;
-    } catch (error) {
-      console.error('Error:', error);
-      throw error;
-    }
-  }
-);
-
-//* Supprimer un membre
-export const deleteMember = createAsyncThunk(
-  'user/deleteMember',
-  async (id: string) => {
-    try {
-      const { data } = await axiosInstance.delete(`/api/users/${id}`);
-      // ? On retourne le state
-      console.log('data', data);
-      return { data };
     } catch (error) {
       console.error('Error:', error);
       throw error;

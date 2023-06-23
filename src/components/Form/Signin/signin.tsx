@@ -110,7 +110,6 @@ function Signin() {
    */
   const handleCguChange = (event) => {
     setCgu(event.target.checked);
-    console.log('État de la case à cocher CGU :', event.target.checked);
   };
 
   /** //* Fonction pour la selection des technos (au clic sur une techno)
@@ -183,9 +182,9 @@ function Signin() {
     const firstname = formData.get('firstname');
     const name = formData.get('name');
     const pseudo = formData.get('pseudo');
-    const email = formData.get('email');
+    const email = formData.get('email').toString();
     const password = formData.get('password');
-    console.log(cgu);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex pour vérifier le format de l'email
 
     let isFormValid = true; // Variable pour suivre l'état des conditions
 
@@ -222,7 +221,7 @@ function Signin() {
         })
       );
       isFormValid = false;
-    } else if (email === '' || !email?.includes('@')) {
+    } else if (email === '' || !emailRegex.test(email)) {
       dispatch(
         updateFlash({
           type: 'error',
@@ -294,7 +293,7 @@ function Signin() {
             <Input name="firstname" type="text" placeholder="Prénom" />
             <Input name="name" type="text" placeholder="Nom" />
             <Input name="pseudo" type="text" placeholder="Pseudo" />
-            <Input name="email" type="email" placeholder="Adresse Email" />
+            <Input name="email" type="text" placeholder="Adresse Email" />
             <Input name="password" type="password" placeholder="Mot de passe" />
 
             <div className="Signin--openToWork">
@@ -357,7 +356,6 @@ function Signin() {
                 J&apos;accepte les CGU
                 <input
                   type="checkbox"
-                  // // required
                   onChange={handleCguChange}
                   checked={cgu}
                   id="cgu"
