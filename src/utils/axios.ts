@@ -1,51 +1,79 @@
-// ? Fonction simple pour créer une instance d'Axios
-// ? On entre l'url principal de l'appel API
-//! L'instance d'Axios est exportée et pourra être utilisée pour stocker le token par exemple
-
 import axios from 'axios';
 
-export default axios.create({
+const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-// import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+// Intercepteur pour la gestion des erreurs
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      // La requête a reçu une réponse avec un code d'erreur (4xx, 5xx)
+      console.log('error response', error.response);
+      return Promise.reject(error.response.data);
+    }
+    if (error.request) {
+      console.log('error request', error.request);
+      // La requête n'a pas reçu de réponse (pas de connexion réseau, par exemple)
+      return Promise.reject({ message: 'No response received' });
+    }
+    // Une erreur s'est produite lors de la configuration de la requête
+    console.log('error unknown', error.message);
+    return Promise.reject({ message: 'Error setting up the request' });
+  }
+);
 
-// import jwt from 'jsonwebtoken';
+// ? Intercepteur pour gérer le rafraîchissement du jeton
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
 
-// // Constants
-// const JWT_SECRET = 'DGmCXdsaXKnjBeY1AR0e10roPUcyBeW4';
+    // Vérifier si la réponse a un code d'état 401 et si l'URL n'est pas déjà '/refresh-token'
+    if (error.response.status === 401 && !originalRequest.retry) {
+      originalRequest.retry = true;
 
-// // Create an Axios instance
-// const instance: AxiosInstance = axios.create({
-//   baseURL: 'https://api.example.com/', // Set your API base URL
-// });
+      try {
+        // Récupérer le rafraîchissement du jeton du localStorage
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (!refreshToken) {
+          throw new Error('No refresh token available');
+        }
 
-// // Add a request interceptor
-// instance.interceptors.request.use((config: AxiosRequestConfig) => {
-//   // Check if the access token is valid
-//   const accessToken = AxiosInstance.defaults.headers.common.Authorization.split('Bearer ')[1];
-//   if (isAccessTokenExpired(accessToken)) {
-//     // If the access token has expired, refresh the token or perform any other necessary actions
-//     // For example, you can redirect to the login page or request a new token using the refresh token
-//   }
+        // Utiliser le rafraîchissement du jeton pour obtenir un nouveau jeton d'accès
+        const { data } = await axiosInstance.post('/refresh-token', {
+          refreshToken,
+        });
 
-//   // Add the access token to the request headers
-//   config.headers['Authorization'] = Bearer ${accessToken};
+        // Mettre à jour le jeton d'accès dans les en-têtes
+        axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.data.accessToken}`;
+        // Stockez le nouveau rafraîchissement du jeton dans le localStorage
+        localStorage.setItem('refreshToken', data.data.refreshToken);
 
-//   return config;
-// });
+        // Réessayer la requête d'origine avec le nouveau jeton d'accès
+        return await axiosInstance(originalRequest);
+      } catch (refreshError) {
+        // Gérer les erreurs lors du rafraîchissement du jeton (par exemple, déconnexion de l'utilisateur)
+        // Vous pouvez rediriger vers la page de connexion ou effectuer d'autres actions nécessaires
+        console.error(
+          'Erreur lors du rafraîchissement du jeton:',
+          refreshError
+        );
 
-// // Helper function to check if the access token is expired
-// function isAccessTokenExpired(accessToken: string): boolean {
-//   // Verify and decode the access token
-//   try {
-//     const decodedToken = jwt.verify(accessToken, JWT_SECRET);
-//     const expirationTime = new Date(decodedToken.exp * 1000); // Convert expiration time to milliseconds
+        logout();
+        // Rejeter l'erreur pour que l'appelant d'origine puisse également la gérer
+        return Promise.reject(refreshError);
+      }
+    }
 
-//     return Date.now() >= expirationTime.getTime();
-//   } catch (error) {
-//     return true; // Token verification failed or expired
-//   }
-// }
+    return Promise.reject(error);
+  }
+);
 
-// export default instance;
+export default axiosInstance;

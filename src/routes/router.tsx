@@ -14,11 +14,11 @@ import ErrorPage from './ErrorPage';
 import Home from '../components/App/Home/Home';
 import Members from '../components/App/Members/Members';
 import Projects from '../components/App/Projetcs/Projects';
-import ProjectDetail from '../components/App/Projetcs/ProjectDetail/ProjectDetail';
+// import ProjectDetail from '../components/App/Projetcs/ProjectDetail/ProjectDetail';
 import OneMember from '../components/App/Members/OneMember/OneMember';
 import MyProfile from '../components/App/Members/OneMember/MyProfile/MyProfile';
-import FormProject from '../components/App/Projetcs/FormProject/FormProject';
-import ModifyProject from '../components/App/Projetcs/ModifyProject/ModifyProject';
+// import FormProject from '../components/App/Projetcs/FormProject/FormProject';
+// import ModifyProject from '../components/App/Projetcs/ModifyProject/ModifyProject';
 
 // ? Fonction
 /** //! Fonction pour gérer l'affichage du profil ou de la page membre
@@ -45,9 +45,9 @@ const Router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="/users" element={<Members />} />
         <Route path="/users/:id" element={<ProfileCondition />} />
-        <Route path="/create-my-project" element={<FormProject />} />
+        {/* <Route path="/create-my-project" element={<FormProject />} /> */}
         <Route path="/projects" element={<Projects />} />
-        <Route path="/projects/:id" element={<ProjectDetail />} />
+        {/* <Route path="/projects/:id" element={<ProjectDetail />} /> */}
         {/* <Route path="/modify-project/:id" element={<ModifyProject />} /> */}
         {/* Autres routes... */}
       </Route>

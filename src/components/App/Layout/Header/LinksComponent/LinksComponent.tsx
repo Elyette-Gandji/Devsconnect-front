@@ -52,14 +52,6 @@ function LinksComponent(props: BurgerI) {
    * Si on est pas connecté, on ouvre la modale de connexion au lieu de rediriger vers la page de création de projet
    * Si on est connecté, on redirige vers la page de création de projet
    */
-  const handleCreateProjectClick = () => {
-    if (isLoggedIn) {
-      navigate('/create-my-project');
-    } else {
-      dispatch(toggleModalLogin());
-      navigate('/');
-    }
-  };
 
   // ? Rendu JSX
   return (
@@ -68,15 +60,14 @@ function LinksComponent(props: BurgerI) {
         role="button"
         onKeyDown={handleKeyDown} // A l'appui sur une touche du clavier, on appelle la fonction handleKeyDown
         tabIndex={0} // On rend le composant focusable
-        onClick={handleCreateProjectClick} // Au clic sur le lien, on appelle la fonction handleCreateProjectClick
+        onClick={handleClick} // Au clic sur le lien, on appelle la fonction handleCreateProjectClick
         className="Header--ul--link"
       >
-        {/* //todo Ternaire navigate */}
-        {isLoggedIn ? (
-          <Navigate to="/create-my-project" replace />
-        ) : (
-          <Navigate to="/" replace />
-        )}
+        {/** //! NavLink
+         * @param {Function} NavLink - Permet de naviguer entre les pages
+         * @param {string} to - On envoie l'ID du projet dans l'url
+         * Permet de naviguer vers la page /create-my-project
+         */}
         <NavLink to="/create-my-project">Créer mon projet</NavLink>
       </div>
       <div

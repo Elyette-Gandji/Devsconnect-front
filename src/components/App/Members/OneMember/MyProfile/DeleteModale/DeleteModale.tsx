@@ -5,7 +5,7 @@ import { useAppSelector, useAppDispatch } from '../../../../../../hook/redux';
 
 // ? Fonctions externes
 import { deleteMember } from '../../../../../../store/reducer/members';
-import { logout } from '../../../../../../store/reducer/user';
+import logout from '../../../../../../store/actions/logout';
 
 // ? Composants
 

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../../../hook/redux';
 
 // ? Fonctions externes
-import { logout } from '../../../../../store/reducer/user';
+import logout from '../../../../../store/actions/logout';
 
 // ? Typage global
 import { BurgerI } from '../../../../../@types/interface';

@@ -15,18 +15,19 @@ function Root() {
   // ? State
   // Redux
   const flash: FlashI | null | undefined = useAppSelector(
-    (state) => state.user.login.message
+    (state) => state.main.flash
   );
   return (
     <>
-      {/* //* Message flash
-      On positionne le message flash ici pour qu'il soit accessible partout
-      */}
+      {/** //* Message flash
+       * On positionne le message flash ici pour qu'il soit accessible partout
+       */}
       {flash && (
         <FlashMessage type={flash?.type} duration={flash?.duration ?? 3000}>
           {flash?.children}
         </FlashMessage>
       )}
+
       <div className="devsConnect">
         <Header />
         <Outlet /> {/* Equivalent de App */}

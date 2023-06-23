@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hook/redux';
 
 // ? Fonctions externes
+import { resetMessage } from '../../../../../store/reducer/main';
+import validatePassword from '../../../../../utils/validatePassword';
 import { fetchAllTags } from '../../../../../store/reducer/tag';
 import {
   fetchOneMember,
@@ -30,6 +32,7 @@ function MyProfile() {
   ); // On récupère les données du membre
   const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
   const allTags: TagI[] = useAppSelector((state) => state.tag.list.data); // On récupère les tags
+  const flash = useAppSelector((state) => state.main.flash); // On récupère le message de la requête
 
   // Local
   const [checked, setChecked] = useState(member?.availability); // Valeur du switch
@@ -174,18 +177,39 @@ function MyProfile() {
         // Si la valeur est différente d'une string vide et de la valeur initiale, on l'ajoute à formData et à objData
         if (value !== '' && value !== memberValue) {
           formData.append(name, value);
-          console.log('formData', formData);
-          objData[name] = value;
-        }
-      } else if (name === 'password') {
-        // Pour le champ de mot de passe
-        if (value !== '') {
-          formData.append(name, value);
-          console.log('formData', formData);
           objData[name] = value;
         }
       }
     });
+
+    // ? Gestion du password
+    const passwordElement = document.querySelector(
+      '#password'
+    ) as HTMLInputElement;
+    const password = passwordElement.value;
+    const errorMessage = validatePassword(password);
+
+    // if (errorMessage) {
+    //   console.log('erreur');
+    //   dispatch(resetMessage()); // On reset le message flash
+    //   dispatch(
+    //     flashMessage({ type: 'error', children: errorMessage, duration: 5000 })
+    //   );
+    //   // Afficher le message d'erreur ou effectuer d'autres actions nécessaires
+    // } else if (password !== '') {
+    //   // Le mot de passe est valide, ajouter le champ au formData et à objData
+    //   dispatch(resetMessage()); // On reset le message flash
+    //   dispatch(
+    //     flashMessage({
+    //       type: 'success',
+    //       children: 'Votre mot de passe a bien été modifié',
+    //       duration: 5000,
+    //     })
+    //   );
+
+    formData.append('password', password);
+    objData.password = password;
+    // }
 
     // ? Gestion du textarea
     const textarea = formRef.current
@@ -226,7 +250,6 @@ function MyProfile() {
 
     // ? Soumission du formulaire
 
-    console.log('objData', objData, formData);
     dispatch(
       // On dispatch l'action updateMember avec l'id du membre et les données du formulaire
       updateMember({
@@ -298,6 +321,7 @@ function MyProfile() {
                 className="MyProfile--input"
               />
               <Input
+                id="password"
                 name="password"
                 type="password"
                 placeholder="*****"

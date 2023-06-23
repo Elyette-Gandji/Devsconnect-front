@@ -50,6 +50,7 @@ export const fetchAllMembers = createAsyncThunk(
       return data;
     } catch (error) {
       // Gérez les erreurs potentielles ici
+
       console.error('Error:', error);
       throw error;
     }
@@ -77,7 +78,6 @@ export const updateMember = createAsyncThunk(
   async ({ id, formData }: UpdateMemberI) => {
     try {
       const { data } = await axiosInstance.put(`/api/users/${id}`, formData);
-
       // ? On retourne le state
       return data;
     } catch (error) {

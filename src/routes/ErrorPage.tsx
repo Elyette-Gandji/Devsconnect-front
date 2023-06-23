@@ -8,7 +8,7 @@ import NotFound from '../components/NotFound/NotFound';
 function ErrorPage() {
   // useRouteError() est un hook qui permet de récupérer l'erreur de la route
   const error = useRouteError();
-  console.log(error);
+  console.log('ErrorPage error', error);
 
   // On gère le message d'erreur
   function getErrorMessage(e: unknown): string {
@@ -34,7 +34,7 @@ function ErrorPage() {
   //* Même procédure pour le status
   function getStatus(e: unknown): number | string {
     if (isRouteErrorResponse(e)) {
-      return e.status;
+      return e.status.toString();
     }
     if (e instanceof Error) {
       return e.name;
@@ -50,7 +50,7 @@ function ErrorPage() {
     // On retourne les props à un composant crée à part qui s'occupera du style et de l'integration dans notre appli
     <NotFound
       errorMessage={getErrorMessage(error)}
-      errorStatut={getStatus(error)}
+      errorStatus={getStatus(error)}
     />
   );
 }
