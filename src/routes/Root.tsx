@@ -41,6 +41,7 @@ function Root() {
 
       return () => clearTimeout(timeoutId);
     }
+    return undefined;
   }, [dispatch, flash]);
 
   return (
