@@ -1,25 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
-import { technos } from '../../../../utils/technosPath';
-import { postOneProject } from '../../../../store/reducer/projects';
-import { fetchOneMember } from '../../../../store/reducer/members';
+import { fetchAllTags } from '../../../../store/reducer/tag';
 
 import './style.scss';
+import { postOneProject } from '../../../../store/reducer/projects';
 
 function FormProject() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  // [selectedTechnos, setSelectedTechnos] = useState([]);
+  const [selectedTechnos, setSelectedTechnos] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [availability, setAvailability] = useState(false);
   const user_id = useAppSelector((state) => state.user.login.id);
 
   const dispatch = useAppDispatch();
   const dropdownRef = useRef(null);
-  console.log(user_id);
 
   useEffect(() => {
-    dispatch(fetchOneMember());
+    dispatch(fetchAllTags());
   }, [dispatch]);
 
   const handleSwitch = () => {
@@ -32,7 +30,7 @@ function FormProject() {
     const projectData = {
       title,
       description,
-      //selectedTechnos,
+      tag: selectedTechnos,
       availability,
       user_id: user_id,
     };
@@ -46,18 +44,16 @@ function FormProject() {
     setIsOpen(!isOpen);
   };
 
-  /* const handleTechnoSelect = (event) => {
-    const selectedTechno = event.target.value;
+  const handleTagSelect = (event) => {
+    const selectedTag = event.target.value;
     setSelectedTechnos((prevSelectedTechnos) => {
-      if (prevSelectedTechnos.includes(selectedTechno)) {
-        return prevSelectedTechnos.filter(
-          (techno) => techno !== selectedTechno
-        );
+      if (prevSelectedTechnos.includes(selectedTag)) {
+        return prevSelectedTechnos.filter((tag) => tag !== selectedTag);
       } else {
-        return [...prevSelectedTechnos, selectedTechno];
+        return [...prevSelectedTechnos, selectedTag];
       }
     });
-  }; */
+  };
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -72,7 +68,7 @@ function FormProject() {
     };
   }, []);
 
-  console.log(user_id);
+  const tags = useAppSelector((state) => state.tag.list.data);
 
   return (
     <div className="form-container">
@@ -87,30 +83,30 @@ function FormProject() {
         />
 
         <h3 className="form-title">Choisissez les technologies</h3>
-        {/* <div className="dropdown-container" ref={dropdownRef}>
+        <div className="dropdown-container" ref={dropdownRef}>
           <div className="dropdown-toggle" onClick={handleToggle}>
-            Tehchnologies
+            Technologies
           </div>
           {isOpen && (
             <div className="dropdown-options">
               <ul>
-                {technos.map((techno) => (
-                  <li key={techno.id}>
+                {tags.map((tag) => (
+                  <li key={tag.id}>
                     <label>
                       <input
                         type="checkbox"
-                        value={techno.value}
-                        checked={selectedTechnos.includes(techno.value)}
-                        onChange={handleTechnoSelect}
+                        value={tag.name}
+                        checked={selectedTechnos.includes(tag.name)}
+                        onChange={handleTagSelect}
                       />
-                      {techno.label}
+                      {tag.name}
                     </label>
                   </li>
                 ))}
               </ul>
             </div>
           )}
-        </div> */}
+        </div>
         <h3 className="form-title">Choisissez la description</h3>
 
         <textarea

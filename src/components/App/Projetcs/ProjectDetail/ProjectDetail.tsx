@@ -9,8 +9,6 @@ import { useAppSelector, useAppDispatch } from '../../../../hook/redux';
 import { fetchOneProject } from '../../../../store/reducer/projects';
 import ErrorPage from '../../../../routes/ErrorPage';
 import { fetchAllTags } from '../../../../store/reducer/tag';
-import { fetchOneMember } from '../../../../store/reducer/members';
-import { technosPath } from '../../../../utils/technosPath';
 
 function ProjectDetail() {
   const { id } = useParams();

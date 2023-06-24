@@ -19,8 +19,8 @@ function Project({ project }: CardProjectI) {
           <h1>{title}</h1>
         </div>
 
-        <div className="project-technos">
-          <div className="project-technos-img">
+        <div className="projects-technos">
+          <div className="projects-technos-img">
             {project.tags && project.tags.length > 0 ? (
               project.tags.map((tag) => (
                 <img
