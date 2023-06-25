@@ -189,11 +189,21 @@ function Signin() {
     let isFormValid = true; // Variable pour suivre l'état des conditions
 
     dispatch(resetMessage()); // On reset le message flash
+    console.log('test', selectedTags);
     if (cgu === false) {
       dispatch(
         updateFlash({
           type: 'error',
           children: "Veuillez accepter les conditions générales d'utilisation",
+        })
+      );
+      isFormValid = false;
+    } else if (selectedTags.length === 0) {
+      console.log(selectedTags);
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez sélectionner au moins une techno',
         })
       );
       isFormValid = false;
@@ -313,7 +323,7 @@ function Signin() {
           <fieldset className="Signin--field">
             <div className="Signin--technos">
               <h3>Mes technos</h3>
-              <p>(5 choix maximum)</p>
+              <p>(Choisissez entre 1 et 5 technos)</p>
               <div className="Signin--techno">
                 {/* //? On map sur le tableau des technos récupérées depuis l'API */}
                 {allTagsFromApi.map((techno: TagSelectedI) => (

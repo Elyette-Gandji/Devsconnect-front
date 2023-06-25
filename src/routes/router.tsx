@@ -10,6 +10,7 @@ import { useAppSelector } from '../hook/redux';
 // ? Composants
 import Root from './Root';
 import ErrorPage from './ErrorPage';
+import NotFound from '../components/NotFound/NotFound';
 
 import Home from '../components/App/Home/Home';
 import Members from '../components/App/Members/Members';

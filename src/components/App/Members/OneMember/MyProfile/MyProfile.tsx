@@ -36,7 +36,6 @@ function MyProfile() {
   const [selectedTags, setSelectedTags] = useState<TagI[] | undefined>(
     member?.tags
   ); // On récupère les tags du membre qu'on stocke (pour la gestion de l'update)
-  const [checked, setChecked] = useState(member?.availability); // Valeur du switch
   const [isEditMode, setIsEditMode] = useState(false); // State pour le mode édition
   const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(false); // State pour la modale de suppression
 
@@ -45,19 +44,18 @@ function MyProfile() {
 
   // ? useDispatch
   const dispatch = useAppDispatch();
-
   // ? useEffect
   useEffect(() => {
     // On récupère les données du membre en fonction de l'id
     if (userId) {
       const userIdString = userId.toString(); // On convertit l'id en string
       dispatch(fetchOneMember(userIdString));
-      if (member.tags === null) {
-        setSelectedTags([]); // Si le membre n'a pas de tags, on stocke un tableau vide
-      }
     }
   }, [dispatch, isEditMode, userId]); // On rappelle le useEffect à chaque modification du state isEditMode et/ou userId
 
+  const [checked, setChecked] = useState(member?.availability); // Valeur du switch //! Positionné ici pour éviter l'erreur de composant non contrôlé.
+  console.log('member', member);
+  console.log('checked apres le useState', checked);
   useEffect(() => {
     // On récupère tous les tags
     dispatch(fetchAllTags());
@@ -176,7 +174,6 @@ function MyProfile() {
     const textareaName: keyof MemberI = textarea?.name as keyof MemberI; // On récupère le name du textarea
     const textareaValue: string | undefined = textarea?.value; // On récupère la value du textarea
     // email
-    const email = document.querySelector('#email') as HTMLInputElement;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex pour vérifier le format de l'email
     // password
     const passwordElement = document.querySelector(
@@ -209,6 +206,14 @@ function MyProfile() {
         );
         isFormValid = false;
       }
+    } else if (selectedTags.length === 0) {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez sélectionner au moins une techno',
+        })
+      );
+      isFormValid = false;
     }
 
     // ! Soumission du formulaire
@@ -292,7 +297,6 @@ function MyProfile() {
       handleSubmit(event);
     }
   };
-
   // ? Rendu JSX
   return (
     <>
@@ -378,8 +382,9 @@ function MyProfile() {
               />
               <div className="MyProfile--content--secondField--technos">
                 <h4 className="MyProfile--content--secondField--technos--title">
-                  Technos
+                  Mes technos
                 </h4>
+                <p>(1 techno minimum et 5 technos maximum)</p>
                 <div className="MyProfile--content--secondField--technos--technos">
                   {/** //! Rendu conditionnel des tags
                    * @param {boolean} isEditMode - Si on est en mode édition ou lecture

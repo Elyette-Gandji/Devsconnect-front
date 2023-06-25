@@ -33,7 +33,7 @@ function Input({ name, placeholder, ...props }: InputProps) {
         htmlFor={inputId} // On lie le label à l'input avec l'id généré (htmlFor = for en JS)
         className="field-label"
       >
-        {name}
+        {placeholder}
       </label>
       <input
         className="Form--input"
