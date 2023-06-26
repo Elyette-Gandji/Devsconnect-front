@@ -7,8 +7,10 @@ import './style.scss';
 import { useAppSelector, useAppDispatch } from '../../../../hook/redux';
 
 import { fetchOneProject } from '../../../../store/reducer/projects';
-import ErrorPage from '../../../../routes/ErrorPage';
 import { fetchAllTags } from '../../../../store/reducer/tag';
+import { addParticipantToProject } from '../../../../store/reducer/participants';
+
+import ErrorPage from '../../../../routes/ErrorPage';
 
 function ProjectDetail() {
   const { id } = useParams();
@@ -19,8 +21,12 @@ function ProjectDetail() {
   const isUserLoggedIn = useAppSelector((state) => state.user.login.logged);
   const userId = useAppSelector((state) => state.user.login.id);
 
+  console.log(projectData);
+
   useEffect(() => {
-    if (id) dispatch(fetchOneProject(Number(id)));
+    if (id) {
+      dispatch(fetchOneProject(Number(id)));
+    }
     dispatch(fetchAllTags());
   }, [dispatch, id]);
 
@@ -50,6 +56,8 @@ function ProjectDetail() {
     if (!isProjectAvailable) {
       return;
     }
+
+    dispatch(addParticipantToProject({ userId, projectId: id }));
   };
 
   return (
