@@ -9,6 +9,8 @@ const axiosInstance = axios.create({
   },
 });
 
+// On définit et exporte une variable pour gérer les erreurs
+// Elle sera utilisée dans les actions asynchrones"
 export let axError = null;
 
 // Intercepteur pour la gestion des erreurs

@@ -39,6 +39,7 @@ export const initialState: UserState = {
 
 const userReducer = createReducer(initialState, (builder) => {
   builder
+
     //* Cas de la connexion réussie
     .addCase(loginUser.fulfilled, (state, action) => {
       const { logged, pseudo, userId } = action.payload.data; // On récupère les données de l'api, qu'on distribue dans le state
