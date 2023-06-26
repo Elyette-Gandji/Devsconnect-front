@@ -1,4 +1,8 @@
+/* eslint-disable prefer-promise-reject-errors */
 import axios from 'axios';
+
+// ? Fonctions externes
+import logout from '../store/actions/logout';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000',
@@ -7,40 +11,40 @@ const axiosInstance = axios.create({
   },
 });
 
-// Intercepteur pour la gestion des erreurs
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response) {
-      // La requête a reçu une réponse avec un code d'erreur (4xx, 5xx)
-      console.log('error response', error.response);
-      const { status, data } = error.response;
-      let errorMessage = 'Une erreur est survenue';
+// // Intercepteur pour la gestion des erreurs
+// axiosInstance.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response) {
+//       // La requête a reçu une réponse avec un code d'erreur (4xx, 5xx)
+//       console.log('error response', error.response);
+//       const { status, data } = error.response;
+//       let errorMessage = 'Une erreur est survenue';
 
-      if (status === 404) {
-        errorMessage = 'La ressource demandée est introuvable';
-      } else if (status === 500) {
-        errorMessage = 'Erreur interne du serveur';
-      }
+//       if (status === 404) {
+//         errorMessage = 'La ressource demandée est introuvable';
+//       } else if (status === 500) {
+//         errorMessage = 'Erreur interne du serveur';
+//       }
 
-      return Promise.reject({ message: errorMessage, data });
-    }
-    if (error.request) {
-      console.log('error request', error.request);
-      // La requête n'a pas reçu de réponse (pas de connexion réseau, par exemple)
-      return Promise.reject({
-        message: 'No response received',
-        request: error.request,
-      });
-    }
-    // Une erreur s'est produite lors de la configuration de la requête
-    console.log('error unknown', error.message);
-    return Promise.reject({
-      message: 'Error setting up the request',
-      config: error.config,
-    });
-  }
-);
+//       return Promise.reject({ message: errorMessage, data });
+//     }
+//     if (error.request) {
+//       console.log('error request', error.request);
+//       // La requête n'a pas reçu de réponse (pas de connexion réseau, par exemple)
+//       return Promise.reject({
+//         message: 'No response received',
+//         request: error.request,
+//       });
+//     }
+//     // Une erreur s'est produite lors de la configuration de la requête
+//     console.log('error unknown', error.message);
+//     return Promise.reject({
+//       message: 'Error setting up the request',
+//       config: error.config,
+//     });
+//   }
+// );
 
 // ? Intercepteur pour gérer le rafraîchissement du jeton
 axiosInstance.interceptors.response.use(
@@ -53,8 +57,12 @@ axiosInstance.interceptors.response.use(
     console.log('response error', error);
     console.log('originalRequest', originalRequest);
 
+    if (error.response.status !== 401) {
+      return Promise.reject(originalRequest);
+    }
     // Vérifier si la réponse a un code d'état 401 et si l'URL n'est pas déjà '/refresh-token'
     if (
+      // Pass all non 401s back to the caller.
       error.response &&
       error.response.status === 401 &&
       !originalRequest.retry
@@ -65,6 +73,7 @@ axiosInstance.interceptors.response.use(
 
       try {
         // Récupérer le rafraîchissement du jeton du localStorage
+        const accessToken = localStorage.getItem('accessToken');
         const refreshToken = localStorage.getItem('refreshToken');
         console.log('refreshToken', refreshToken);
         if (!refreshToken) {
@@ -78,7 +87,7 @@ axiosInstance.interceptors.response.use(
         });
         console.log('data', data);
         // Mettre à jour le jeton d'accès dans les en-têtes
-        axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.data.accessToken}`;
+        axiosInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
         // Stockez le nouveau rafraîchissement du jeton dans le localStorage
         localStorage.setItem('refreshToken', data.data.refreshToken);
         console.log('Access token refreshed!');

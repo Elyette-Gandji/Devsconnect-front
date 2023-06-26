@@ -44,8 +44,8 @@ const axiosInstance = axios.create({
 
 // Add the interceptors to the axios instance
 axiosInstance.interceptors.request.use(
-  (config) => {
-    const accessToken = localStorage.getItem('accessToken');
+  async (config) => {
+    const accessToken = await localStorage.getItem('accessToken');
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -67,9 +67,9 @@ axiosInstance.interceptors.response.use(
     if (
       error.response &&
       error.response.status === 401 &&
-      !originalRequest._retry
+      !originalRequest.retry
     ) {
-      originalRequest._retry = true;
+      originalRequest.retry = true;
 
       return axiosInstance
         .post(`http://localhost:3000/refresh-token`, {
@@ -80,10 +80,10 @@ axiosInstance.interceptors.response.use(
           if (response.status === 200) {
             const newAccessToken = response.data.data.accessToken;
             const { refreshToken } = response.data.data;
+            localStorage.clear();
             localStorage.setItem('accessToken', newAccessToken);
             localStorage.setItem('refreshToken', refreshToken);
             console.log('Access token refreshed!');
-
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             return axiosInstance(originalRequest);
           }

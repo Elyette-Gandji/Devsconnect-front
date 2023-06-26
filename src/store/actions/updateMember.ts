@@ -19,6 +19,7 @@ const updateMember = createAsyncThunk(
       // ? On retourne le state
 
       console.log('localStorage', localStorage);
+      console.log('data', data);
       return data;
     } catch (error) {
       console.error('Error:', error);

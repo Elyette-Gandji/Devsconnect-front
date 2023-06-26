@@ -274,7 +274,6 @@ function Signin() {
       dispatch(toggleModalLogin()); // On ouvre la modale de connexion
     }
   };
-
   // ? Rendu JSX
   return (
     <div className="Signin">

@@ -105,8 +105,9 @@ const membersReducer = createReducer(initialState, (builder) => {
     });
   builder
     //* Cas de la connexion réussie de updateMember
-    .addCase(updateMember.fulfilled, (state) => {
+    .addCase(updateMember.fulfilled, (state, action) => {
       state.member.loading = false; // Définir l'état de chargement sur false
+      state.member.data = action.payload.data;
     })
     //* Cas de la connexion échouée de updateMember
     .addCase(updateMember.rejected, (state) => {

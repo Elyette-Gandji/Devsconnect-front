@@ -194,7 +194,8 @@ function MyProfile() {
         })
       );
       isFormValid = false;
-    } else if (password !== '') {
+    }
+    if (password !== '') {
       const validationResult = validatePassword(password); // On vérifie que le mot de passe est valide
       if (validationResult !== '') {
         dispatch(
@@ -205,7 +206,8 @@ function MyProfile() {
         );
         isFormValid = false;
       }
-    } else if (selectedTags.length === 0) {
+    }
+    if (selectedTags.length === 0) {
       dispatch(
         updateFlash({
           type: 'error',
