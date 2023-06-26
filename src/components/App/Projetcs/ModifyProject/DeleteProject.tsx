@@ -1,28 +1,18 @@
-// ? Librairie
-import { useRef, useEffect, FormEvent } from 'react';
-import { useAppSelector } from '../../../../hook/redux';
-// import FlashMessage from '../FlashMessage/FlashMessage';
+import { useRef, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteOneProject } from '../../../../store/reducer/projects';
 
-// Styles
 import './style.scss';
 
-// ? Fonction
 function DeleteProject({ isOpenDeleteModale, setIsOpenDeleteModale }) {
-  const flash = useAppSelector((state) => state.user.login.message);
-
-  //! Ref pour la modale
+  const flash = useSelector((state) => state.user.login.message);
   const modalRef = useRef(null);
+  const projectId = useSelector((state) => state.projects.project.data?.id);
+  const dispatch = useDispatch();
 
-  //! useEffect pour clic externe à la modale
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        //* On précise que modalRef.current éun element html (Element)
-        //* On précise que event.target représente un noeud du DOM (Node)
-        !(modalRef.current as Element).contains(event.target as Node)
-      ) {
-        // Clic en dehors de la modale
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
         setIsOpenDeleteModale(!isOpenDeleteModale);
       }
     };
@@ -32,30 +22,25 @@ function DeleteProject({ isOpenDeleteModale, setIsOpenDeleteModale }) {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [isOpenDeleteModale, setIsOpenDeleteModale]);
 
-  //! Fonction pour fermer la modale avec la croix ou le bouton annuler
   const handleDeleteModale = () => {
     setIsOpenDeleteModale(!isOpenDeleteModale);
   };
-  // * Une div n'est pas un element clickable
-  // * Fonction d’accessibilité pour le clavier.
-  // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
-  const handleDeleteModaleKeyDown = (
-    event: React.KeyboardEvent<HTMLDivElement>
-  ) => {
+
+  const handleDeleteModaleKeyDown = (event) => {
     if (event.key === 'enter' || event.key === ' ') {
       handleDeleteModale();
     }
   };
 
-  //! Fonction pour soumettre le formulaire
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     console.log('delete envoyé');
     setIsOpenDeleteModale(!isOpenDeleteModale);
-    // TODO : dispatch de la fonction de suppression du profil
+    dispatch(deleteOneProject(projectId));
   };
+
   return (
     <div className="DeleteModale">
       <div className="DeleteModale--container" ref={modalRef}>

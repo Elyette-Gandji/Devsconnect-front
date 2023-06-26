@@ -1,38 +1,36 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
-import { technos } from '../../../../utils/technosPath';
-import { putOneProject } from '../../../../store/reducer/projects';
-import { fetchOneMember } from '../../../../store/reducer/members';
+import { fetchAllTags } from '../../../../store/reducer/tag';
+import {
+  deleteOneProject,
+  fetchOneProject,
+  putOneProject,
+} from '../../../../store/reducer/projects';
 import DeleteProject from './DeleteProject';
 
 import './style.scss';
+import { useParams } from 'react-router';
 
-function ModifyProject({ projectId }) {
+function ModifyProject() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [selectedTechnos, setSelectedTechnos] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [availability, setAvailability] = useState(false);
   const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(false);
+
   const user_id = useAppSelector((state) => state.user.login.id);
+  const tags = useAppSelector((state) => state.tag.list.data);
+  const projectId = useAppSelector((state) => state.projects.project.data?.id);
 
   const dispatch = useAppDispatch();
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    dispatch(fetchOneMember());
-    fetchProjectDetails(projectId);
-  }, [dispatch, projectId]);
+  const { id } = useParams();
 
-  const fetchProjectDetails = async (projectId) => {
-    try {
-      const project = await fetchProject(projectId);
-      setTitle(project.title);
-      setDescription(project.description);
-      setAvailability(project.availability);
-    } catch (error) {
-      console.error('Failed to fetch project details:', error);
-    }
-  };
+  useEffect(() => {
+    dispatch(fetchAllTags());
+  }, [dispatch]);
 
   const handleSwitch = () => {
     setAvailability(!availability);
@@ -44,17 +42,36 @@ function ModifyProject({ projectId }) {
     const projectData = {
       title,
       description,
+      tag: selectedTechnos,
       availability,
       user_id: user_id,
     };
 
     console.log('Project Data:', projectData);
 
-    dispatch(putOneProject({ projectId, projectData }));
+    dispatch(putOneProject({ projectData, id }));
+    console.log(id);
+  };
+
+  const handleDeleteProjet = () => {
+    if (projectId) {
+      dispatch(deleteOneProject(projectId));
+    }
   };
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleTagSelect = (event) => {
+    const selectedTag = event.target.value;
+    setSelectedTechnos((prevSelectedTechnos) => {
+      if (prevSelectedTechnos.includes(selectedTag)) {
+        return prevSelectedTechnos.filter((tag) => tag !== selectedTag);
+      } else {
+        return [...prevSelectedTechnos, selectedTag];
+      }
+    });
   };
 
   useEffect(() => {
@@ -87,6 +104,30 @@ function ModifyProject({ projectId }) {
         />
 
         <h3 className="form-title">Choisissez les technologies</h3>
+        <div className="dropdown-container" ref={dropdownRef}>
+          <div className="dropdown-toggle" onClick={handleToggle}>
+            Technologies
+          </div>
+          {isOpen && (
+            <div className="dropdown-options">
+              <ul>
+                {tags.map((tag) => (
+                  <li key={tag.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        value={tag.name}
+                        checked={selectedTechnos.includes(tag.name)}
+                        onChange={handleTagSelect}
+                      />
+                      {tag.name}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
         <h3 className="form-title">Choisissez la description</h3>
 
         <textarea
@@ -108,22 +149,22 @@ function ModifyProject({ projectId }) {
           </label>
         </div>
 
-        <button type="submit" className="validate-button">
-          Valider
+        <button type="submit" className="validates-button">
+          Valider les modifications
         </button>
       </form>
       <button
-        type="button"
-        className="MyProfile--fourthField--button--delete"
+        className="deletes-button"
         onClick={handleDeleteModale}
+        type="button"
       >
-        Supprimer le projet
+        Supprimer mon projet
       </button>
-
       {isOpenDeleteModale && (
         <DeleteProject
           isOpenDeleteModale={isOpenDeleteModale}
           setIsOpenDeleteModale={setIsOpenDeleteModale}
+          projectId={projectId}
         />
       )}
     </div>
