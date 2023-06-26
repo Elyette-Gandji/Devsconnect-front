@@ -53,7 +53,7 @@ body {
 // Container
 .MuiAlert-root {
     z-index: 99999;
-    position: absolute;
+    position: fixed;
     left: 50%;
     transform: translateX(-50%);
     &.MuiAlert-standardError,
