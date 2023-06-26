@@ -17,10 +17,7 @@ const updateMember = createAsyncThunk(
     try {
       const { data } = await axiosInstance.put(`/api/users/${id}`, formData);
       // ? On retourne le state
-      console.log(
-        'authorizes',
-        axiosInstance.defaults.headers.common.Authorization
-      );
+
       console.log('localStorage', localStorage);
       return data;
     } catch (error) {

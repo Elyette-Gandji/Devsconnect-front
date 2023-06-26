@@ -54,8 +54,7 @@ function MyProfile() {
   }, [dispatch, isEditMode, userId]); // On rappelle le useEffect à chaque modification du state isEditMode et/ou userId
 
   const [checked, setChecked] = useState(member?.availability); // Valeur du switch //! Positionné ici pour éviter l'erreur de composant non contrôlé.
-  console.log('member', member);
-  console.log('checked apres le useState', checked);
+
   useEffect(() => {
     // On récupère tous les tags
     dispatch(fetchAllTags());

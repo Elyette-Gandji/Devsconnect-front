@@ -8,39 +8,39 @@ const axiosInstance = axios.create({
 });
 
 // Intercepteur pour la gestion des erreurs
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response) {
-      // La requête a reçu une réponse avec un code d'erreur (4xx, 5xx)
-      console.log('error response', error.response);
-      const { status, data } = error.response;
-      let errorMessage = 'Une erreur est survenue';
+// axiosInstance.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response) {
+//       // La requête a reçu une réponse avec un code d'erreur (4xx, 5xx)
+//       console.log('error response', error.response);
+//       const { status, data } = error.response;
+//       let errorMessage = 'Une erreur est survenue';
 
-      if (status === 404) {
-        errorMessage = 'La ressource demandée est introuvable';
-      } else if (status === 500) {
-        errorMessage = 'Erreur interne du serveur';
-      }
+//       if (status === 404) {
+//         errorMessage = 'La ressource demandée est introuvable';
+//       } else if (status === 500) {
+//         errorMessage = 'Erreur interne du serveur';
+//       }
 
-      return Promise.reject({ message: errorMessage, data });
-    }
-    if (error.request) {
-      console.log('error request', error.request);
-      // La requête n'a pas reçu de réponse (pas de connexion réseau, par exemple)
-      return Promise.reject({
-        message: 'No response received',
-        request: error.request,
-      });
-    }
-    // Une erreur s'est produite lors de la configuration de la requête
-    console.log('error unknown', error.message);
-    return Promise.reject({
-      message: 'Error setting up the request',
-      config: error.config,
-    });
-  }
-);
+//       return Promise.reject({ message: errorMessage, data });
+//     }
+//     if (error.request) {
+//       console.log('error request', error.request);
+//       // La requête n'a pas reçu de réponse (pas de connexion réseau, par exemple)
+//       return Promise.reject({
+//         message: 'No response received',
+//         request: error.request,
+//       });
+//     }
+//     // Une erreur s'est produite lors de la configuration de la requête
+//     console.log('error unknown', error.message);
+//     return Promise.reject({
+//       message: 'Error setting up the request',
+//       config: error.config,
+//     });
+//   }
+// );
 
 // Add the interceptors to the axios instance
 axiosInstance.interceptors.request.use(
