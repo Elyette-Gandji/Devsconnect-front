@@ -8,7 +8,10 @@ import { useAppSelector, useAppDispatch } from '../../../../hook/redux';
 
 import { fetchOneProject } from '../../../../store/reducer/projects';
 import { fetchAllTags } from '../../../../store/reducer/tag';
-import { addParticipantToProject } from '../../../../store/reducer/participants';
+import {
+  addParticipantToProject,
+  deleteParticipantFromProject,
+} from '../../../../store/reducer/participants';
 
 import ErrorPage from '../../../../routes/ErrorPage';
 
@@ -60,6 +63,12 @@ function ProjectDetail() {
     dispatch(addParticipantToProject({ userId, projectId: id }));
   };
 
+  const handleDeleteParticipant = (participantId) => {
+    dispatch(
+      deleteParticipantFromProject({ userId: participantId, projectId: id })
+    );
+  };
+
   return (
     <div className="card">
       <button className="return-btn" type="button" onClick={handleReturn}>
@@ -88,6 +97,16 @@ function ProjectDetail() {
                 {otherUsers.map((user) => (
                   <li className="other-user-list" key={user.user_id}>
                     {user.pseudo}
+                    {userId === projectData.user_id &&
+                      user.user_id !== userId && (
+                        <button
+                          className="delete-participant-btn"
+                          type="button"
+                          onClick={() => handleDeleteParticipant(user.user_id)}
+                        >
+                          Supprimer
+                        </button>
+                      )}
                   </li>
                 ))}
               </ul>
