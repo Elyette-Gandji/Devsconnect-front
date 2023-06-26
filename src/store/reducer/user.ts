@@ -39,6 +39,7 @@ export const initialState: UserState = {
 
 const userReducer = createReducer(initialState, (builder) => {
   builder
+
     //* Cas de la connexion réussie
     .addCase(loginUser.fulfilled, (state, action) => {
 
@@ -69,6 +70,9 @@ const userReducer = createReducer(initialState, (builder) => {
 
       //! à la déconnexion, on supprime le token
       delete axiosInstance.defaults.headers.common.Authorization;
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      console.log('local', localStorage);
     });
 });
 

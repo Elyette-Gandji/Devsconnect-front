@@ -1,3 +1,9 @@
+// ? Librairies
+import { useEffect } from 'react';
+
+// ? Instance Axios
+import axiosInstance from '../../utils/axios';
+
 // ? Style
 import './style.scss';
 
@@ -11,8 +17,7 @@ interface NotFoundI {
 function NotFound({ errorMessage, errorStatus }: NotFoundI) {
   return (
     <div className="not-found">
-      <h1>{errorStatus}</h1>
-      <p>Désolé, une erreur inattendue est survenue.</p>
+      <h1>Error {errorStatus}</h1>
       <p>{errorMessage}</p>
     </div>
   );

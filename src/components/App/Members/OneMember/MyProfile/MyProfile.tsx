@@ -3,13 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hook/redux';
 
 // ? Fonctions externes
-import { resetMessage } from '../../../../../store/reducer/main';
+import { resetMessage, updateFlash } from '../../../../../store/reducer/main';
 import validatePassword from '../../../../../utils/validatePassword';
 import { fetchAllTags } from '../../../../../store/reducer/tag';
-import {
-  fetchOneMember,
-  updateMember,
-} from '../../../../../store/reducer/members';
+import { fetchOneMember } from '../../../../../store/reducer/members';
+import updateMember from '../../../../../store/actions/updateMember';
+import { toggleEditMode } from '../../../../../store/reducer/log';
 
 // ? Composants
 import CustomSwitch from '../../../../../utils/customSwitchUI';
@@ -32,14 +31,15 @@ function MyProfile() {
   ); // On récupère les données du membre
   const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
   const allTags: TagI[] = useAppSelector((state) => state.tag.list.data); // On récupère les tags
-  const flash = useAppSelector((state) => state.main.flash); // On récupère le message de la requête
+  const isEditMode = useAppSelector((state) => state.log.isEditMode); // On récupère le state isEditMode
 
   // Local
-  const [checked, setChecked] = useState(member?.availability); // Valeur du switch
+  const [checked, setChecked] = useState(false); // Valeur du switch
+  const [emailValue, setEmailValue] = useState(''); // On récupère l'email du membre qu'on stocke (pour la gestion de l'update)
   const [selectedTags, setSelectedTags] = useState<TagI[] | undefined>(
     member?.tags
   ); // On récupère les tags du membre qu'on stocke (pour la gestion de l'update)
-  const [isEditMode, setIsEditMode] = useState(false); // State pour le mode édition
+  // const [isEditMode, setIsEditMode] = useState(false); // State pour le mode édition
   const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(false); // State pour la modale de suppression
 
   // ? useRef
@@ -47,13 +47,13 @@ function MyProfile() {
 
   // ? useDispatch
   const dispatch = useAppDispatch();
-
   // ? useEffect
   useEffect(() => {
     // On récupère les données du membre en fonction de l'id
     if (userId) {
       const userIdString = userId.toString(); // On convertit l'id en string
       dispatch(fetchOneMember(userIdString));
+      setChecked(member?.availability); // On stocke la valeur de l'availability du membre dans le state checked
     }
   }, [dispatch, isEditMode, userId]); // On rappelle le useEffect à chaque modification du state isEditMode et/ou userId
 
@@ -77,7 +77,7 @@ function MyProfile() {
    * Au clic, on inverse la valeur du state isEditMode
    */
   const handleCancelClick = () => {
-    setIsEditMode(!isEditMode);
+    dispatch(toggleEditMode());
   };
 
   /** //* Fonction pour le bouton delete
@@ -160,103 +160,128 @@ function MyProfile() {
    */
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // ! Déclaration des variables
     const formData = new FormData(); // On crée un objet formData pour stocker les données du formulaire
     const objData = Object.fromEntries(formData.entries()); // On stocke les données du formulaire dans un objet
 
-    // ? Gestion des inputs
+    // inputs
     const inputs = formRef.current
       ? formRef.current.querySelectorAll('.MyProfile--input') // On cible tous les inputs du formulaire
       : null;
-    inputs?.forEach((input) => {
-      // Pour chaque input
-      const { name, value } = input as HTMLInputElement; // On récupère le name et la value en destructuring
-      // Vérifiez si `name` est une clé valide de `MemberI`
-      if (member && name in member) {
-        const memberValue = member[name as keyof MemberI]; // Obtenez la valeur actuelle de `name` dans `objData`
-
-        // Si la valeur est différente d'une string vide et de la valeur initiale, on l'ajoute à formData et à objData
-        if (value !== '' && value !== memberValue) {
-          formData.append(name, value);
-          objData[name] = value;
-        }
-      }
-    });
-
-    // ? Gestion du password
-    const passwordElement = document.querySelector(
-      '#password'
-    ) as HTMLInputElement;
-    const password = passwordElement.value;
-    const errorMessage = validatePassword(password);
-
-    // if (errorMessage) {
-    //   console.log('erreur');
-    //   dispatch(resetMessage()); // On reset le message flash
-    //   dispatch(
-    //     flashMessage({ type: 'error', children: errorMessage, duration: 5000 })
-    //   );
-    //   // Afficher le message d'erreur ou effectuer d'autres actions nécessaires
-    // } else if (password !== '') {
-    //   // Le mot de passe est valide, ajouter le champ au formData et à objData
-    //   dispatch(resetMessage()); // On reset le message flash
-    //   dispatch(
-    //     flashMessage({
-    //       type: 'success',
-    //       children: 'Votre mot de passe a bien été modifié',
-    //       duration: 5000,
-    //     })
-    //   );
-
-    formData.append('password', password);
-    objData.password = password;
-    // }
-
-    // ? Gestion du textarea
+    // textarea
     const textarea = formRef.current
       ? formRef.current.querySelector('textarea') // On cible le textarea du formulaire
       : null;
     const textareaName: keyof MemberI = textarea?.name as keyof MemberI; // On récupère le name du textarea
     const textareaValue: string | undefined = textarea?.value; // On récupère la value du textarea
+    // email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex pour vérifier le format de l'email
+    // password
+    const passwordElement = document.querySelector(
+      '#password'
+    ) as HTMLInputElement;
+    const password = passwordElement.value;
 
-    if (
-      textareaValue !== undefined && // On vérifie que textareaValue existe
-      textareaValue !== '' && // On vérifie que textareaValue n'est pas une string vide
-      textareaName && // On vérifie que textareaName existe
-      member && // On vérifie que member existe
-      textareaValue !== member[textareaName] // On vérifie que textareaValue est différent de la valeur initiale
-    ) {
-      formData.append(textareaName, textareaValue); // Alors, on ajoute textareaValue à formData
-      objData[textareaName] = textareaValue; // On ajoute textareaValue à objData
+    // erreurs du formulaire
+    let isFormValid = true; // Variable pour suivre l'état des conditions
+
+    // ! Gestion des erreurs
+
+    dispatch(resetMessage()); // On reset le message flash
+    if (emailValue !== '' && !emailRegex.test(emailValue)) {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez renseigner un email valide',
+        })
+      );
+      isFormValid = false;
+    }
+    if (password !== '') {
+      const validationResult = validatePassword(password); // On vérifie que le mot de passe est valide
+      if (validationResult !== '') {
+        dispatch(
+          updateFlash({
+            type: 'error',
+            children: validationResult,
+          })
+        );
+        isFormValid = false;
+      }
+    }
+    if (selectedTags.length === 0) {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez sélectionner au moins une techno',
+        })
+      );
+      isFormValid = false;
     }
 
-    // ? Gestion du switch openToWork
-    if (
-      checked !== undefined && // On vérifie que checked existe
-      checked !== member?.availability
-    ) {
-      // Si la valeur du state est différente de la valeur du membre, on l'ajoute à formData
-      formData.append('availability', checked.toString());
+    // ! Soumission du formulaire
+    if (isFormValid) {
+      // ? Gestion des inputs
+      inputs?.forEach((input) => {
+        // Pour chaque input
+        const { name, value } = input as HTMLInputElement; // On récupère le name et la value en destructuring
+        // Vérifiez si `name` est une clé valide de `MemberI`
+        if (member && name in member) {
+          const memberValue = member[name as keyof MemberI]; // Obtenez la valeur actuelle de `name` dans `objData`
+
+          // Si la valeur est différente d'une string vide et de la valeur initiale, on l'ajoute à formData et à objData
+          if (value !== '' && value !== memberValue) {
+            formData.append(name, value);
+            objData[name] = value;
+          }
+        }
+      });
+
+      // ? Gestion du textarea
+      if (
+        textareaValue !== undefined && // On vérifie que textareaValue existe
+        textareaValue !== '' && // On vérifie que textareaValue n'est pas une string vide
+        textareaName && // On vérifie que textareaName existe
+        member && // On vérifie que member existe
+        textareaValue !== member[textareaName] // On vérifie que textareaValue est différent de la valeur initiale
+      ) {
+        formData.append(textareaName, textareaValue); // Alors, on ajoute textareaValue à formData
+        objData[textareaName] = textareaValue; // On ajoute textareaValue à objData
+      }
+
+      // ? Gestion du password
+      formData.append('password', password);
+      objData.password = password;
+
+      // ? Gestion du switch openToWork
+      if (
+        checked !== undefined && // On vérifie que checked existe
+        checked !== member?.availability
+      ) {
+        // Si la valeur du state est différente de la valeur du membre, on l'ajoute à formData
+        formData.append('availability', checked.toString());
+      }
+
+      // ? Gestion des tags
+      if (selectedTags && selectedTags.length > 0) {
+        // On vérifie que selectedTags existe et qu'il contient au moins un tag
+        const selectedTagsData = selectedTags.map((tag) => tag.id); // On crée un tableau avec les id des tags sélectionnés
+        // const tagsJSON = JSON.stringify(selectedTagsData); // On convertie le tableau en chaîne JSON
+
+        formData.append('tags', selectedTagsData); // On ajoute le tableau selectedTagsData à formData
+        objData.tags = selectedTagsData; // On ajoute le tableau selectedTagsData à objData
+      }
+
+      dispatch(
+        // On dispatch l'action updateMember avec l'id du membre et les données du formulaire
+        updateMember({
+          id: userId,
+          formData: { availability: checked, ...objData }, // Dans formData, on ajoute la valeur de checked et on ajoute les données du formulaire (objData)
+        })
+      );
+    } else {
+      dispatch(toggleEditMode(true));
     }
-
-    // ? Gestion des tags
-    if (selectedTags && selectedTags.length > 0) {
-      // On vérifie que selectedTags existe et qu'il contient au moins un tag
-      const selectedTagsData = selectedTags.map((tag) => tag.id); // On crée un tableau avec les id des tags sélectionnés
-      // const tagsJSON = JSON.stringify(selectedTagsData); // On convertie le tableau en chaîne JSON
-
-      formData.append('tags', selectedTagsData); // On ajoute le tableau selectedTagsData à formData
-      objData.tags = selectedTagsData; // On ajoute le tableau selectedTagsData à objData
-    }
-
-    // ? Soumission du formulaire
-
-    dispatch(
-      // On dispatch l'action updateMember avec l'id du membre et les données du formulaire
-      updateMember({
-        id: userId,
-        formData: { availability: checked, ...objData }, // Dans formData, on ajoute la valeur de checked et on ajoute les données du formulaire (objData)
-      })
-    );
   };
 
   /** //* Fonction pour le bouton d'édition
@@ -269,13 +294,12 @@ function MyProfile() {
   const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    setIsEditMode(!isEditMode);
+    dispatch(toggleEditMode());
 
     if (isEditMode) {
       handleSubmit(event);
     }
   };
-
   // ? Rendu JSX
   return (
     <>
@@ -315,8 +339,11 @@ function MyProfile() {
               />
               <Input
                 name="email"
+                id="email"
                 type="email"
                 placeholder={member?.email || ''}
+                value={emailValue}
+                onChange={(e) => setEmailValue(e.target.value)}
                 disabled={!isEditMode}
                 className="MyProfile--input"
               />
@@ -358,8 +385,9 @@ function MyProfile() {
               />
               <div className="MyProfile--content--secondField--technos">
                 <h4 className="MyProfile--content--secondField--technos--title">
-                  Technos
+                  Mes technos
                 </h4>
+                <p>(1 techno minimum et 5 technos maximum)</p>
                 <div className="MyProfile--content--secondField--technos--technos">
                   {/** //! Rendu conditionnel des tags
                    * @param {boolean} isEditMode - Si on est en mode édition ou lecture

@@ -8,10 +8,10 @@ import { fetchOneMember } from '../../../../store/reducer/members';
 
 // ? Composants
 import ProjectCard from './ProjectCard';
-import ErrorPage from '../../../../routes/ErrorPage';
 
 // ? Styles
 import './style.scss';
+import NotFound from '../../../NotFound/NotFound';
 
 // ? Fonction principale
 function OneMember() {
@@ -39,9 +39,14 @@ function OneMember() {
     return <p>Loading...</p>;
   }
 
-  // Si le membre n'existe pas, on affiche une erreur 404 au composant NotFound
+  // Si la réponse ne vient pas, on affiche une erreur serveur
   if (!member) {
-    return <ErrorPage />;
+    return (
+      <NotFound
+        errorMessage="Désolé, ce membre est momentanément indisponible"
+        errorStatus=""
+      />
+    );
   }
 
   // ? Rendu JSX

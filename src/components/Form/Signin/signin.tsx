@@ -33,6 +33,7 @@ function Signin() {
   // Local
   const [selectedTags, setSelectedTags] = useState<TagSelectedI[]>([]); // Tableau des tags sélectionnés par l'utilisateur
   const [checked, setChecked] = useState(true); // State pour le check de open to work
+  const [cgu, setCgu] = useState(false); // State pour la case à cocher CGU
 
   // ? useRef
   const modalRef = useRef(null); // Référence pour la modale
@@ -101,6 +102,14 @@ function Signin() {
    */
   const handleSwitch = () => {
     setChecked(!checked);
+  };
+
+  /** //* Fonction pour la case à cocher CGU
+   * @param {setCgu} setCgu - State pour la case à cocher CGU
+   * Au clic, on inverse la valeur du state
+   */
+  const handleCguChange = (event) => {
+    setCgu(event.target.checked);
   };
 
   /** //* Fonction pour la selection des technos (au clic sur une techno)
@@ -173,51 +182,71 @@ function Signin() {
     const firstname = formData.get('firstname');
     const name = formData.get('name');
     const pseudo = formData.get('pseudo');
-    const email = formData.get('email');
+    const email = formData.get('email').toString();
     const password = formData.get('password');
-    const cgu = formData.get('cgu');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex pour vérifier le format de l'email
+
+    let isFormValid = true; // Variable pour suivre l'état des conditions
 
     dispatch(resetMessage()); // On reset le message flash
-    if (firstname === '') {
+    console.log('test', selectedTags);
+    if (cgu === false) {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: "Veuillez accepter les conditions générales d'utilisation",
+        })
+      );
+      isFormValid = false;
+    } else if (selectedTags.length === 0) {
+      console.log(selectedTags);
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez sélectionner au moins une techno',
+        })
+      );
+      isFormValid = false;
+    } else if (firstname === '') {
       dispatch(
         updateFlash({
           type: 'error',
           children: 'Veuillez renseigner votre prénom',
-          duration: 4000,
         })
       );
+      isFormValid = false;
     } else if (name === '') {
       dispatch(
         updateFlash({
           type: 'error',
           children: 'Veuillez renseigner votre nom',
-          duration: 4000,
         })
       );
+      isFormValid = false;
     } else if (pseudo === '') {
       dispatch(
         updateFlash({
           type: 'error',
           children: 'Veuillez renseigner un pseudo',
-          duration: 4000,
         })
       );
-    } else if (email === '' || !email?.includes('@')) {
+      isFormValid = false;
+    } else if (email === '' || !emailRegex.test(email)) {
       dispatch(
         updateFlash({
           type: 'error',
           children: 'Veuillez renseigner un email valide',
-          duration: 4000,
         })
       );
+      isFormValid = false;
     } else if (password === '') {
       dispatch(
         updateFlash({
           type: 'error',
           children: 'Veuillez renseigner un mot de passe',
-          duration: 4000,
         })
       );
+      isFormValid = false;
     } else if (password !== '') {
       const validationResult = validatePassword(password); // On vérifie que le mot de passe est valide
       if (validationResult !== '') {
@@ -225,25 +254,26 @@ function Signin() {
           updateFlash({
             type: 'error',
             children: validationResult,
-            duration: 4000,
           })
         );
+        isFormValid = false;
       }
     }
 
-    // Créer un tableau pour les données de selectedTags
-    const selectedTagsData = selectedTags.map((tag) => tag.id);
-    // Convertir le tableau en chaîne JSON
-    const tagsJSON = JSON.stringify(selectedTagsData);
-    // Ajouter le tableau selectedTagsData à formData
-    formData.delete('cgu');
-    formData.append('tags', tagsJSON);
-    formData.append('availability', String(checked));
-    dispatch(signinUser(formData)); // On envoie les données du formulaire à l'API
-    dispatch(toggleModalSignin()); // On ferme la modale
-    // dispatch(toggleModalLogin()); // On ouvre la modale de connexion
+    if (isFormValid) {
+      // Créer un tableau pour les données de selectedTags
+      const selectedTagsData = selectedTags.map((tag) => tag.id);
+      // Convertir le tableau en chaîne JSON
+      const tagsJSON = JSON.stringify(selectedTagsData);
+      // Ajouter le tableau selectedTagsData à formData
+      formData.delete('cgu');
+      formData.append('tags', tagsJSON);
+      formData.append('availability', String(checked));
+      dispatch(signinUser(formData)); // On envoie les données du formulaire à l'API
+      dispatch(toggleModalSignin()); // On ferme la modale
+      dispatch(toggleModalLogin()); // On ouvre la modale de connexion
+    }
   };
-
   // ? Rendu JSX
   return (
     <div className="Signin">
@@ -272,7 +302,7 @@ function Signin() {
             <Input name="firstname" type="text" placeholder="Prénom" />
             <Input name="name" type="text" placeholder="Nom" />
             <Input name="pseudo" type="text" placeholder="Pseudo" />
-            <Input name="email" type="email" placeholder="Adresse Email" />
+            <Input name="email" type="text" placeholder="Adresse Email" />
             <Input name="password" type="password" placeholder="Mot de passe" />
 
             <div className="Signin--openToWork">
@@ -292,7 +322,7 @@ function Signin() {
           <fieldset className="Signin--field">
             <div className="Signin--technos">
               <h3>Mes technos</h3>
-              <p>(5 choix maximum)</p>
+              <p>(Choisissez entre 1 et 5 technos)</p>
               <div className="Signin--techno">
                 {/* //? On map sur le tableau des technos récupérées depuis l'API */}
                 {allTagsFromApi.map((techno: TagSelectedI) => (
@@ -335,10 +365,10 @@ function Signin() {
                 J&apos;accepte les CGU
                 <input
                   type="checkbox"
-                  required
+                  onChange={handleCguChange}
+                  checked={cgu}
                   id="cgu"
                   name="cgu"
-                  value="cgu"
                   className="Signin--inputCheckbox--cgu"
                 />
               </label>
