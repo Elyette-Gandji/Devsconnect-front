@@ -8,6 +8,7 @@ import validatePassword from '../../../../../utils/validatePassword';
 import { fetchAllTags } from '../../../../../store/reducer/tag';
 import { fetchOneMember } from '../../../../../store/reducer/members';
 import updateMember from '../../../../../store/actions/updateMember';
+import { toggleEditMode } from '../../../../../store/reducer/log';
 
 // ? Composants
 import CustomSwitch from '../../../../../utils/customSwitchUI';
@@ -30,13 +31,15 @@ function MyProfile() {
   ); // On récupère les données du membre
   const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
   const allTags: TagI[] = useAppSelector((state) => state.tag.list.data); // On récupère les tags
+  const isEditMode = useAppSelector((state) => state.log.isEditMode); // On récupère le state isEditMode
 
   // Local
+  const [checked, setChecked] = useState(false); // Valeur du switch
   const [emailValue, setEmailValue] = useState(''); // On récupère l'email du membre qu'on stocke (pour la gestion de l'update)
   const [selectedTags, setSelectedTags] = useState<TagI[] | undefined>(
     member?.tags
   ); // On récupère les tags du membre qu'on stocke (pour la gestion de l'update)
-  const [isEditMode, setIsEditMode] = useState(false); // State pour le mode édition
+  // const [isEditMode, setIsEditMode] = useState(false); // State pour le mode édition
   const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(false); // State pour la modale de suppression
 
   // ? useRef
@@ -50,10 +53,9 @@ function MyProfile() {
     if (userId) {
       const userIdString = userId.toString(); // On convertit l'id en string
       dispatch(fetchOneMember(userIdString));
+      setChecked(member?.availability); // On stocke la valeur de l'availability du membre dans le state checked
     }
   }, [dispatch, isEditMode, userId]); // On rappelle le useEffect à chaque modification du state isEditMode et/ou userId
-
-  const [checked, setChecked] = useState(member?.availability); // Valeur du switch //! Positionné ici pour éviter l'erreur de composant non contrôlé.
 
   useEffect(() => {
     // On récupère tous les tags
@@ -75,7 +77,7 @@ function MyProfile() {
    * Au clic, on inverse la valeur du state isEditMode
    */
   const handleCancelClick = () => {
-    setIsEditMode(!isEditMode);
+    dispatch(toggleEditMode());
   };
 
   /** //* Fonction pour le bouton delete
@@ -278,7 +280,7 @@ function MyProfile() {
         })
       );
     } else {
-      setIsEditMode(true);
+      dispatch(toggleEditMode(true));
     }
   };
 
@@ -292,7 +294,7 @@ function MyProfile() {
   const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    setIsEditMode(!isEditMode);
+    dispatch(toggleEditMode());
 
     if (isEditMode) {
       handleSubmit(event);

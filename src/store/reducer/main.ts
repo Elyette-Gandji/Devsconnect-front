@@ -8,6 +8,9 @@ import logout from '../actions/logout';
 import updateMember from '../actions/updateMember';
 import deleteMember from '../actions/deleteMember';
 
+// ? instance axios
+import { axError } from '../../utils/axios';
+
 // ? Typage global
 import { FlashI } from '../../@types/interface';
 
@@ -86,16 +89,24 @@ const mainReducer = createReducer(initialState, (builder) => {
     });
 
   //* Cas de l'inscription échouée
-  // .addCase(signinUser.rejected, (state, action) => {
-  //   state.flash = {
-  //     type: 'error',
-  // children: action.error.message || 'llUNKNOWN_ERROR',
-  //     duration: 5000,
-  //   };
-  // });
+  builder.addCase(signinUser.rejected, (state) => {
+    console.log('axError', axError.response.data.message);
+    if (axError.response.data.message.includes('Email')) {
+      state.flash = {
+        type: 'error',
+        children: 'Cette adresse email est déjà utilisée',
+      };
+    }
+    if (axError.response.data.message.includes('Pseudo')) {
+      state.flash = {
+        type: 'error',
+        children: 'Ce pseudo est déjà utilisé',
+      };
+    }
+  });
 
   //* Cas de la mise à jour du membre réussie
-  builder.addCase(updateMember.fulfilled, (state, action) => {
+  builder.addCase(updateMember.fulfilled, (state) => {
     state.flash = {
       type: 'success',
       children: 'Les changements ont bien été pris en compte !',
@@ -103,12 +114,20 @@ const mainReducer = createReducer(initialState, (builder) => {
   });
 
   //* Cas de la mise à jour du membre échouée
-  // builder.addCase(updateMember.rejected, (state, action) => {
-  //   state.flash = {
-  //     type: 'error',
-  //     children: 'Une erreur est survenue, veuillez réessayer plus tard !'
-  //   };
-  // });
+  builder.addCase(updateMember.rejected, (state) => {
+    if (axError.response.data.message.includes('email')) {
+      state.flash = {
+        type: 'error',
+        children: 'Cette adresse email est déjà utilisée',
+      };
+    }
+    if (axError.response.data.message.includes('pseudo')) {
+      state.flash = {
+        type: 'error',
+        children: 'Ce pseudo est déjà utilisé',
+      };
+    }
+  });
 
   //* Cas de la suppression du membre réussie
   builder.addCase(deleteMember.fulfilled, (state) => {

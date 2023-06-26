@@ -54,8 +54,6 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    console.log('response error', error);
-    console.log('originalRequest', originalRequest);
 
     if (error.response.status !== 401) {
       return Promise.reject(originalRequest);
