@@ -1,3 +1,6 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m; // @include pour utiliser
+
 .card {
     flex-grow: 1;
 }
@@ -47,7 +50,7 @@
     width: 100px;
     border-radius: 6px;
     border: none;
-    background-color: #7c7b79;
+    background-color: v.$color-return;
     color: white;
     padding: 0.5rem;
 }

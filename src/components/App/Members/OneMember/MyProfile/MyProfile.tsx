@@ -1,155 +1,282 @@
-// Librairies
+// ? Librairies
 import { useState, useEffect, useRef } from 'react';
-// import Carousel from 'react-multi-carousel';
 import { useAppDispatch, useAppSelector } from '../../../../../hook/redux';
 
-// Composants
-import CustomSwitch from '../../../../../utils/customSwitchUI';
-import ProjectCard from '../ProjectCard';
-import Input from '../../../../Form/Input';
-import DeleteModale from './DeleteModale/DeleteModale';
-// import 'react-multi-carousel/lib/styles.css';
-
-// Fonctions asynchrones
+// ? Fonctions externes
+import { resetMessage } from '../../../../../store/reducer/main';
+import validatePassword from '../../../../../utils/validatePassword';
+import { fetchAllTags } from '../../../../../store/reducer/tag';
 import {
   fetchOneMember,
   updateMember,
 } from '../../../../../store/reducer/members';
-import { fetchAllTags } from '../../../../../store/reducer/tag';
 
-// Styles
+// ? Composants
+import CustomSwitch from '../../../../../utils/customSwitchUI';
+import ProjectCard from '../ProjectCard';
+import Input from '../../../../Form/Input';
+import DeleteModale from './DeleteModale/DeleteModale';
+
+// ? Styles
 import './style.scss';
-// import { Key, ReactElement, JSXElementConstructor, ReactNode } from 'react';
 
+// ? Typage global
+import { TagI, MemberI } from '../../../../../@types/interface';
+
+// ? Fonction principale
 function MyProfile() {
-  // State pour le check de open to work
-  const [checked, setChecked] = useState(false); // Valeur du switch
-
+  // ? State
+  // Store
+  const member: MemberI | null = useAppSelector(
+    (state) => state.members.member.data
+  ); // On récupère les données du membre
   const userId = useAppSelector((state) => state.user.login.id); // On récupère l'id de l'utilisateur connecté
-  const member = useAppSelector((state) => state.members.member.data); // On récupère les données du membre
+  const allTags: TagI[] = useAppSelector((state) => state.tag.list.data); // On récupère les tags
+  const flash = useAppSelector((state) => state.main.flash); // On récupère le message de la requête
 
-  const allTags = useAppSelector((state) => state.tag.list.data); // On récupère les données du membre
-  const [selectedTags, setSelectedTags] = useState([member?.tags]); // On récupère les tags du membre qu'on stocke pour la gestion de l'update
-
+  // Local
+  const [checked, setChecked] = useState(member?.availability); // Valeur du switch
+  const [selectedTags, setSelectedTags] = useState<TagI[] | undefined>(
+    member?.tags
+  ); // On récupère les tags du membre qu'on stocke (pour la gestion de l'update)
   const [isEditMode, setIsEditMode] = useState(false); // State pour le mode édition
-  const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(false); // State pour la modale de <suppression></suppression>
+  const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(false); // State pour la modale de suppression
 
-  //! useRef
-  const formRef = useRef(null); // Utiliser pour récupérer les données du formulaire (référence au <form>)
+  // ? useRef
+  const formRef = useRef<HTMLFormElement>(null); // Utiliser pour récupérer les données du formulaire (référence au <form>)
 
-  //! useDispatch
+  // ? useDispatch
   const dispatch = useAppDispatch();
 
-  //! On récupère les données du membre
+  // ? useEffect
   useEffect(() => {
-    if (userId) dispatch(fetchOneMember(userId));
-  }, [dispatch]);
+    // On récupère les données du membre en fonction de l'id
+    if (userId) {
+      const userIdString = userId.toString(); // On convertit l'id en string
+      dispatch(fetchOneMember(userIdString));
+    }
+  }, [dispatch, isEditMode, userId]); // On rappelle le useEffect à chaque modification du state isEditMode et/ou userId
 
-  /** //! On récupère les tags
-   * * Qu'on stocke dans un state pour la gestion de l'update
-   * * A chaque modification des tags du membre (validation de l'update), on met à jour le state
-   * * Quand il sera rappelé, il sera à jour
-   */
   useEffect(() => {
+    // On récupère tous les tags
     dispatch(fetchAllTags());
-    setSelectedTags(member?.tags);
-  }, [dispatch, member?.tags]);
+    setSelectedTags(member?.tags); // On stocke les tags du membre dans le state selectedTags
+  }, [dispatch, member?.tags, isEditMode]); // On rappelle le useEffect à chaque modification du state isEditMode et/ou member?.tags
 
-  //! Fonction pour le switch open to work
+  // ? Fonctions
+  /** //* Switch open to work
+   * @param {boolean} checked - valeur du switch
+   * Au clic, on inverse la valeur du switch
+   */
   const handleSwitch = () => {
     setChecked(!checked);
   };
 
-  //! Fonction d'envoi du formulaire
-  const handleSubmit = (event) => {
-    const form = formRef.current;
-    const formData = new FormData();
-
-    form.rest(); // Vider le formulaire
-
-    // On parcourt les champs du formulaire pour voir ceux qui ont été modifiés
-    for (let i = 0; i < form.elements.length; i++) {
-      const element = form.elements[i];
-
-      // Vérifier si le champ a été modifié par l'utilisateur
-      if (element.value !== '') {
-        // ? Dans le cas ou le champ est écrit plutôt qu'en placeholder => (element.value !== element.defaultValue)
-        // Ajouter le champ au FormData
-        formData.append(element.name, element.value);
-      }
-    }
-    console.log('formData', formData);
-    // dispatch(updateMember(formData)); //todo A décommenter pour l'update
-  };
-
-  //! Fonction pour le bouton edit
-  const handleEditClick = (event) => {
-    event.preventDefault();
-
+  /** //* Fonction pour le bouton annuler
+   * @param {boolean} isEditMode - valeur du state isEditMode
+   * Au clic, on inverse la valeur du state isEditMode
+   */
+  const handleCancelClick = () => {
     setIsEditMode(!isEditMode);
-
-    if (isEditMode) {
-      console.log('selectedTags', selectedTags); // On envoie les tags sélectionnés en remplacement
-      console.log('update envoyé');
-      handleSubmit(event.currentTarget);
-    }
   };
 
-  /* //! Fonction pour le bouton delete
-   * * On ouvre la modale de confirmation de suppression
+  /** //* Fonction pour le bouton delete
+   * @param {boolean} isOpenDeleteModale - valeur du state isOpenDeleteModale
+   * Au clic, on inverse la valeur du state isOpenDeleteModale
+   * qui affiche ou non la modale de suppression
    */
   const handleDeleteModale = () => {
     setIsOpenDeleteModale(!isOpenDeleteModale);
   };
 
-  /* //! Fonction pour la modification du tableau selectedTags
-   * * On récupère l'id du tag cliqué
-   * * On vérifie si le tag est déjà sélectionné (find)
-   * * Si oui, on le retire du tableau et on retire la classe `selected` du tag grace a son id
-   * * Si non, on l'ajoute au tableau et on ajoute la classe `selected` au tag grace a son id
+  /** //* Fonction pour la modification du tableau selectedTags
+   * @param {number} id - id du tag cliqué
+   * On récupère l'id du tag cliqué
+   * On vérifie si le tag est présent dans selectedTags (find)
+   * Si oui, on le retire du tableau et on retire la classe `selected` du tag.
+   * Si non, on l'ajoute au tableau et on ajoute la classe `selected` au tag.
    */
   const handleImageClick = (id: number) => {
+    // Si on trouve l'id dans allTags, on stocke dans selectedTag
     const selectedTag = allTags.find((tag) => tag.id === id);
     if (selectedTag) {
       if (
+        // Si selectedTags existe et que selectedTag est présent dans selectedTags
         selectedTags &&
         selectedTags.some((tag) => tag.id === selectedTag.id)
       ) {
-        //! Le tag est déjà sélectionné, on le supprime
+        // ? Le tag est déjà sélectionné
+        // On le supprime en filtrant selectedTags pour ne garder que ceux avec un id différent
         const updatedTags = selectedTags.filter(
           (tag) => tag.id !== selectedTag.id
         );
-        console.log(`On retire le tag ${selectedTag.name}`);
+        // On met à jour le state
         setSelectedTags(updatedTags);
 
-        //* On retire la classe `selected` du tag
+        // On retire la classe `selected` du tag
         const tagElement = document.getElementById(`tag-${selectedTag.id}`); // On cible l'element par son id spécifique
-        if (tagElement) tagElement.classList.remove('selected');
+        if (tagElement) tagElement.classList.remove('selected'); // Si on trouve l'element avec l'id de selectedTag, on retire la classe `selected`
       } else {
-        //! Le tag n'est pas sélectionné, on l'ajoute
-        const updatedTags = [...selectedTags, selectedTag];
-        console.log(`On ajoute le tag ${selectedTag.name}`);
+        // ? Le tag n'est pas sélectionné
+        // On l'ajoute en concaténant selectedTags et selectedTag dans updatedTags (spread operator)
+        // Pour éviter l'erreur de linter sur le ternaire imbriqué => eslint-disable-next-line no-nested-ternary
+        // eslint-disable-next-line no-nested-ternary
+        const updatedTags: TagI[] | undefined = selectedTag
+          ? selectedTags !== undefined
+            ? [...selectedTags, selectedTag]
+            : [selectedTag]
+          : [selectedTag]; // Si selectedTags existe, on concatène, sinon on crée un tableau avec selectedTag
+        // On met à jour le state
         setSelectedTags(updatedTags);
 
-        //* On ajoute la classe `selected` au tag
+        // On ajoute la classe `selected` au tag
         const tagElement = document.getElementById(`tag-${selectedTag.id}`); // On cible l'element par son id spécifique
-        if (tagElement) tagElement.classList.add('selected');
+        if (tagElement) tagElement.classList.add('selected'); // Si on trouve l'element avec l'id de selectedTag, on ajoute la classe `selected`
       }
     }
   };
-  /* //* Une div n'est pas un element clickable
-   * Fonction d’accessibilité pour le clavier.
-   * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
+  /** //! Accessibilité
+   * Une div n'est pas un element clickable par défaut.
+   * @param {React.KeyboardEvent<HTMLDivElement>} event - event du clavier
+   * @param {string} imageId - id de l'image cliquée
+   * On ajoute un fonction d’accessibilité pour le clavier.
+   * Si la touche enter ou espace est pressée, on appelle la fonction handleClick() juste au dessus.
    */
   const handleImageKeyDown = (
     event: React.KeyboardEvent<HTMLDivElement>,
     imageId: string
   ) => {
     if (event.key === 'enter' || event.key === ' ') {
-      handleImageClick(imageId);
+      handleImageClick(Number(imageId));
     }
   };
 
+  /** //* Fonction d'envoi du formulaire
+   * @param {React.FormEvent<HTMLFormElement>} event - event du formulaire
+   * On empêche le comportement par défaut du formulaire
+   * On crée un objet formData pour stocker les données du formulaire
+   * On stocke les données du formulaire dans un objet
+   * On soumet le formulaire
+   */
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(); // On crée un objet formData pour stocker les données du formulaire
+    const objData = Object.fromEntries(formData.entries()); // On stocke les données du formulaire dans un objet
+
+    // ? Gestion des inputs
+    const inputs = formRef.current
+      ? formRef.current.querySelectorAll('.MyProfile--input') // On cible tous les inputs du formulaire
+      : null;
+    inputs?.forEach((input) => {
+      // Pour chaque input
+      const { name, value } = input as HTMLInputElement; // On récupère le name et la value en destructuring
+      // Vérifiez si `name` est une clé valide de `MemberI`
+      if (member && name in member) {
+        const memberValue = member[name as keyof MemberI]; // Obtenez la valeur actuelle de `name` dans `objData`
+
+        // Si la valeur est différente d'une string vide et de la valeur initiale, on l'ajoute à formData et à objData
+        if (value !== '' && value !== memberValue) {
+          formData.append(name, value);
+          objData[name] = value;
+        }
+      }
+    });
+
+    // ? Gestion du password
+    const passwordElement = document.querySelector(
+      '#password'
+    ) as HTMLInputElement;
+    const password = passwordElement.value;
+    const errorMessage = validatePassword(password);
+
+    // if (errorMessage) {
+    //   console.log('erreur');
+    //   dispatch(resetMessage()); // On reset le message flash
+    //   dispatch(
+    //     flashMessage({ type: 'error', children: errorMessage, duration: 5000 })
+    //   );
+    //   // Afficher le message d'erreur ou effectuer d'autres actions nécessaires
+    // } else if (password !== '') {
+    //   // Le mot de passe est valide, ajouter le champ au formData et à objData
+    //   dispatch(resetMessage()); // On reset le message flash
+    //   dispatch(
+    //     flashMessage({
+    //       type: 'success',
+    //       children: 'Votre mot de passe a bien été modifié',
+    //       duration: 5000,
+    //     })
+    //   );
+
+    formData.append('password', password);
+    objData.password = password;
+    // }
+
+    // ? Gestion du textarea
+    const textarea = formRef.current
+      ? formRef.current.querySelector('textarea') // On cible le textarea du formulaire
+      : null;
+    const textareaName: keyof MemberI = textarea?.name as keyof MemberI; // On récupère le name du textarea
+    const textareaValue: string | undefined = textarea?.value; // On récupère la value du textarea
+
+    if (
+      textareaValue !== undefined && // On vérifie que textareaValue existe
+      textareaValue !== '' && // On vérifie que textareaValue n'est pas une string vide
+      textareaName && // On vérifie que textareaName existe
+      member && // On vérifie que member existe
+      textareaValue !== member[textareaName] // On vérifie que textareaValue est différent de la valeur initiale
+    ) {
+      formData.append(textareaName, textareaValue); // Alors, on ajoute textareaValue à formData
+      objData[textareaName] = textareaValue; // On ajoute textareaValue à objData
+    }
+
+    // ? Gestion du switch openToWork
+    if (
+      checked !== undefined && // On vérifie que checked existe
+      checked !== member?.availability
+    ) {
+      // Si la valeur du state est différente de la valeur du membre, on l'ajoute à formData
+      formData.append('availability', checked.toString());
+    }
+
+    // ? Gestion des tags
+    if (selectedTags && selectedTags.length > 0) {
+      // On vérifie que selectedTags existe et qu'il contient au moins un tag
+      const selectedTagsData = selectedTags.map((tag) => tag.id); // On crée un tableau avec les id des tags sélectionnés
+      // const tagsJSON = JSON.stringify(selectedTagsData); // On convertie le tableau en chaîne JSON
+
+      formData.append('tags', selectedTagsData); // On ajoute le tableau selectedTagsData à formData
+      objData.tags = selectedTagsData; // On ajoute le tableau selectedTagsData à objData
+    }
+
+    // ? Soumission du formulaire
+
+    dispatch(
+      // On dispatch l'action updateMember avec l'id du membre et les données du formulaire
+      updateMember({
+        id: userId,
+        formData: { availability: checked, ...objData }, // Dans formData, on ajoute la valeur de checked et on ajoute les données du formulaire (objData)
+      })
+    );
+  };
+
+  /** //* Fonction pour le bouton d'édition
+   * @param {React.FormEvent<HTMLFormElement>} event - event du formulaire
+   * On empêche le comportement par défaut du formulaire
+   * Au clic, on inverse la valeur du state isEditMode
+   *
+   * Si isEditMode est true, on soumet le formulaire
+   */
+  const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+
+    setIsEditMode(!isEditMode);
+
+    if (isEditMode) {
+      handleSubmit(event);
+    }
+  };
+
+  // ? Rendu JSX
   return (
     <>
       <div className="MyProfile">
@@ -159,68 +286,67 @@ function MyProfile() {
         <form ref={formRef} onSubmit={handleSubmit}>
           <div className="MyProfile--content">
             <fieldset className="MyProfile--content--firstField">
-              {' '}
-              {/* //! Style de MyProfile */}
               <img
                 className="MyProfile--content--firstField--image"
                 src="/images/profil/profil.svg"
                 alt="profil"
               />
+              {/* Pour chaque input, on désactive le champ si on est pas en mode édition */}
               <Input
-                name="Prénom"
+                name="firstname"
                 type="text"
-                // value={isEditMode ? member?.firstname : ''}
                 placeholder={member?.firstname || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
-                name="Nom"
+                name="name"
                 type="text"
-                // value={isEditMode ? member?.name : ''}
                 placeholder={member?.name || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
-                name="Pseudo"
+                name="pseudo"
                 type="text"
-                // value={isEditMode ? member?.pseudo : ''}
                 placeholder={member?.pseudo || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
-                name="Email"
+                name="email"
                 type="email"
-                // value={isEditMode ? member?.email : ''}
                 placeholder={member?.email || ''}
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <Input
-                name="Mot de passe"
+                id="password"
+                name="password"
                 type="password"
-                // value={isEditMode ? member?.password : '*****'}
                 placeholder="*****"
                 disabled={!isEditMode}
+                className="MyProfile--input"
               />
               <div className="MyProfile--content--firstField--openToWork">
                 <p>Ouvert aux projets</p>
                 <CustomSwitch
                   name="availability"
-                  checked={member?.availability || !checked}
-                  onChange={handleSwitch}
-                  disabled={!isEditMode}
+                  checked={isEditMode ? checked : member?.availability} // Si on est en mode édition, on affiche la valeur du state checked, sinon on affiche la valeur du membre
+                  onChange={handleSwitch} // On appelle la fonction handleSwitch au changement de valeur du switch
+                  disabled={!isEditMode} // On désactive le switch si on est pas en mode édition
                 />
               </div>
               <label
                 htmlFor="description"
                 className="MyProfile--content--firstField--inputTextarea"
               >
-                {' '}
                 A propos de moi :
                 <textarea
                   name="description"
                   id="description"
                   placeholder={member?.description || ''}
-                  disabled={!isEditMode}
+                  disabled={!isEditMode} // On désactive le textarea si on est pas en mode édition
                 />
               </label>
             </fieldset>
@@ -235,16 +361,20 @@ function MyProfile() {
                   Technos
                 </h4>
                 <div className="MyProfile--content--secondField--technos--technos">
-                  {/* //! Style dans MyProfile */}
-                  {/* Rendu conditionnel : 
-              si on est en mode édition, on affiche tous les tags
-              sinon on affiche les tags du membre
-              Dans la partie lecture, on map sur les tags du membre directement
-              Dans la partie edition, on map sur all tags pour tous les afficher,
-              puis on compare chaque tag avec ceux du membre pour avoir la classe selected si il le possède
-              */}
+                  {/** //! Rendu conditionnel des tags
+                   * @param {boolean} isEditMode - Si on est en mode édition ou lecture
+                   * @param {array} member.tags - Les tags du membre
+                   * @param {array} allTags - Tous les tags
+                   *
+                   * Affichage des tags en fonction des conditions lecture ou édition
+                   */}
                   {!isEditMode
-                    ? member?.tags &&
+                    ? /** //* En mode lecture
+                       * Si on a des tags, on les affiche avec un map() sur les tags du membre
+                       * On ajoute une key à chaque tag
+                       * On affiche l'image du tag et son nom
+                       */
+                      member?.tags &&
                       member.tags.map((tag) => (
                         <div
                           className="MyProfile--content--secondField--technos--technos--group"
@@ -258,25 +388,31 @@ function MyProfile() {
                           <p>{tag.name}</p>
                         </div>
                       ))
-                    : allTags &&
-                      allTags.map((tag) => {
+                    : /** //* En mode édition
+                       * Si on a des tags, on les affiche avec un map() sur allTags
+                       * On ajoute une key à chaque tag
+                       * On affiche l'image du tag et son nom
+                       *
+                       * On vérifie si le tag est présent dans les tags du membre pour ajouter la classe selected
+                       */
+                      allTags &&
+                      allTags?.map((tag) => {
                         const isMatchingTag =
-                          member?.tags.find(
-                            (selectedTag) => selectedTag.id === tag.id
+                          member?.tags?.find(
+                            (memberTag) => memberTag.id === tag.id // On vérifie si le tag est présent dans les tags du membre
                           ) !== undefined;
-                        const className = isMatchingTag ? 'selected' : '';
+                        const className = isMatchingTag ? 'selected' : ''; // Si le tag est présent dans les tags du membre, on ajoute la classe selected
                         return (
                           <div
-                            className={className}
+                            className={`MyProfile--content--secondField--technos--technos--group ${className}`}
                             role="button"
                             key={tag.id}
                             id={`tag-${tag.id}`} // Sert de référence pour la fonction handleImageClick ( permet d'ajouter ou de retirer la classe selected quand on ajoute/supprime le tag)
-                            onClick={() => handleImageClick(tag.id)}
-                            onKeyDown={(event) =>
-                              handleImageKeyDown(event, tag.id)
-                            }
-                            // On ajoute un tabIndex pour que l'élément soit focusable (accessibilité)
-                            tabIndex={0}
+                            onClick={() => handleImageClick(tag.id)} // On appelle la fonction handleImageClick au clic sur l'image
+                            onKeyDown={(
+                              event // On appelle la fonction handleImageKeyDown au keydown sur l'image
+                            ) => handleImageKeyDown(event, tag.id.toString())}
+                            tabIndex={0} // On ajoute un tabIndex pour que l'élément soit focusable (accessibilité)
                           >
                             <img
                               src={`/images/technos/${tag.name.toLowerCase()}.svg`}
@@ -295,6 +431,11 @@ function MyProfile() {
                 <h4 className="MyProfile--thirdField--projects--title">
                   Projets
                 </h4>
+                {/** //! Projets du membre
+                 * @param {array} member.projects - Les projets du membre
+                 * Si on a au moins un projet, on les affiche avec un map() sur les projets du membre
+                 * Pour chaque projet, on envoie au composant <ProjectCard /> une key et le projet
+                 */}
                 {member?.projects &&
                   member.projects.length > 0 &&
                   member.projects.map((project) => (
@@ -305,11 +446,11 @@ function MyProfile() {
           </div>
           <fieldset className="MyProfile--fourthField--button">
             <div className="MyProfile--fourthField--button--group">
-              <button
-                onClick={handleEditClick}
-                type="submit"
-                // className=`{MyProfile--fourthField--button--cancel isEditMode ? 'visible' : 'hidden'}`
+              <button // ? Bouton annuler
+                onClick={handleCancelClick} // On appelle la fonction handleCancelClick au clic sur le bouton
+                type="button"
                 className={`MyProfile--fourthField--button--cancel ${
+                  // On contrôle l'affichage du bouton si on est en mode édition grâce à la classe CSS visible ou hidden
                   isEditMode
                     ? 'MyProfile--fourthField--button--group--visible'
                     : 'MyProfile--fourthField--button--group--hidden'
@@ -318,28 +459,36 @@ function MyProfile() {
               >
                 Annuler
               </button>
-              <button
+              <button // ? Bouton modifier ou valider
                 onClick={handleEditClick}
-                type="submit"
+                type="button"
                 className={`MyProfile--fourthField--button--submit ${
+                  // On contrôle l'affichage du bouton si on est en mode édition grâce à la classe CSS updatedMode ou submittedMode
                   isEditMode
                     ? 'MyProfile--fourthField--button--updatedMode'
                     : 'MyProfile--fourthField--button--submittedMode'
                 }`}
               >
-                {isEditMode ? 'Valider' : 'Modifier mon profil'}
+                {isEditMode ? 'Valider' : 'Modifier mon profil'}{' '}
+                {/* On affiche le texte en fonction du mode isEditMode */}
               </button>
             </div>
-            <button
+            <button // ? Bouton supprimer le profil
               type="button"
               className="MyProfile--fourthField--button--delete"
-              onClick={handleDeleteModale}
+              onClick={handleDeleteModale} // On appelle la fonction handleDeleteModale au clic sur le bouton
             >
               Supprimer le profil
             </button>
           </fieldset>
         </form>
       </div>
+      {/** //! Modale de suppression
+       * @param {boolean} isOpenDeleteModale - Si la modale est ouverte ou non
+       * @param {function} setIsOpenDeleteModale - Setter pour modifier isOpenDeleteModale
+       * Si isOpenDeleteModale est true, on affiche la modale
+       * On envoie à la modale la fonction setIsOpenDeleteModale pour pouvoir la fermer depuis la modale
+       */}
       {isOpenDeleteModale && (
         <DeleteModale
           isOpenDeleteModale={isOpenDeleteModale}
