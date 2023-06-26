@@ -1,131 +1,172 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
+import { fetchAllTags } from '../../../../store/reducer/tag';
 import {
+  deleteOneProject,
+  fetchOneProject,
   putOneProject,
-  deleteOneProject, // Importez l'action de suppression de projet
 } from '../../../../store/reducer/projects';
+import DeleteProject from './DeleteProject';
+
 import './style.scss';
-import InputTitle from '../Form/InputTitle/InputTitle';
-import SelectCheckMarks from '../Form/SelectCheckmark/SelectCheckMarks';
-import MultilineTextFields from '../Form/MultiLineTextField/MultiLineTextFiled';
-import ControlledSwitch from '../Form/Switch/Switch';
-import ValidateButton from '../Form/Button/ValidateButton';
+import { useParams } from 'react-router';
 
-function ModifyProject({ projectId }) {
+function ModifyProject() {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedTechnos, setSelectedTechnos] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [availability, setAvailability] = useState(false);
+  const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(false);
+
+  const user_id = useAppSelector((state) => state.user.login.id);
+  const tags = useAppSelector((state) => state.tag.list.data);
+  const projectId = useAppSelector((state) => state.projects.project.data?.id);
+
   const dispatch = useAppDispatch();
-  const projects = useAppSelector((state) => state.projects.projects);
+  const dropdownRef = useRef(null);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    technos: [],
-    open: false,
-  });
+  const { id } = useParams();
 
   useEffect(() => {
-    // Recherche du projet correspondant à l'identifiant donné
-    const project = projects.find((project) => project.id === projectId);
+    dispatch(fetchAllTags());
+  }, [dispatch]);
 
-    if (project) {
-      setFormData({
-        title: project.title,
-        description: project.description,
-        technos: project.technos,
-        open: project.open,
-      });
-    }
-  }, [projects, projectId]);
+  const handleSwitch = () => {
+    setAvailability(!availability);
+  };
 
-  const handleFormSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Créer un objet contenant les données du formulaire
     const projectData = {
-      id: projectId,
-      title: formData.title,
-      description: formData.description,
-      technos: formData.technos,
-      open: formData.open,
+      title,
+      description,
+      tag: selectedTechnos,
+      availability,
+      user_id: user_id,
     };
 
-    // Dispatch l'action pour mettre à jour le projet
-    dispatch(putOneProject(projectData))
-      .then((response) => {
-        // Gérer la réponse de l'API en cas de succès
-        console.log('Projet mis à jour avec succès:', response.payload);
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la mise à jour du projet:', error);
-      });
+    console.log('Project Data:', projectData);
+
+    dispatch(putOneProject({ projectData, id }));
+    console.log(id);
   };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+  const handleDeleteProjet = () => {
+    if (projectId) {
+      dispatch(deleteOneProject(projectId));
+    }
   };
 
-  const handleTechnosChange = (selectedTechnos) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      technos: selectedTechnos,
-    }));
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
   };
 
-  const handleSwitchChange = (event) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      open: event.target.checked,
-    }));
+  const handleTagSelect = (event) => {
+    const selectedTag = event.target.value;
+    setSelectedTechnos((prevSelectedTechnos) => {
+      if (prevSelectedTechnos.includes(selectedTag)) {
+        return prevSelectedTechnos.filter((tag) => tag !== selectedTag);
+      } else {
+        return [...prevSelectedTechnos, selectedTag];
+      }
+    });
   };
 
-  const handleDeleteProject = () => {
-    dispatch(deleteOneProject(projectId))
-      .then((response) => {
-        console.log('Projet supprimé avec succès:', response.payload);
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la suppression du projet:', error);
-      });
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+
+  const handleDeleteModale = () => {
+    setIsOpenDeleteModale(!isOpenDeleteModale);
   };
 
   return (
-    <div>
-      <h1>Modifier mon projet</h1>
-
-      <form onSubmit={handleFormSubmit}>
-        <h2>Titre du projet</h2>
-        <InputTitle
-          name="title"
-          value={formData.title}
-          onChange={handleInputChange}
+    <div className="form-container">
+      <h2>Modifier votre projet</h2>
+      <h3 className="form-title">Choisissez le titre du projet</h3>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Titre..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
 
-        <h2>Quelles sont les technos de votre projet</h2>
-        <SelectCheckMarks
-          selectedTechnos={formData.technos}
-          onTechnosChange={handleTechnosChange}
+        <h3 className="form-title">Choisissez les technologies</h3>
+        <div className="dropdown-container" ref={dropdownRef}>
+          <div className="dropdown-toggle" onClick={handleToggle}>
+            Technologies
+          </div>
+          {isOpen && (
+            <div className="dropdown-options">
+              <ul>
+                {tags.map((tag) => (
+                  <li key={tag.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        value={tag.name}
+                        checked={selectedTechnos.includes(tag.name)}
+                        onChange={handleTagSelect}
+                      />
+                      {tag.name}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        <h3 className="form-title">Choisissez la description</h3>
+
+        <textarea
+          id="description"
+          value={description}
+          placeholder="Description..."
+          onChange={(e) => setDescription(e.target.value)}
         />
+        <div>
+          <h3 className="form-title">Ouvert aux participants</h3>
 
-        <h2>Description du projet</h2>
-        <MultilineTextFields
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-        />
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={availability}
+              onChange={handleSwitch}
+            />
+            <span className="slider"></span>
+          </label>
+        </div>
 
-        <h2>Ouvert aux participants</h2>
-        <ControlledSwitch
-          checked={formData.open}
-          onChange={handleSwitchChange}
-        />
-
-        <ValidateButton onSubmit={handleFormSubmit} />
-
-        <button onClick={handleDeleteProject}>Supprimer le projet</button>
+        <button type="submit" className="validates-button">
+          Valider les modifications
+        </button>
       </form>
+      <button
+        className="deletes-button"
+        onClick={handleDeleteModale}
+        type="button"
+      >
+        Supprimer mon projet
+      </button>
+      {isOpenDeleteModale && (
+        <DeleteProject
+          isOpenDeleteModale={isOpenDeleteModale}
+          setIsOpenDeleteModale={setIsOpenDeleteModale}
+          projectId={projectId}
+        />
+      )}
     </div>
   );
 }

@@ -76,10 +76,11 @@ export const postOneProject = createAsyncThunk(
 // todo
 export const putOneProject = createAsyncThunk(
   'project/putOneProject',
-  async (projectData: ProjectI) => {
+  async ({ projectData, id }) => {
+    console.log(id);
     try {
       const { data } = await axiosInstance.put(
-        `/api/projects/${projectData.id}`,
+        `/api/projects/${id}`,
         projectData
       );
       return data;
@@ -143,6 +144,28 @@ const projectsReducer = createReducer(initialState, (builder) => {
     // todo
     .addCase(deleteOneProject.pending, (state) => {
       state.project.loading = false;
+    })
+    .addCase(postOneProject.fulfilled, (state, action) => {
+      state.project.data = action.payload;
+      state.project.loading = false;
+    })
+    .addCase(postOneProject.rejected, (state) => {
+      state.project.data = null;
+      state.project.loading = false;
+    })
+    .addCase(postOneProject.pending, (state) => {
+      state.project.loading = true;
+    })
+    .addCase(putOneProject.fulfilled, (state, action) => {
+      state.project.data = action.payload;
+      state.project.loading = false;
+    })
+    .addCase(putOneProject.rejected, (state) => {
+      state.project.data = null;
+      state.project.loading = false;
+    })
+    .addCase(putOneProject.pending, (state) => {
+      state.project.loading = true;
     });
 });
 

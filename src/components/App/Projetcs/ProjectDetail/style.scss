@@ -55,14 +55,16 @@
     padding: 0.5rem;
 }
 
-.project-description-title {
+.project-second-title {
     margin: 2rem;
     border-bottom: 1px solid black;
-    width: 135px;
+    width: 200px;
+    font-size: 3rem;
 }
 
 .card-project-description {
     margin: 2rem;
+    margin-top: 4rem;
 }
 .description-container {
     width: 100%;
@@ -96,10 +98,47 @@
 
 .title-description-container {
     margin-right: 15rem;
-    padding-right: 5rem;
     padding-right: 2rem;
     margin-left: 2rem;
     min-height: 30rem;
+}
+
+.all-lists {
+    margin-top: 4rem;
+}
+
+.other-user-list {
+    margin: 2rem;
+    list-style: none;
+    background-color: white;
+    text-align: center;
+    padding: 2rem;
+    font-size: 2rem;
+    box-shadow: 5px 5px 5px rgb(190, 190, 190);
+}
+
+.modify-btn {
+    border: 2px solid black;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: #51bcfaa9;
+    margin-bottom: 2rem;
+    margin-top: 10rem;
+}
+
+.button-container {
+    display: flex;
+    float: right;
+}
+
+.no-other-users {
+    text-align: center;
+}
+
+.techno-list {
+    list-style: none;
+    margin-top: 2rem;
+    font-size: 2rem;
 }
 
 @media (max-width: 768px) {
@@ -128,5 +167,50 @@
         margin-right: 0;
         margin-bottom: 2rem;
         padding: 2rem;
+    }
+
+    .other-user-list {
+        max-width: 200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .project-second-title {
+        margin-left: auto;
+        margin-right: auto;
+        width: 175px;
+    }
+
+    .card-project-description {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    .card-project-title {
+        font-size: 5rem;
+    }
+
+    .button-container {
+        justify-content: center;
+        margin-right: 25%;
+        margin-left: 25%;
+    }
+}
+
+@media (max-width: 700px) {
+    .button-container {
+        -ms-flex-direction: column;
+        margin-left: 5%;
+        margin-right: 5%;
+        justify-content: center;
+    }
+
+    .apply-btn {
+        text-align: center;
+    }
+
+    .modify-btn {
+        text-align: center;
     }
 }

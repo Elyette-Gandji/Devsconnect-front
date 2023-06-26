@@ -94,6 +94,13 @@ img {
     justify-content: space-around;
 }
 
+.projects-technos-img {
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
 .project-open {
     background-color: rgba(36, 177, 90, 0.699);
     float: right;

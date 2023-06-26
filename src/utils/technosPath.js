@@ -23,6 +23,7 @@ export const technosPath = {
 export const technos = [
   {
     id: 'html',
+
     label: 'Html',
     name: 'Html',
     value: 'Html',

@@ -1,107 +1,136 @@
-import { useState } from 'react';
-import { useAppDispatch } from '../../../../hook/redux';
-import { postOneProject } from '../../../../store/reducer/projects';
+import { useState, useEffect, useRef } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
+import { fetchAllTags } from '../../../../store/reducer/tag';
+
 import './style.scss';
-import InputTitle from '../Form/InputTitle/InputTitle';
-import SelectCheckMarks from '../Form/SelectCheckmark/SelectCheckMarks';
-import MultilineTextFields from '../Form/MultiLineTextField/MultiLineTextFiled';
-import ControlledSwitch from '../Form/Switch/Switch';
-import ValidateButton from '../Form/Button/ValidateButton';
+import { postOneProject } from '../../../../store/reducer/projects';
 
 function FormProject() {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedTechnos, setSelectedTechnos] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [availability, setAvailability] = useState(false);
+  const user_id = useAppSelector((state) => state.user.login.id);
+
   const dispatch = useAppDispatch();
+  const dropdownRef = useRef(null);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    technos: [],
-    open: false,
-  });
+  useEffect(() => {
+    dispatch(fetchAllTags());
+  }, [dispatch]);
 
-  const handleFormSubmit = (event) => {
+  const handleSwitch = () => {
+    setAvailability(!availability);
+  };
+
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Créer un objet contenant les données du formulaire
     const projectData = {
-      title: formData.title,
-      description: formData.description,
-      availability: formData.open,
+      title,
+      description,
+      tag: selectedTechnos,
+      availability,
+      user_id: user_id,
     };
 
-    // Dispatch l'action pour créer un nouveau projet
-    dispatch(postOneProject(projectData))
-      .then((response) => {
-        // Gérer la réponse de l'API en cas de succès
-        console.log('Projet créé avec succès:', response.payload);
+    console.log('Project Data:', projectData);
 
-        setFormData({
-          title: '',
-          description: '',
-          technos: [],
-          open: false,
-        });
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la création du projet:', error);
-      });
+    dispatch(postOneProject(projectData));
   };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
   };
 
-  const handleTechnosChange = (selectedTechnos) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      technos: selectedTechnos,
-    }));
+  const handleTagSelect = (event) => {
+    const selectedTag = event.target.value;
+    setSelectedTechnos((prevSelectedTechnos) => {
+      if (prevSelectedTechnos.includes(selectedTag)) {
+        return prevSelectedTechnos.filter((tag) => tag !== selectedTag);
+      } else {
+        return [...prevSelectedTechnos, selectedTag];
+      }
+    });
   };
 
-  const handleSwitchChange = (event) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      open: event.target.checked,
-    }));
-  };
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+
+  const tags = useAppSelector((state) => state.tag.list.data);
 
   return (
     <div className="form-container">
-      <h1>Créer mon projet</h1>
-
-      <form onSubmit={handleFormSubmit}>
-        <h2 className="form-title">Titre du projet</h2>
-        <InputTitle
-          name="title"
-          value={formData.title}
-          onChange={handleInputChange}
+      <h2>Créer votre projet</h2>
+      <h3 className="form-title">Choisissez le titre du projet</h3>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Titre..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
 
-        <h2 className="form-title">Quelles sont les technos de votre projet</h2>
-        <SelectCheckMarks
-          selectedTechnos={formData.technos}
-          onTechnosChange={handleTechnosChange}
-        />
-
-        <h2 className="form-title">Description du projet</h2>
-        <MultilineTextFields
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-        />
-
-        <h2 className="form-title">Ouvert aux participants</h2>
-        <ControlledSwitch
-          checked={formData.open}
-          onChange={handleSwitchChange}
-        />
-
-        <div className="validate-button">
-          <ValidateButton onSubmit={handleFormSubmit} />
+        <h3 className="form-title">Choisissez les technologies</h3>
+        <div className="dropdown-container" ref={dropdownRef}>
+          <div className="dropdown-toggle" onClick={handleToggle}>
+            Technologies
+          </div>
+          {isOpen && (
+            <div className="dropdown-options">
+              <ul>
+                {tags.map((tag) => (
+                  <li key={tag.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        value={tag.name}
+                        checked={selectedTechnos.includes(tag.name)}
+                        onChange={handleTagSelect}
+                      />
+                      {tag.name}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
+        <h3 className="form-title">Choisissez la description</h3>
+
+        <textarea
+          id="description"
+          value={description}
+          placeholder="Description..."
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <div>
+          <h3 className="form-title">Ouvert aux participants</h3>
+
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={availability}
+              onChange={handleSwitch}
+            />
+            <span className="slider"></span>
+          </label>
+        </div>
+
+        <button type="submit" className="validate-button">
+          Valider
+        </button>
       </form>
     </div>
   );
