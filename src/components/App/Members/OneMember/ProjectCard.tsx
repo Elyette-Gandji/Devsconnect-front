@@ -61,14 +61,17 @@ function ProjectCard({ projectID }: { projectID: ProjectI }) {
              * On limite à 4 l'affichage
              * On affiche l'image de la techno avec le nom en alt et title
              */}
-            {project.tags.slice(0, 4).map((tag) => (
-              <img
-                key={`${project.id}-${tag.id}`}
-                src={`/images/technos/${tag.name.toLowerCase()}.svg`}
-                alt={tag.name}
-                title={tag.name}
-              />
-            ))}
+            {project.tags &&
+              project.tags
+                .slice(0, 4)
+                .map((tag) => (
+                  <img
+                    key={`${project.id}-${tag.id}`}
+                    src={`/images/technos/${tag.name.toLowerCase()}.svg`}
+                    alt={tag.name}
+                    title={tag.name}
+                  />
+                ))}
           </div>
         </div>
         <div className="ProjectCard--secondField">

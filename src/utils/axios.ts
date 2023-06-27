@@ -21,6 +21,7 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       // La requête a reçu une réponse avec un code d'erreur (4xx, 5xx)
       const { status, data } = error.response;
+      console.log(error.response);
       let errorMessage = 'Une erreur est survenue';
 
       if (status === 404) {
