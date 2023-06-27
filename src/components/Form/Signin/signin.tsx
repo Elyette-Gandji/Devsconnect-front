@@ -297,11 +297,31 @@ function Signin() {
         >
           <fieldset className="Signin--field">
             {/* Input maison, importé */}
-            <Input name="firstname" type="text" placeholder="Prénom" />
-            <Input name="name" type="text" placeholder="Nom" />
-            <Input name="pseudo" type="text" placeholder="Pseudo" />
-            <Input name="email" type="text" placeholder="Adresse Email" />
-            <Input name="password" type="password" placeholder="Mot de passe" />
+            <Input
+              name="firstname"
+              type="text"
+              placeholder="Prénom"
+              slot="Prénom"
+            />
+            <Input name="name" type="text" placeholder="Nom" slot="Nom" />
+            <Input
+              name="pseudo"
+              type="text"
+              placeholder="Pseudo"
+              slot="Pseudo"
+            />
+            <Input
+              name="email"
+              type="text"
+              placeholder="Adresse Email"
+              slot="Email"
+            />
+            <Input
+              name="password"
+              type="password"
+              placeholder="Mot de passe"
+              slot="Mot de passe"
+            />
 
             <div className="Signin--openToWork">
               <p>Ouvert aux projets</p>

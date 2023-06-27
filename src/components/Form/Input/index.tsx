@@ -5,11 +5,12 @@ import { useId, useState } from 'react';
 interface InputProps {
   name: string; //! Obligatoire
   placeholder: string;
+  slot?: string;
   [otherProps: string]: unknown; // On ne connait pas le type de ce qu'il peut y avoir => booléen, string, number, ...
 }
 
 // ? Fonction principale
-function Input({ name, placeholder, ...props }: InputProps) {
+function Input({ name, placeholder, slot, ...props }: InputProps) {
   // ? State
   // Local
   const [value, setValue] = useState('');
@@ -33,9 +34,10 @@ function Input({ name, placeholder, ...props }: InputProps) {
         htmlFor={inputId} // On lie le label à l'input avec l'id généré (htmlFor = for en JS)
         className="field-label"
       >
-        {placeholder}
+        {slot}
       </label>
       <input
+        slot={slot} // Pour le label en français
         className="Form--input"
         name={name}
         value={value}
