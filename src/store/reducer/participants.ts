@@ -29,9 +29,9 @@ export const deleteParticipantFromProject = createAsyncThunk(
   }
 );
 
-export const validatePendingParticipant = createAsyncThunk(
-  'participants/validatePendingParticipant',
-  async ({ projectId, userId }) => {
+export const requestParticipantValidation = createAsyncThunk(
+  'participants/requestParticipantValidation',
+  async ({ userId, projectId }) => {
     try {
       const { data } = await axiosInstance.put(
         `/api/projects/${projectId}/user/${userId}/validate`
@@ -49,43 +49,21 @@ const participantsReducer = createReducer(
   (builder) => {
     builder
       .addCase(addParticipantToProject.fulfilled, (state, action) => {
-        const { userId } = action.payload;
-        if (
-          state.pendingParticipants.find(
-            (participant) => participant.userId === userId
-          )
-        ) {
-          state.pendingParticipants = state.pendingParticipants.filter(
-            (participant) => participant.userId !== userId
-          );
-        } else {
-          state.participants.push(action.payload);
-        }
+        state.pendingParticipants.push(action.payload);
       })
       .addCase(deleteParticipantFromProject.fulfilled, (state, action) => {
-        const { userId, projectId } = action.payload;
         state.participants = state.participants.filter(
-          (participant) =>
-            participant.userId !== userId || participant.projectId !== projectId
+          (participant) => participant.userId !== action.payload.userId
         );
         state.pendingParticipants = state.pendingParticipants.filter(
-          (participant) =>
-            participant.userId !== userId || participant.projectId !== projectId
+          (participant) => participant.userId !== action.payload.userId
         );
       })
-      .addCase(validatePendingParticipant.fulfilled, (state, action) => {
-        const { userId } = action.payload;
-        const pendingParticipantIndex = state.pendingParticipants.findIndex(
-          (participant) => participant.userId === userId
+      .addCase(requestParticipantValidation.fulfilled, (state, action) => {
+        state.pendingParticipants = state.pendingParticipants.filter(
+          (participant) => participant.userId !== action.payload.userId
         );
-        if (pendingParticipantIndex !== -1) {
-          const [participant] = state.pendingParticipants.splice(
-            pendingParticipantIndex,
-            1
-          );
-
-          state.participants.push(participant);
-        }
+        state.participants.push(action.payload);
       });
   }
 );
