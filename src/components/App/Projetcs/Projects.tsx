@@ -1,14 +1,18 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 import { fetchAllProjects } from '../../../store/reducer/projects';
 import NotFound from '../../NotFound/NotFound';
 import Project from './Project';
 
+import { ProjectI } from '../../../@types/interface';
+
 function Projects() {
   const dispatch = useAppDispatch();
   const projects = useAppSelector((state) => state.projects.list.data);
   const loading = useAppSelector((state) => state.projects.list.loading);
+  const [filteredProjects, setFilteredProjects] =
+    useState<ProjectII[]>(projects);
 
   useEffect(() => {
     dispatch(fetchAllProjects());

@@ -7,7 +7,8 @@ import {
   putOneProject,
 } from '../../../../store/reducer/projects';
 import DeleteProject from './DeleteProject';
-
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import './style.scss';
 import { useParams } from 'react-router';
 
@@ -18,10 +19,10 @@ function ModifyProject() {
   const [isOpen, setIsOpen] = useState(false);
   const [availability, setAvailability] = useState(false);
   const [isOpenDeleteModale, setIsOpenDeleteModale] = useState(false);
-
-  const user_id = useAppSelector((state) => state.user.login.id);
-  const tags = useAppSelector((state) => state.tag.list.data);
-  const projectId = useAppSelector((state) => state.projects.project.data?.id);
+  const [isProjectModified, setIsProjectModified] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [isModifyError, setIsModifyError] = useState(false);
 
   const dispatch = useAppDispatch();
   const dropdownRef = useRef(null);
@@ -32,6 +33,11 @@ function ModifyProject() {
     dispatch(fetchAllTags());
   }, [dispatch]);
 
+  const user_id = useAppSelector((state) => state.user.login.id);
+  const tags = useAppSelector((state) => state.tag.list.data);
+  const projectId = useAppSelector((state) => state.projects.project.data?.id);
+  const currentProject = useAppSelector((state) => state.projects.project.data);
+
   const handleSwitch = () => {
     setAvailability(!availability);
   };
@@ -39,17 +45,46 @@ function ModifyProject() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    const updatedTitle = title !== '' ? title : currentProject?.title;
+    const updatedDescription =
+      description !== '' ? description : currentProject?.description;
+    const updatedTags =
+      selectedTechnos.length !== 0
+        ? selectedTechnos.map((tagId) => parseInt(tagId, 10))
+        : currentProject?.tags;
+    const updatedAvailability =
+      availability !== null ? availability : currentProject?.availability;
+
     const projectData = {
-      title,
-      description,
-      tags: selectedTechnos.map((tagId) => parseInt(tagId, 10)),
-      availability,
+      title: updatedTitle,
+      description: updatedDescription,
+      tags: updatedTags,
+      availability: updatedAvailability,
       user_id: user_id,
     };
 
     console.log('Project Data:', projectData);
 
+    const isTitleModified = title !== '' && title !== currentProject?.title;
+    const isDescriptionModified =
+      description !== '' && description !== currentProject?.description;
+    const areTagsModified =
+      selectedTechnos.length !== 0 && selectedTechnos !== currentProject?.tags;
+    const isAvailabilityModified =
+      availability !== null && availability !== currentProject?.availability;
+
+    if (
+      !isTitleModified &&
+      !isDescriptionModified &&
+      !areTagsModified &&
+      !isAvailabilityModified
+    ) {
+      setIsModifyError(true);
+      return;
+    }
+
     dispatch(putOneProject({ projectData, id }));
+    setIsProjectModified(true);
     console.log(id);
   };
 
@@ -61,17 +96,6 @@ function ModifyProject() {
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleTagSelect = (event) => {
-    const selectedTagId = event.target.value;
-    setSelectedTechnos((prevSelectedTechnos) => {
-      if (prevSelectedTechnos.includes(selectedTagId)) {
-        return prevSelectedTechnos.filter((tagId) => tagId !== selectedTagId);
-      } else {
-        return [...prevSelectedTechnos, selectedTagId];
-      }
-    });
   };
 
   useEffect(() => {
@@ -89,6 +113,36 @@ function ModifyProject() {
 
   const handleDeleteModale = () => {
     setIsOpenDeleteModale(!isOpenDeleteModale);
+  };
+
+  useEffect(() => {
+    if (isProjectModified) {
+      setShowSuccessAlert(true);
+
+      setTimeout(() => {
+        setShowSuccessAlert(false);
+      }, 2000);
+    }
+  }, [isProjectModified]);
+
+  useEffect(() => {
+    if (isModifyError) {
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 2000);
+    }
+  }, [isModifyError]);
+
+  const handleTagSelect = (event) => {
+    const selectedTagId = event.target.value;
+    setSelectedTechnos((prevSelectedTechnos) => {
+      if (prevSelectedTechnos.includes(selectedTagId)) {
+        return prevSelectedTechnos.filter((tagId) => tagId !== selectedTagId);
+      } else {
+        return [...prevSelectedTechnos, selectedTagId];
+      }
+    });
   };
 
   return (
@@ -166,6 +220,20 @@ function ModifyProject() {
           setIsOpenDeleteModale={setIsOpenDeleteModale}
           projectId={projectId}
         />
+      )}
+      {isProjectModified && showSuccessAlert && (
+        <Stack>
+          <Alert severity="success">
+            Le projet a été modifié avec succès !
+          </Alert>
+        </Stack>
+      )}
+      {isModifyError && showErrorAlert && (
+        <Stack sx={{ width: '100%' }} spacing={2}>
+          <Alert severity="error">
+            Une erreur est survenue lors de la modification de votre projet
+          </Alert>
+        </Stack>
       )}
     </div>
   );

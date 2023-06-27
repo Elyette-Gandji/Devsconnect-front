@@ -1,13 +1,10 @@
 // ? Librairies
 import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 
-// ? Instance Axios
 import axiosInstance from '../../utils/axios';
 
-// ? Typage global
 import { ProjectI } from '../../@types/interface';
 
-// ? Typage local
 interface ProjectState {
   status?: string;
   list: {
@@ -20,7 +17,6 @@ interface ProjectState {
   };
 }
 
-// ? InitialState
 export const initialState: ProjectState = {
   list: {
     data: [],
@@ -32,7 +28,6 @@ export const initialState: ProjectState = {
   },
 };
 
-// ? Fonctions asynchrones
 export const fetchAllProjects = createAsyncThunk(
   'project/fetchAllProjects',
   async () => {
@@ -59,7 +54,6 @@ export const fetchOneProject = createAsyncThunk(
   }
 );
 
-// todo
 export const postOneProject = createAsyncThunk(
   'project/postOneProject',
   async (projectData: ProjectI) => {
@@ -74,7 +68,6 @@ export const postOneProject = createAsyncThunk(
   }
 );
 
-// todo
 export const putOneProject = createAsyncThunk(
   'project/putOneProject',
   async ({ projectData, id }) => {
@@ -92,7 +85,6 @@ export const putOneProject = createAsyncThunk(
   }
 );
 
-// todo
 export const deleteOneProject = createAsyncThunk(
   'project/deleteOneProject',
   async (projectId: string) => {
@@ -109,40 +101,40 @@ export const deleteOneProject = createAsyncThunk(
 const projectsReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(fetchAllProjects.fulfilled, (state, action) => {
-      state.list.data = action.payload.data; // On modifie le state avec les données reçues
-      state.list.loading = false; // Définir l'état de chargement sur false
+      state.list.data = action.payload.data;
+      state.list.loading = false;
     })
     .addCase(fetchAllProjects.rejected, (state) => {
-      state.list.data = []; // On ne reçoit pas de données, on laisse un tableau vide
-      state.list.loading = false; // Définir l'état de chargement sur false
+      state.list.data = [];
+      state.list.loading = false;
     })
     .addCase(fetchAllProjects.pending, (state) => {
-      state.list.loading = true; // Définir l'état de chargement sur true
+      state.list.loading = true;
     })
     .addCase(fetchOneProject.fulfilled, (state, action) => {
-      state.project.data = action.payload.data; // On modifie le state avec les données reçues
-      state.project.loading = false; // Définir l'état de chargement sur false
+      state.project.data = action.payload.data;
+      state.project.loading = false;
     })
     .addCase(fetchOneProject.rejected, (state) => {
-      state.project.data = null; // On ne reçoit pas de données, on laisse null
-      state.project.loading = false; // Définir l'état de chargement sur false
+      state.project.data = null;
+      state.project.loading = false;
     })
     .addCase(fetchOneProject.pending, (state) => {
-      state.project.loading = true; // Définir l'état de chargement sur true
+      state.project.loading = true;
     })
-    // todo
+
     .addCase(deleteOneProject.fulfilled, (state, action) => {
       const projectId = action.payload;
       state.list.data = state.list.data.filter(
         (project) => project.id !== projectId
       );
     })
-    // todo
+
     .addCase(deleteOneProject.rejected, (state) => {
       state.project.data = null;
       state.project.loading = false;
     })
-    // todo
+
     .addCase(deleteOneProject.pending, (state) => {
       state.project.loading = false;
     })
