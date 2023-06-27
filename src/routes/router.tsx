@@ -18,6 +18,7 @@ import Projects from '../components/App/Projetcs/Projects';
 // import ProjectDetail from '../components/App/Projetcs/ProjectDetail/ProjectDetail';
 import OneMember from '../components/App/Members/OneMember/OneMember';
 import MyProfile from '../components/App/Members/OneMember/MyProfile/MyProfile';
+import Cgu from '../components/App/Cgu/Cgu';
 // import FormProject from '../components/App/Projetcs/FormProject/FormProject';
 // import ModifyProject from '../components/App/Projetcs/ModifyProject/ModifyProject';
 
@@ -44,6 +45,7 @@ const Router = createBrowserRouter(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Home />} />
+        <Route path="/cgu" element={<Cgu />} />
         <Route path="/users" element={<Members />} />
         <Route path="/users/:id" element={<ProfileCondition />} />
         {/* <Route path="/create-my-project" element={<FormProject />} /> */}

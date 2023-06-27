@@ -318,6 +318,7 @@ function MyProfile() {
               {/* Pour chaque input, on désactive le champ si on est pas en mode édition */}
               <Input
                 name="firstname"
+                slot="Prénom"
                 type="text"
                 placeholder={member?.firstname || ''}
                 disabled={!isEditMode}
@@ -325,6 +326,7 @@ function MyProfile() {
               />
               <Input
                 name="name"
+                slot="Nom"
                 type="text"
                 placeholder={member?.name || ''}
                 disabled={!isEditMode}
@@ -332,6 +334,7 @@ function MyProfile() {
               />
               <Input
                 name="pseudo"
+                slot="Pseudo"
                 type="text"
                 placeholder={member?.pseudo || ''}
                 disabled={!isEditMode}
@@ -339,6 +342,7 @@ function MyProfile() {
               />
               <Input
                 name="email"
+                slot="Email"
                 id="email"
                 type="email"
                 placeholder={member?.email || ''}
@@ -349,6 +353,7 @@ function MyProfile() {
               />
               <Input
                 id="password"
+                slot="Mot de passe"
                 name="password"
                 type="password"
                 placeholder="*****"
