@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
 import { fetchAllTags } from '../../../../store/reducer/tag';
-
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import './style.scss';
 import { postOneProject } from '../../../../store/reducer/projects';
 
@@ -12,6 +13,10 @@ function FormProject() {
   const [isOpen, setIsOpen] = useState(false);
   const [availability, setAvailability] = useState(false);
   const user_id = useAppSelector((state) => state.user.login.id);
+  const [isProjectCreate, setIsProjectCreate] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [isCreateError, setIsCreateError] = useState(false);
 
   const dispatch = useAppDispatch();
   const dropdownRef = useRef(null);
@@ -36,12 +41,12 @@ function FormProject() {
       title,
       description,
       tags: selectedTechnos,
-      selectedTechnos: selectedTagsIds.filter((id) => id !== null),
       availability,
       user_id,
     };
 
     dispatch(postOneProject(projectData));
+    setIsProjectCreate(true);
   };
 
   const handleToggle = () => {
@@ -51,14 +56,11 @@ function FormProject() {
   const handleTagSelect = (event) => {
     const selectedTagId = parseInt(event.target.value);
     setSelectedTechnos((prevSelectedTechnos) => {
-
       if (prevSelectedTechnos.includes(selectedTagId)) {
         return prevSelectedTechnos.filter((tagId) => tagId !== selectedTagId);
       } else {
         return [...prevSelectedTechnos, selectedTagId];
-
       }
-      return [...prevSelectedTechnos, selectedTag];
     });
   };
 
@@ -74,6 +76,25 @@ function FormProject() {
       document.removeEventListener('click', handleOutsideClick);
     };
   }, []);
+
+  useEffect(() => {
+    if (isProjectCreate) {
+      setShowSuccessAlert(true);
+
+      setTimeout(() => {
+        setShowSuccessAlert(false);
+      }, 2000);
+    }
+  }, [isProjectCreate]);
+
+  useEffect(() => {
+    if (isCreateError) {
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 2000);
+    }
+  }, [isCreateError]);
 
   const tags = useAppSelector((state) => state.tag.list.data) || [];
 
@@ -139,6 +160,20 @@ function FormProject() {
           Valider
         </button>
       </form>
+      {isProjectCreate && showSuccessAlert && (
+        <Stack>
+          <Alert severity="success">
+            Le projet a été modifié avec succès !
+          </Alert>
+        </Stack>
+      )}
+      {isCreateError && showErrorAlert && (
+        <Stack sx={{ width: '100%' }} spacing={2}>
+          <Alert severity="error">
+            Une erreur est survenue lors de la modification de votre projet
+          </Alert>
+        </Stack>
+      )}
     </div>
   );
 }
