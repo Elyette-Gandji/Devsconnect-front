@@ -90,7 +90,6 @@ const mainReducer = createReducer(initialState, (builder) => {
 
   //* Cas de l'inscription échouée
   builder.addCase(signinUser.rejected, (state) => {
-    console.log('axError', axError.response.data.message);
     if (axError.response.data.message.includes('Email')) {
       state.flash = {
         type: 'error',

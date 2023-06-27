@@ -42,12 +42,10 @@ const userReducer = createReducer(initialState, (builder) => {
 
     //* Cas de la connexion réussie
     .addCase(loginUser.fulfilled, (state, action) => {
-
       const { logged, pseudo, userId } = action.payload.data; // On récupère les données de l'api, qu'on distribue dans le state
       state.login.logged = logged;
       state.login.pseudo = pseudo;
       state.login.id = userId;
-
     })
 
     //* Cas de la connexion échouée
@@ -72,7 +70,6 @@ const userReducer = createReducer(initialState, (builder) => {
       delete axiosInstance.defaults.headers.common.Authorization;
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      console.log('local', localStorage);
     });
 });
 

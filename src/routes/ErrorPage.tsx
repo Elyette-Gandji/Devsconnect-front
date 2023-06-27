@@ -15,17 +15,13 @@ function ErrorPage() {
     if (isRouteErrorResponse(e)) {
       const { status } = e;
       if (status === 404) {
-        console.log('404');
         return ['404', "Désolé, la page que vous demandez n'existe pas"];
       }
-      console.log('500');
       return ['500', 'Désolé, une erreur est survenue'];
     }
-    console.log('500+');
     return ['500', 'Désolé, une erreur est survenue'];
   }
   const [errorStatus, errorMessage] = getStatus(error);
-  console.log('errorResponse', errorStatus, errorMessage);
   // ? Rendu JSX
   return (
     // On retourne les props à un composant crée à part qui s'occupera du style et de l'integration dans notre appli

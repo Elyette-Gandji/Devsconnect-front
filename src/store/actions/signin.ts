@@ -15,7 +15,8 @@ const signinUser = createAsyncThunk(
       // ? On retourne le state
       return data;
     } catch (error) {
-      console.log(error);
+      console.error();
+      error;
       // throw new Error("Une erreur s'est produite lors de l'inscription'.");
 
       // console.error('Error during signin:', error);

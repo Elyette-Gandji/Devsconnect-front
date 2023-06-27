@@ -44,13 +44,10 @@ function ModifyProject() {
       description,
       tag: selectedTechnos,
       availability,
-      user_id: user_id,
+      user_id,
     };
 
-    console.log('Project Data:', projectData);
-
     dispatch(putOneProject({ projectData, id }));
-    console.log(id);
   };
 
   const handleDeleteProjet = () => {
@@ -68,9 +65,8 @@ function ModifyProject() {
     setSelectedTechnos((prevSelectedTechnos) => {
       if (prevSelectedTechnos.includes(selectedTag)) {
         return prevSelectedTechnos.filter((tag) => tag !== selectedTag);
-      } else {
-        return [...prevSelectedTechnos, selectedTag];
       }
+      return [...prevSelectedTechnos, selectedTag];
     });
   };
 
@@ -145,7 +141,7 @@ function ModifyProject() {
               checked={availability}
               onChange={handleSwitch}
             />
-            <span className="slider"></span>
+            <span className="slider" />
           </label>
         </div>
 

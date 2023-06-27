@@ -189,7 +189,6 @@ function Signin() {
     let isFormValid = true; // Variable pour suivre l'état des conditions
 
     dispatch(resetMessage()); // On reset le message flash
-    console.log('test', selectedTags);
     if (cgu === false) {
       dispatch(
         updateFlash({
@@ -199,7 +198,6 @@ function Signin() {
       );
       isFormValid = false;
     } else if (selectedTags.length === 0) {
-      console.log(selectedTags);
       dispatch(
         updateFlash({
           type: 'error',

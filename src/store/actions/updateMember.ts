@@ -18,8 +18,6 @@ const updateMember = createAsyncThunk(
       const { data } = await axiosInstance.put(`/api/users/${id}`, formData);
       // ? On retourne le state
 
-      console.log('localStorage', localStorage);
-      console.log('data', data);
       return data;
     } catch (error) {
       console.error('Error:', error);

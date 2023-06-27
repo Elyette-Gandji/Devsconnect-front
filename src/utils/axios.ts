@@ -20,7 +20,6 @@ axiosInstance.interceptors.response.use(
     axError = error;
     if (error.response) {
       // La requête a reçu une réponse avec un code d'erreur (4xx, 5xx)
-      console.log('error response', error.response);
       const { status, data } = error.response;
       let errorMessage = 'Une erreur est survenue';
 
@@ -33,7 +32,6 @@ axiosInstance.interceptors.response.use(
       return Promise.reject({ message: errorMessage, data });
     }
     if (error.request) {
-      console.log('error request', error.request);
       // La requête n'a pas reçu de réponse (pas de connexion réseau, par exemple)
       return Promise.reject({
         message: 'No response received',
@@ -41,7 +39,6 @@ axiosInstance.interceptors.response.use(
       });
     }
     // Une erreur s'est produite lors de la configuration de la requête
-    console.log('error unknown', error.message);
     return Promise.reject({
       message: 'Error setting up the request',
       config: error.config,
@@ -108,7 +105,6 @@ axiosInstance.interceptors.response.use(
           })
           .catch((error) => {
             logout();
-            console.log(error);
           })
       );
     }
