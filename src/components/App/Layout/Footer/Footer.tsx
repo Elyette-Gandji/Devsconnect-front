@@ -1,4 +1,5 @@
 // ? Style
+import { Link } from 'react-router-dom';
 import './style.scss';
 
 // ? Fonction principale
@@ -10,7 +11,9 @@ function Footer() {
       <p className="Footer--copyright">
         Copyright © 2023 - Tous droits réservés.
       </p>
-      <p className="Footer--cgu">CGU</p>
+      <Link to="/cgu" className="Footer--cgu">
+        <p className="Footer--cgu">CGU</p>
+      </Link>
     </div>
   );
 }

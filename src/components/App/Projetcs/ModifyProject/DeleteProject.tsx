@@ -36,7 +36,6 @@ function DeleteProject({ isOpenDeleteModale, setIsOpenDeleteModale }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('delete envoyé');
     setIsOpenDeleteModale(!isOpenDeleteModale);
     dispatch(deleteOneProject(projectId));
   };

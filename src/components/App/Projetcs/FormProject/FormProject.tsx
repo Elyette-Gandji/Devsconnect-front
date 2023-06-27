@@ -38,10 +38,8 @@ function FormProject() {
       tags: selectedTechnos,
       selectedTechnos: selectedTagsIds.filter((id) => id !== null),
       availability,
-      user_id: user_id,
+      user_id,
     };
-
-    console.log('Project Data:', projectData);
 
     dispatch(postOneProject(projectData));
   };
@@ -53,11 +51,14 @@ function FormProject() {
   const handleTagSelect = (event) => {
     const selectedTagId = parseInt(event.target.value);
     setSelectedTechnos((prevSelectedTechnos) => {
+
       if (prevSelectedTechnos.includes(selectedTagId)) {
         return prevSelectedTechnos.filter((tagId) => tagId !== selectedTagId);
       } else {
         return [...prevSelectedTechnos, selectedTagId];
+
       }
+      return [...prevSelectedTechnos, selectedTag];
     });
   };
 
@@ -130,7 +131,7 @@ function FormProject() {
               checked={availability}
               onChange={handleSwitch}
             />
-            <span className="slider"></span>
+            <span className="slider" />
           </label>
         </div>
 

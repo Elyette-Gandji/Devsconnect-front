@@ -1,4 +1,6 @@
+/* eslint-disable prefer-promise-reject-errors */
 import axios from 'axios';
+import logout from '../store/actions/logout';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000',
@@ -7,23 +9,55 @@ const axiosInstance = axios.create({
   },
 });
 
+// On définit et exporte une variable pour gérer les erreurs
+// Elle sera utilisée dans les actions asynchrones"
+export let axError = null;
+
 // Intercepteur pour la gestion des erreurs
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    axError = error;
     if (error.response) {
       // La requête a reçu une réponse avec un code d'erreur (4xx, 5xx)
-      console.log('error response', error.response);
-      return Promise.reject(error.response.data);
+      const { status, data } = error.response;
+      let errorMessage = 'Une erreur est survenue';
+
+      if (status === 404) {
+        errorMessage = 'La ressource demandée est introuvable';
+      } else if (status === 500) {
+        errorMessage = 'Erreur interne du serveur';
+      }
+
+      return Promise.reject({ message: errorMessage, data });
     }
     if (error.request) {
-      console.log('error request', error.request);
       // La requête n'a pas reçu de réponse (pas de connexion réseau, par exemple)
-      return Promise.reject({ message: 'No response received' });
+      return Promise.reject({
+        message: 'No response received',
+        request: error.request,
+      });
     }
     // Une erreur s'est produite lors de la configuration de la requête
-    console.log('error unknown', error.message);
-    return Promise.reject({ message: 'Error setting up the request' });
+    return Promise.reject({
+      message: 'Error setting up the request',
+      config: error.config,
+    });
+  }
+);
+
+// ? Intercepteur pour gérer le jeton
+axiosInstance.interceptors.request.use(
+  // On ajoute le jeton d'authentification provenant du local storage dans le header de la requête
+  (config) => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
 );
 
@@ -32,44 +66,47 @@ axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
-  async (error) => {
+  (error) => {
     const originalRequest = error.config;
 
-    // Vérifier si la réponse a un code d'état 401 et si l'URL n'est pas déjà '/refresh-token'
-    if (error.response.status === 401 && !originalRequest.retry) {
+    // Vérifie si la requête a échoué avec une erreur 401 (jeton expiré)
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest.retry
+    ) {
+      // On indique que la requête a déjà été tentée
       originalRequest.retry = true;
 
-      try {
-        // Récupérer le rafraîchissement du jeton du localStorage
-        const refreshToken = localStorage.getItem('refreshToken');
-        if (!refreshToken) {
-          throw new Error('No refresh token available');
-        }
+      return (
+        axiosInstance
+          // On envoie une requête pour rafraîchir le jeton
+          .post(`http://localhost:3000/refresh-token`, {
+            refreshToken: localStorage.getItem('refreshToken'),
+          })
+          // On récupère la réponse
+          .then((response) => {
+            // Si la réponse est un succès
+            if (response.status === 200) {
+              // On récupère le nouveau jeton et le nouveau jeton de rafraîchissement
+              const newAccessToken = response.data.data.accessToken;
+              const { refreshToken } = response.data.data;
+              // On met à jour le local storage
+              localStorage.clear();
+              localStorage.setItem('accessToken', newAccessToken);
+              localStorage.setItem('refreshToken', refreshToken);
 
-        // Utiliser le rafraîchissement du jeton pour obtenir un nouveau jeton d'accès
-        const { data } = await axiosInstance.post('/refresh-token', {
-          refreshToken,
-        });
+              // On met à jour le header de la requête avec le nouveau jeton
+              originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-        // Mettre à jour le jeton d'accès dans les en-têtes
-        axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.data.accessToken}`;
-        // Stockez le nouveau rafraîchissement du jeton dans le localStorage
-        localStorage.setItem('refreshToken', data.data.refreshToken);
-
-        // Réessayer la requête d'origine avec le nouveau jeton d'accès
-        return await axiosInstance(originalRequest);
-      } catch (refreshError) {
-        // Gérer les erreurs lors du rafraîchissement du jeton (par exemple, déconnexion de l'utilisateur)
-        // Vous pouvez rediriger vers la page de connexion ou effectuer d'autres actions nécessaires
-        console.error(
-          'Erreur lors du rafraîchissement du jeton:',
-          refreshError
-        );
-
-        logout();
-        // Rejeter l'erreur pour que l'appelant d'origine puisse également la gérer
-        return Promise.reject(refreshError);
-      }
+              // On renvoie la requête avec le nouveau jeton
+              return axiosInstance(originalRequest);
+            }
+          })
+          .catch((error) => {
+            logout();
+          })
+      );
     }
 
     return Promise.reject(error);
