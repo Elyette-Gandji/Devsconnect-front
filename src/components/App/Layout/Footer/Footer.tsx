@@ -1,6 +1,9 @@
+// ? Style
 import './style.scss';
 
+// ? Fonction principale
 function Footer() {
+  // ? Rendu JSX
   return (
     <div className="Footer">
       <p className="Footer--contact">Contact: mail</p>

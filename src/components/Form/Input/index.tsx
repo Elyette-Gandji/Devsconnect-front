@@ -1,48 +1,51 @@
-//* Librairies
+// ? Librairies
 import { useId, useState } from 'react';
-import Icon from '../../UI/Icon/Icon';
 
+// ? Typage local
 interface InputProps {
-  //! Obligation d'avoir une propriété `name` sur l'input
-  name: string;
+  name: string; //! Obligatoire
   placeholder: string;
-  [otherProps: string]: unknown; // On ne connait pas le type de ce qu'il peut y avoir => booleen, string, number, ...
+  [otherProps: string]: unknown; // On ne connait pas le type de ce qu'il peut y avoir => booléen, string, number, ...
 }
 
-// ? Composant
+// ? Fonction principale
 function Input({ name, placeholder, ...props }: InputProps) {
-  // ? Génère un id aléatoire pour le champ
-  const inputId = useId();
-
-  // ? Gestion en local du champ
+  // ? State
+  // Local
   const [value, setValue] = useState('');
 
+  // ? useId
+  const inputId = useId(); // Génère un id aléatoire pour le champ
+
+  // ? Fonctions
+  /** //* Mise à jour de la valeur de l'input
+   * @param {React.ChangeEvent<HTMLInputElement>} event - On récupère l'évènement
+   * On met à jour le state value avec la valeur de l'input
+   */
   function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setValue(event.target.value);
   }
 
+  // ? Rendu JSX
   return (
     <div className="Signin--inputText">
-      {/* // ! On utilise l'id généré pour lier le label à l'input htmlFor = for  */}
-      {/* // ! On utilise le placeholder reçu pour le label */}
-      <label htmlFor={inputId} className="field-label">
+      <label
+        htmlFor={inputId} // On lie le label à l'input avec l'id généré (htmlFor = for en JS)
+        className="field-label"
+      >
         {name}
       </label>
       <input
-        // infos obligatoires
+        className="Form--input"
         name={name}
-        // React - state
         value={value}
         onChange={handleChange}
         id={inputId}
         placeholder={placeholder}
-        // autres infos
         {...props}
-        className=""
       />
     </div>
   );
 }
 
-// == Export
 export default Input;

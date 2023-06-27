@@ -1,12 +1,13 @@
 // ? Librairies
 import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 
-// ? fonctions maison pour l'instance Axios
+// ? Instance Axios
 import axiosInstance from '../../utils/axios';
 
-// ? Typage
+// ? Typage global
 import { TagI } from '../../@types/interface';
 
+// ? Typage local
 interface TagState {
   status?: string;
   list: {
@@ -17,7 +18,7 @@ interface TagState {
   };
 }
 
-// ? Initialisation
+// ? InitialState
 export const initialState: TagState = {
   // Liste des tags
   list: {
@@ -59,31 +60,25 @@ export const fetchOneTag = createAsyncThunk(
   }
 );
 
-// ? Construction du reducer user avec builder qui utilise les actions pour modifier le state initial
 const tagReducer = createReducer(initialState, (builder) => {
-  // ? On retourne le state selon les cas de figure suivants :
   builder
     //* Cas de la connexion réussie de fetchAllTags
     .addCase(fetchAllTags.fulfilled, (state, action) => {
-      // ? On modifie le state
-      state.list.data = action.payload.data;
+      state.list.data = action.payload.data; // On modifie le state avec les données reçues
     })
     //* Cas de la connexion échouée de fetchAllTags
     .addCase(fetchAllTags.rejected, (state) => {
-      // ? On modifie le state
-      state.list.data = [];
+      state.list.data = []; // On ne reçoit pas de données, on laisse un tableau vide
     });
 
   //* Cas de la connexion réussie de fetchOneMember
   builder
     .addCase(fetchOneTag.fulfilled, (state, action) => {
-      // ? On modifie le state
-      state.tag.data = action.payload.data;
+      state.tag.data = action.payload.data; // On modifie le state avec les données reçues
     })
     //* Cas de la connexion échouée de fetchOneMember
     .addCase(fetchOneTag.rejected, (state) => {
-      // ? On modifie le state
-      state.tag.data = null;
+      state.tag.data = null; // On ne reçoit pas de données, on laisse null
     });
 });
 

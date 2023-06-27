@@ -1,29 +1,49 @@
 // ? Librairie
 import { useRef, useEffect, FormEvent } from 'react';
-import { useAppSelector } from '../../../../../../hook/redux';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../../../../../hook/redux';
 
-// import FlashMessage from '../FlashMessage/FlashMessage';
+// ? Fonctions externes
+import { deleteMember } from '../../../../../../store/reducer/members';
+import logout from '../../../../../../store/actions/logout';
 
-// Styles
+// ? Composants
+
+// ? Styles
 import './style.scss';
 
-// ? Fonction
-function DeleteModale({ isOpenDeleteModale, setIsOpenDeleteModale }) {
-  const flash = useAppSelector((state) => state.user.login.message);
+// ? Fonction principale
+function DeleteModale({
+  isOpenDeleteModale,
+  setIsOpenDeleteModale,
+}: {
+  isOpenDeleteModale: boolean;
+  setIsOpenDeleteModale: (isOpen: boolean) => void;
+}) {
+  // ? States
+  // Redux
+  const id = useAppSelector((state) => state.user.login.id); // id du membre connecté
 
-  //! Ref pour la modale
-  const modalRef = useRef(null);
+  // ? useRef
+  const modalRef = useRef(null); // Permet de cibler la modale
 
-  //! useEffect pour clic externe à la modale
+  // ? Dispatch
+  const dispatch = useAppDispatch();
+
+  // ? useNavigate
+  const navigate = useNavigate(); // Permet d'acceder à l'historique de navigation, pour rediriger
+
+  // ? useEffect
+  //* Pour le clic externe à la modale
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
+        // Si on clique en dehors de la modale
         modalRef.current &&
-        //* On précise que modalRef.current éun element html (Element)
-        //* On précise que event.target représente un noeud du DOM (Node)
         !(modalRef.current as Element).contains(event.target as Node)
+        // On précise que modalRef.current éun element html (Element)
+        // On précise que event.target représente un noeud du DOM (Node)
       ) {
-        // Clic en dehors de la modale
         setIsOpenDeleteModale(!isOpenDeleteModale);
       }
     };
@@ -33,15 +53,24 @@ function DeleteModale({ isOpenDeleteModale, setIsOpenDeleteModale }) {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [isOpenDeleteModale, setIsOpenDeleteModale]);
 
-  //! Fonction pour fermer la modale avec la croix ou le bouton annuler
+  // ? Fonctions
+  /** //* Fonction pour fermer la modale avec la croix ou le bouton annuler
+   * @param {boolean} isOpenDeleteModale - État de la modale
+   * Au clic, on inverse l'état de la modale
+   */
   const handleDeleteModale = () => {
     setIsOpenDeleteModale(!isOpenDeleteModale);
   };
-  // * Une div n'est pas un element clickable
-  // * Fonction d’accessibilité pour le clavier.
-  // * Si la touche enter ou espace est pressée, on appelle la fonction handleClick()
+
+  /** //! Accessibilité
+   * @param {React.KeyboardEvent<HTMLDivElement>} event - Événement clavier
+   * @param {boolean} isOpenDeleteModale - État de la modale
+   * * Une div n'est pas un element clickable par défaut.
+   * On ajoute un fonction d’accessibilité pour le clavier.
+   * Si la touche enter ou espace est pressée, on appelle la fonction handleDeleteModale() juste au dessus.
+   */
   const handleDeleteModaleKeyDown = (
     event: React.KeyboardEvent<HTMLDivElement>
   ) => {
@@ -50,27 +79,39 @@ function DeleteModale({ isOpenDeleteModale, setIsOpenDeleteModale }) {
     }
   };
 
-  //! Fonction pour soumettre le formulaire
+  /** //* Fonction d'envoi du formulaire
+   * @param {FormEvent<HTMLFormElement>} event - Événement formulaire
+   * @param {boolean} isOpenDeleteModale - État de la modale
+   * Au submit, on envoie les données du formulaire au serveur
+   */
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log('delete envoyé');
-    setIsOpenDeleteModale(!isOpenDeleteModale);
-    // TODO : dispatch de la fonction de suppression du profil
+    event.preventDefault(); // On empêche le comportement par défaut du formulaire
+    setIsOpenDeleteModale(!isOpenDeleteModale); // On ferme la modale
+    if (id !== null) {
+      dispatch(logout()); // On déconnecte le membre
+      dispatch(deleteMember(id.toString())); // On supprime le membre
+      navigate('/'); // On redirige vers la page d'accueil
+    }
   };
+
+  // ? Rendu JSX
   return (
     <div className="DeleteModale">
       <div className="DeleteModale--container" ref={modalRef}>
-        {/* {flash && (
-          <FlashMessage type={flash.type} duration={flash.duration ?? 3000}>
-            {flash.children}
-          </FlashMessage>
-        )} */}
         <div className="DeleteModale--container--head">
           <h2 className="DeleteModale--title">Suppression</h2>
           <div
+            /** //? Bouton fermer la modale
+             * @param {boolean} isOpenDeleteModale - État de la modale
+             * @param {React.MouseEvent<HTMLDivElement>} event - Événement clic
+             * @param {React.KeyboardEvent<HTMLDivElement>} event - Événement clavier
+             * * Une div n'est pas un element clickable par défaut.
+             * On ajoute tabindex={0} pour le rendre focusable.
+             * et une fonction de déclenchement au clic ou au clavier
+             */
             className="DeleteModale--close"
-            role="button"
-            tabIndex={0}
+            role="button" // On précise que c'est un bouton
+            tabIndex={0} // On précise que c'est un élément focusable
             onClick={handleDeleteModale}
             onKeyDown={handleDeleteModaleKeyDown}
           >
@@ -78,12 +119,12 @@ function DeleteModale({ isOpenDeleteModale, setIsOpenDeleteModale }) {
           </div>
         </div>
 
-        <form className="DeleteModale--form" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="DeleteModale--form">
           <h3>Voulez-vous vraiment supprimer votre compte ?</h3>
           <p>(Attention, cette action est irréversible.)</p>
           <div className="DeleteModale--form--submit">
             <button
-              type="submit"
+              type="button"
               onClick={handleDeleteModale}
               className="DeleteModale--form--submit--cancel"
             >
