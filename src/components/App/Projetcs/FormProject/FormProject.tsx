@@ -27,10 +27,16 @@ function FormProject() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    const selectedTagsIds = selectedTechnos.map((selectedTag) => {
+      const tag = tags.find((tag) => tag.name === selectedTag);
+      return tag ? tag.id : null;
+    });
+
     const projectData = {
       title,
       description,
-      tag: selectedTechnos,
+      tags: selectedTechnos,
+      selectedTechnos: selectedTagsIds.filter((id) => id !== null),
       availability,
       user_id,
     };
@@ -43,10 +49,14 @@ function FormProject() {
   };
 
   const handleTagSelect = (event) => {
-    const selectedTag = event.target.value;
+    const selectedTagId = parseInt(event.target.value);
     setSelectedTechnos((prevSelectedTechnos) => {
-      if (prevSelectedTechnos.includes(selectedTag)) {
-        return prevSelectedTechnos.filter((tag) => tag !== selectedTag);
+
+      if (prevSelectedTechnos.includes(selectedTagId)) {
+        return prevSelectedTechnos.filter((tagId) => tagId !== selectedTagId);
+      } else {
+        return [...prevSelectedTechnos, selectedTagId];
+
       }
       return [...prevSelectedTechnos, selectedTag];
     });
@@ -65,7 +75,7 @@ function FormProject() {
     };
   }, []);
 
-  const tags = useAppSelector((state) => state.tag.list.data);
+  const tags = useAppSelector((state) => state.tag.list.data) || [];
 
   return (
     <div className="form-container">
@@ -92,8 +102,8 @@ function FormProject() {
                     <label>
                       <input
                         type="checkbox"
-                        value={tag.name}
-                        checked={selectedTechnos.includes(tag.name)}
+                        value={tag.id}
+                        checked={selectedTechnos.includes(tag.id)}
                         onChange={handleTagSelect}
                       />
                       {tag.name}
@@ -104,17 +114,17 @@ function FormProject() {
             </div>
           )}
         </div>
-        <h3 className="form-title">Choisissez la description</h3>
 
+        <h3 className="form-title">Choisissez la description</h3>
         <textarea
           id="description"
           value={description}
           placeholder="Description..."
           onChange={(e) => setDescription(e.target.value)}
         />
+
         <div>
           <h3 className="form-title">Ouvert aux participants</h3>
-
           <label className="switch">
             <input
               type="checkbox"

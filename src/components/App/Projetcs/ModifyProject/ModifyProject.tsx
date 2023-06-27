@@ -42,7 +42,7 @@ function ModifyProject() {
     const projectData = {
       title,
       description,
-      tag: selectedTechnos,
+      tags: selectedTechnos.map((tagId) => parseInt(tagId, 10)),
       availability,
       user_id,
     };
@@ -61,10 +61,14 @@ function ModifyProject() {
   };
 
   const handleTagSelect = (event) => {
-    const selectedTag = event.target.value;
+    const selectedTagId = event.target.value;
     setSelectedTechnos((prevSelectedTechnos) => {
-      if (prevSelectedTechnos.includes(selectedTag)) {
-        return prevSelectedTechnos.filter((tag) => tag !== selectedTag);
+
+      if (prevSelectedTechnos.includes(selectedTagId)) {
+        return prevSelectedTechnos.filter((tagId) => tagId !== selectedTagId);
+      } else {
+        return [...prevSelectedTechnos, selectedTagId];
+
       }
       return [...prevSelectedTechnos, selectedTag];
     });
@@ -112,8 +116,8 @@ function ModifyProject() {
                     <label>
                       <input
                         type="checkbox"
-                        value={tag.name}
-                        checked={selectedTechnos.includes(tag.name)}
+                        value={tag.id}
+                        checked={selectedTechnos.includes(String(tag.id))}
                         onChange={handleTagSelect}
                       />
                       {tag.name}

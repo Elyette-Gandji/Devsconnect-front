@@ -141,6 +141,43 @@
     font-size: 2rem;
 }
 
+.other-users-container {
+    margin-top: 20px;
+}
+
+.other-user-list {
+    display: flex;
+    align-items: center;
+}
+
+.other-user-list button {
+    margin-left: 10px;
+}
+
+.delete-participant-btn {
+    background-color: rgb(243, 95, 95);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.delete-participant-btn:hover {
+    background-color: darkred;
+}
+
+.no-other-users {
+    margin-top: 10px;
+    color: #777;
+}
+
+.apply-btn:hover {
+    background-color: rgba(93, 168, 93, 0.829);
+}
+.modify-btn:hover {
+    background-color: #2980b9;
+}
+
 @media (max-width: 768px) {
     .project-technos-container {
         width: 100%;
