@@ -40,9 +40,14 @@ function Members() {
     return <p>Loading...</p>;
   }
 
-  // Si la liste des membres est vide, on affiche une erreur 404 au composant NotFound
+  // Si la liste des membres est vide, on affiche une erreur serveur
   if (members.length === 0) {
-    return <NotFound errorMessage="Erreur 404" errorStatut={404} />;
+    return (
+      <NotFound
+        errorMessage="Désolé, le serveur ne répond pas"
+        errorStatus={500}
+      />
+    );
   }
 
   // ? Rendu JSX

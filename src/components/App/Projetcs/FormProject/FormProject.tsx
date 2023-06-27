@@ -42,10 +42,8 @@ function FormProject() {
       description,
       tags: selectedTechnos,
       availability,
-      user_id: user_id,
+      user_id,
     };
-
-    console.log('Project Data:', projectData);
 
     dispatch(postOneProject(projectData));
     setIsProjectCreate(true);
@@ -154,7 +152,7 @@ function FormProject() {
               checked={availability}
               onChange={handleSwitch}
             />
-            <span className="slider"></span>
+            <span className="slider" />
           </label>
         </div>
 

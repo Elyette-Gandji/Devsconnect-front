@@ -5,6 +5,11 @@ import { createAction, createReducer } from '@reduxjs/toolkit';
 import loginUser from '../actions/login';
 import signinUser from '../actions/signin';
 import logout from '../actions/logout';
+import updateMember from '../actions/updateMember';
+import deleteMember from '../actions/deleteMember';
+
+// ? instance axios
+import { axError } from '../../utils/axios';
 
 // ? Typage global
 import { FlashI } from '../../@types/interface';
@@ -46,7 +51,6 @@ const mainReducer = createReducer(initialState, (builder) => {
     })
     //* Cas de la mise à jour du message
     .addCase(updateFlash, (state, action) => {
-      console.log(action.payload);
       state.flash = action.payload;
     })
     //* Cas de la connexion réussie
@@ -58,7 +62,6 @@ const mainReducer = createReducer(initialState, (builder) => {
       state.flash = {
         type: 'success',
         children: `Bienvenue ${pseudo} !`,
-        duration: 5000,
       };
     })
     //* Cas de la connexion échouée
@@ -66,31 +69,80 @@ const mainReducer = createReducer(initialState, (builder) => {
       state.flash = {
         type: 'error',
         children: 'Pseudo ou mot de passe incorrect',
-        duration: 5000,
       };
     })
 
     //* Cas de la déconnexion
     .addCase(logout, (state) => {
-      state.flash = null;
+      state.flash = {
+        type: 'success',
+        children: 'Au revoir !',
+      };
     })
 
     //* Cas de l'inscription réussie
     .addCase(signinUser.fulfilled, (state) => {
       state.flash = {
         type: 'success',
-        children: 'Vous êtes bien inscrit, merci de vous connecter maintenant',
+        children: 'Vous êtes bien inscrit, vous pouvez vous connecter !',
       };
     });
 
   //* Cas de l'inscription échouée
-  // .addCase(signinUser.rejected, (state, action) => {
-  //   state.flash = {
-  //     type: 'error',
-  //     children: action.error.message || 'llUNKNOWN_ERROR',
-  //     duration: 5000,
-  //   };
-  // });
+  builder.addCase(signinUser.rejected, (state) => {
+    if (axError.response.data.message.includes('Email')) {
+      state.flash = {
+        type: 'error',
+        children: 'Cette adresse email est déjà utilisée',
+      };
+    }
+    if (axError.response.data.message.includes('Pseudo')) {
+      state.flash = {
+        type: 'error',
+        children: 'Ce pseudo est déjà utilisé',
+      };
+    }
+  });
+
+  //* Cas de la mise à jour du membre réussie
+  builder.addCase(updateMember.fulfilled, (state) => {
+    state.flash = {
+      type: 'success',
+      children: 'Les changements ont bien été pris en compte !',
+    };
+  });
+
+  //* Cas de la mise à jour du membre échouée
+  builder.addCase(updateMember.rejected, (state) => {
+    if (axError.response.data.message.includes('email')) {
+      state.flash = {
+        type: 'error',
+        children: 'Cette adresse email est déjà utilisée',
+      };
+    }
+    if (axError.response.data.message.includes('pseudo')) {
+      state.flash = {
+        type: 'error',
+        children: 'Ce pseudo est déjà utilisé',
+      };
+    }
+  });
+
+  //* Cas de la suppression du membre réussie
+  builder.addCase(deleteMember.fulfilled, (state) => {
+    state.flash = {
+      type: 'success',
+      children: 'Le compte a bien été supprimé !',
+    };
+  });
+
+  //* Cas de la suppression du membre échouée
+  builder.addCase(deleteMember.rejected, (state) => {
+    state.flash = {
+      type: 'error',
+      children: 'Une erreur est survenue, veuillez réessayer plus tard !',
+    };
+  });
 });
 
 export default mainReducer;

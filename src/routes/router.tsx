@@ -10,6 +10,7 @@ import { useAppSelector } from '../hook/redux';
 // ? Composants
 import Root from './Root';
 import ErrorPage from './ErrorPage';
+import NotFound from '../components/NotFound/NotFound';
 
 import Home from '../components/App/Home/Home';
 import Members from '../components/App/Members/Members';
@@ -17,8 +18,11 @@ import Projects from '../components/App/Projetcs/Projects';
 import ProjectDetail from '../components/App/Projetcs/ProjectDetail/ProjectDetail';
 import OneMember from '../components/App/Members/OneMember/OneMember';
 import MyProfile from '../components/App/Members/OneMember/MyProfile/MyProfile';
+
 import FormProject from '../components/App/Projetcs/FormProject/FormProject';
 import ModifyProject from '../components/App/Projetcs/ModifyProject/ModifyProject';
+
+import Cgu from '../components/App/Cgu/Cgu';
 
 // ? Fonction
 /** //! Fonction pour gérer l'affichage du profil ou de la page membre
@@ -43,6 +47,7 @@ const Router = createBrowserRouter(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Home />} />
+        <Route path="/cgu" element={<Cgu />} />
         <Route path="/users" element={<Members />} />
         <Route path="/users/:id" element={<ProfileCondition />} />
         <Route path="/create-my-project" element={<FormProject />} />

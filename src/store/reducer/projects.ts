@@ -71,7 +71,6 @@ export const postOneProject = createAsyncThunk(
 export const putOneProject = createAsyncThunk(
   'project/putOneProject',
   async ({ projectData, id }) => {
-    console.log(id);
     try {
       const { data } = await axiosInstance.put(
         `/api/projects/${id}`,

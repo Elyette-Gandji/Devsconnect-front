@@ -1,17 +1,15 @@
 // ? Librairies
 import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 
+// ? Fonctions externes
+import updateMember from '../actions/updateMember';
+import deleteMember from '../actions/deleteMember';
+
 // ? Instance Axios
 import axiosInstance from '../../utils/axios';
 
 // ? Typage global
 import { MemberI } from '../../@types/interface';
-
-// ? Typage local
-type UpdateMemberI = {
-  id: number | null;
-  formData: FormData & { availability: boolean | undefined };
-};
 
 interface MemberState {
   status?: string;
@@ -72,37 +70,6 @@ export const fetchOneMember = createAsyncThunk(
   }
 );
 
-//* Update un membre
-export const updateMember = createAsyncThunk(
-  'user/updateMember',
-  async ({ id, formData }: UpdateMemberI) => {
-    try {
-      const { data } = await axiosInstance.put(`/api/users/${id}`, formData);
-      // ? On retourne le state
-      return data;
-    } catch (error) {
-      console.error('Error:', error);
-      throw error;
-    }
-  }
-);
-
-//* Supprimer un membre
-export const deleteMember = createAsyncThunk(
-  'user/deleteMember',
-  async (id: string) => {
-    try {
-      const { data } = await axiosInstance.delete(`/api/users/${id}`);
-      // ? On retourne le state
-      console.log('data', data);
-      return { data };
-    } catch (error) {
-      console.error('Error:', error);
-      throw error;
-    }
-  }
-);
-
 // ? Reducer
 const membersReducer = createReducer(initialState, (builder) => {
   builder
@@ -138,8 +105,9 @@ const membersReducer = createReducer(initialState, (builder) => {
     });
   builder
     //* Cas de la connexion réussie de updateMember
-    .addCase(updateMember.fulfilled, (state) => {
+    .addCase(updateMember.fulfilled, (state, action) => {
       state.member.loading = false; // Définir l'état de chargement sur false
+      state.member.data = action.payload.data;
     })
     //* Cas de la connexion échouée de updateMember
     .addCase(updateMember.rejected, (state) => {

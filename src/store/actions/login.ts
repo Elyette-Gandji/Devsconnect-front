@@ -15,14 +15,13 @@ const loginUser = createAsyncThunk(
 
       const { data } = await axiosInstance.post('/login', objData);
 
-      // ! A la connexion, j'ajoute le token à mon instance Axios
+      // Stockez le rafraîchissement du jeton dans le localStorage
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      localStorage.setItem('accessToken', data.data.accessToken);
       axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.data.accessToken}`;
 
       // ! Pour des raisons de sécurité, on le supprime de `data`
       delete data.data.accessToken;
-
-      // Stockez le rafraîchissement du jeton dans le localStorage
-      localStorage.setItem('refreshToken', data.data.refreshToken);
       delete data.data.refreshToken;
       // ? On retourne le state
       return data;

@@ -98,6 +98,17 @@ function ModifyProject() {
     setIsOpen(!isOpen);
   };
 
+  const handleTagSelect = (event) => {
+    const selectedTagId = event.target.value;
+    setSelectedTechnos((prevSelectedTechnos) => {
+      if (prevSelectedTechnos.includes(selectedTagId)) {
+        return prevSelectedTechnos.filter((tagId) => tagId !== selectedTagId);
+      } else {
+        return [...prevSelectedTechnos, selectedTagId];
+      }
+    });
+  };
+
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -133,17 +144,6 @@ function ModifyProject() {
       }, 2000);
     }
   }, [isModifyError]);
-
-  const handleTagSelect = (event) => {
-    const selectedTagId = event.target.value;
-    setSelectedTechnos((prevSelectedTechnos) => {
-      if (prevSelectedTechnos.includes(selectedTagId)) {
-        return prevSelectedTechnos.filter((tagId) => tagId !== selectedTagId);
-      } else {
-        return [...prevSelectedTechnos, selectedTagId];
-      }
-    });
-  };
 
   return (
     <div className="form-container">
@@ -199,7 +199,7 @@ function ModifyProject() {
               checked={availability}
               onChange={handleSwitch}
             />
-            <span className="slider"></span>
+            <span className="slider" />
           </label>
         </div>
 
