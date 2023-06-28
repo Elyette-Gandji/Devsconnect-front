@@ -168,14 +168,18 @@ function MyProfile() {
     const inputs = formRef.current
       ? formRef.current.querySelectorAll('.MyProfile--input') // On cible tous les inputs du formulaire
       : null;
+
     // textarea
     const textarea = formRef.current
       ? formRef.current.querySelector('textarea') // On cible le textarea du formulaire
       : null;
     const textareaName: keyof MemberI = textarea?.name as keyof MemberI; // On récupère le name du textarea
     const textareaValue: string | undefined = textarea?.value; // On récupère la value du textarea
+    const firstname = inputs?.item(0) as HTMLInputElement; // On cible le premier input du formulaire
+    const name = inputs?.item(1) as HTMLInputElement; // On cible le premier input du formulaire
+    const pseudo = inputs?.item(2) as HTMLInputElement; // On cible le premier input du formulaire
     // email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex pour vérifier le format de l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/; // Regex pour vérifier le format de l'email
     // password
     const passwordElement = document.querySelector(
       '#password'
@@ -188,6 +192,39 @@ function MyProfile() {
     // ! Gestion des erreurs
 
     dispatch(resetMessage()); // On reset le message flash
+    if (firstname.value !== '') {
+      if (firstname.value.length < 1 || firstname.value.length > 30) {
+        dispatch(
+          updateFlash({
+            type: 'error',
+            children: 'Votre prénom doit contenir entre 1 et 30 caractères',
+          })
+        );
+        isFormValid = false;
+      }
+    }
+    if (name.value !== '') {
+      if (name.value.length < 1 || name.value.length > 30) {
+        dispatch(
+          updateFlash({
+            type: 'error',
+            children: 'Votre nom doit contenir entre 1 et 30 caractères',
+          })
+        );
+        isFormValid = false;
+      }
+    }
+    if (pseudo.value !== '') {
+      if (pseudo.value.length < 1 || pseudo.value.length > 30) {
+        dispatch(
+          updateFlash({
+            type: 'error',
+            children: 'Votre pseudo doit contenir entre 1 et 30 caractères',
+          })
+        );
+        isFormValid = false;
+      }
+    }
     if (emailValue !== '' && !emailRegex.test(emailValue)) {
       dispatch(
         updateFlash({

@@ -1,7 +1,7 @@
 // ? Librairies
 import { useState, useRef, useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 import { Link } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../../hook/redux';
 
 // ? Fonctions externes
 import {
@@ -183,6 +183,7 @@ function Signin() {
     const firstname = formData.get('firstname');
     const name = formData.get('name');
     const pseudo = formData.get('pseudo');
+    const description = formData.get('description');
     const email = formData.get('email').toString();
     const password = formData.get('password');
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex pour vérifier le format de l'email
@@ -198,7 +199,8 @@ function Signin() {
         })
       );
       isFormValid = false;
-    } else if (selectedTags.length === 0) {
+    }
+    if (selectedTags.length === 0) {
       dispatch(
         updateFlash({
           type: 'error',
@@ -206,7 +208,8 @@ function Signin() {
         })
       );
       isFormValid = false;
-    } else if (firstname === '') {
+    }
+    if (firstname === '') {
       dispatch(
         updateFlash({
           type: 'error',
@@ -214,7 +217,41 @@ function Signin() {
         })
       );
       isFormValid = false;
-    } else if (name === '') {
+    }
+    if (firstname !== '') {
+      if (firstname.length < 1 || firstname.length > 30) {
+        dispatch(
+          updateFlash({
+            type: 'error',
+            children: 'Votre prénom doit contenir entre 1 et 30 caractères',
+          })
+        );
+        isFormValid = false;
+      }
+    }
+    if (name !== '') {
+      if (name.length < 1 || name.length > 30) {
+        dispatch(
+          updateFlash({
+            type: 'error',
+            children: 'Votre nom doit contenir entre 1 et 30 caractères',
+          })
+        );
+        isFormValid = false;
+      }
+    }
+    if (pseudo !== '') {
+      if (pseudo.length < 1 || pseudo.length > 30) {
+        dispatch(
+          updateFlash({
+            type: 'error',
+            children: 'Votre pseudo doit contenir entre 1 et 30 caractères',
+          })
+        );
+        isFormValid = false;
+      }
+    }
+    if (name === '') {
       dispatch(
         updateFlash({
           type: 'error',
@@ -222,7 +259,8 @@ function Signin() {
         })
       );
       isFormValid = false;
-    } else if (pseudo === '') {
+    }
+    if (pseudo === '') {
       dispatch(
         updateFlash({
           type: 'error',
@@ -230,7 +268,17 @@ function Signin() {
         })
       );
       isFormValid = false;
-    } else if (email === '' || !emailRegex.test(email)) {
+    }
+    if (description === '') {
+      dispatch(
+        updateFlash({
+          type: 'error',
+          children: 'Veuillez renseigner une description',
+        })
+      );
+      isFormValid = false;
+    }
+    if (email === '' || !emailRegex.test(email)) {
       dispatch(
         updateFlash({
           type: 'error',
@@ -238,7 +286,8 @@ function Signin() {
         })
       );
       isFormValid = false;
-    } else if (password === '') {
+    }
+    if (password === '') {
       dispatch(
         updateFlash({
           type: 'error',
@@ -246,7 +295,8 @@ function Signin() {
         })
       );
       isFormValid = false;
-    } else if (password !== '') {
+    }
+    if (password !== '') {
       const validationResult = validatePassword(password); // On vérifie que le mot de passe est valide
       if (validationResult !== '') {
         dispatch(
