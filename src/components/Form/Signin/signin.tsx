@@ -440,10 +440,10 @@ function Signin() {
                   name="cgu"
                   className="Signin--inputCheckbox--cgu"
                 />
+                <Link to="/cgu" target="_blank" className="Signin--cgu--link">
+                  (voir les CGU)
+                </Link>
               </label>
-              <Link to="/cgu" target="_blank" className="Signin--cgu--link">
-                (voir les CGU)
-              </Link>
             </div>
             <button type="submit" className="Signin--form--submit">
               S&apos;inscrire

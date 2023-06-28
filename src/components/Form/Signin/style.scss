@@ -121,9 +121,10 @@
         & label {
             display: flex;
             flex-direction: rows; // Pour que le label et le lien soient côte à côte
-            justify-content: left; // A gauche
+            justify-content: center; // centre
         }
         & a {
+            padding-left: 1rem;
             text-decoration: underline;
         }
     }
