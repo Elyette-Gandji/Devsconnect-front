@@ -62,14 +62,24 @@ function ProjectDetail() {
       return;
     }
 
-    dispatch(addParticipantToProject({ userId, projectId: id }));
+    dispatch(addParticipantToProject({ userId, projectId: id }))
+      .then(() => {
+        dispatch(fetchOneProject(Number(id)));
+      })
+      .catch((error) => {});
   };
 
   const handleDeleteParticipant = (participantId) => {
     setDeletedParticipantId(participantId);
     dispatch(
       deleteParticipantFromProject({ userId: participantId, projectId: id })
-    );
+    )
+      .then(() => {
+        // La mise à jour sera gérée par useEffect
+      })
+      .catch((error) => {
+        // Gérer l'erreur si nécessaire
+      });
   };
 
   const removeDeletedParticipant = () => {

@@ -11,6 +11,7 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import './style.scss';
 import { useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 function ModifyProject() {
   const [title, setTitle] = useState('');
@@ -26,6 +27,7 @@ function ModifyProject() {
 
   const dispatch = useAppDispatch();
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   const { id } = useParams();
 
@@ -86,11 +88,20 @@ function ModifyProject() {
     dispatch(putOneProject({ projectData, id }));
     setIsProjectModified(true);
     console.log(id);
+
+    dispatch(putOneProject(projectData, id)).then((response) => {
+      const projectId = response.id;
+      console.log(response);
+
+      setIsProjectModified(true);
+      navigate(`/projects`);
+    });
   };
 
-  const handleDeleteProjet = () => {
+  const handleDeleteProject = () => {
     if (projectId) {
       dispatch(deleteOneProject(projectId));
+      navigate('/projects');
     }
   };
 
@@ -209,7 +220,7 @@ function ModifyProject() {
       </form>
       <button
         className="deletes-button"
-        onClick={handleDeleteModale}
+        onClick={handleDeleteProject}
         type="button"
       >
         Supprimer mon projet
