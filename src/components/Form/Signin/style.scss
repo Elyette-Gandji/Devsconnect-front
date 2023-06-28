@@ -57,6 +57,12 @@
     &--inputText {
         display: flex; // label et input côte à côte
         justify-content: space-between; // A chaque extrémité
+        align-items: center;
+        padding: 0 2rem;
+
+        & label {
+            margin-right: 1rem;
+        }
 
         & input {
             width: 45%;

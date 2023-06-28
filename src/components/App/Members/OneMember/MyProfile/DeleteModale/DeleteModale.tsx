@@ -88,9 +88,9 @@ function DeleteModale({
     event.preventDefault(); // On empêche le comportement par défaut du formulaire
     setIsOpenDeleteModale(!isOpenDeleteModale); // On ferme la modale
     if (id !== null) {
-      dispatch(logout()); // On déconnecte le membre
       dispatch(deleteMember(id.toString())); // On supprime le membre
       navigate('/'); // On redirige vers la page d'accueil
+      dispatch(logout()); // On déconnecte le membre
     }
   };
 

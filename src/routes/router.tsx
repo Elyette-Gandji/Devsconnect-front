@@ -23,10 +23,7 @@ import ModifyProject from '../components/App/Projetcs/ModifyProject/ModifyProjec
 
 import Cgu from '../components/App/Cgu/Cgu';
 
-import FormProject from '../components/App/Projetcs/FormProject/FormProject';
-import ModifyProject from '../components/App/Projetcs/ModifyProject/ModifyProject';
 import NotFound from '../components/NotFound/NotFound';
-
 
 // ? Fonction
 /** //! Fonction pour gérer l'affichage du profil ou de la page membre

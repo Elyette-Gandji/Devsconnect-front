@@ -58,7 +58,7 @@
     //? Gestion des champs texte
     &--inputText {
         display: flex; // label et input côte à côte
-        margin-top: v.$font-large;
+        // margin-top: v.$font-large;
         justify-content: space-between; // A chaque extrémité
         & input {
             border-radius: 1rem;

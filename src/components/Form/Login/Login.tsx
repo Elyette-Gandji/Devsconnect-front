@@ -122,12 +122,14 @@ function Login() {
             type="email"
             placeholder="Adresse Email"
             className="Login--inputText"
+            slot="Email"
           />
           <Input
             name="password"
             type="password"
             placeholder="Mot de passe"
             className="Login--inputText"
+            slot="Mot de passe"
           />
           <button type="submit" className="Login--form--submit">
             Se connecter
