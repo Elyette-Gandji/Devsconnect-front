@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../hook/redux';
 import { fetchAllTags } from '../../../../store/reducer/tag';
 import Alert from '@mui/material/Alert';
@@ -20,6 +21,7 @@ function FormProject() {
 
   const dispatch = useAppDispatch();
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchAllTags());
@@ -45,8 +47,13 @@ function FormProject() {
       user_id,
     };
 
-    dispatch(postOneProject(projectData));
-    setIsProjectCreate(true);
+    dispatch(postOneProject(projectData)).then((response) => {
+      const projectId = response.payload.data.id;
+      console.log(response);
+
+      setIsProjectCreate(true);
+      navigate(`/projects/${projectId}`);
+    });
   };
 
   const handleToggle = () => {
